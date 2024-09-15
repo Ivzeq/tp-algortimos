@@ -64,7 +64,7 @@ def menu():
                      3.Salir"""))
         limpiar()
     return opcion
-def cliente():
+def cliente(): #la funcion debe seguir el flujo del diagrama "DIAGRAMA.CLIENTES"
     print("nada")
     #aqui deberiamos poner las actividades que realiza el cleinte
 def staff(lista_usuarios):
