@@ -19,10 +19,28 @@ def getMesas (id):
                 return mesa
             else: 
                 return None
-    
+
+def verificarTipo (type):
+    tipoValido = False
+    for userType in userTypes:
+        if userType['userType'] == type:
+            tipoValido = True
+    return tipoValido
+
+def getPermisos (type):
+    for userType in userTypes:
+        if userType['userType'] == type:
+            return userType['permisos']
+    else:
+        return None
+
+def printDivider ():
+    print('''
+            ===============================================================================================
+          ''')
 
 # Ejecucion
-possibleStatesTupla = ('ejecutando', 'verPerfiles', 'verMesas', 'finalizado')
+possibleStatesTupla = ('login', 'verPerfiles', 'verMesas', 'finalizado')
 
 userTypes = [
     {
@@ -32,6 +50,19 @@ userTypes = [
     {
        "userType": 'client',
        "permisos": ['verMesas']
+    }
+]
+
+users = [
+    {
+       "user": 'RoleError',
+       "password": 'error',
+       "role": None
+    },
+    {
+       "user": 'admin2',
+       "password": 'admin2',
+       "role": 'admin'
     }
 ]
 
@@ -63,10 +94,32 @@ mesas = [
     },
 ]
 
-appState = 'ejecutando'
+appState = 'login'
+
+loggedUser = ''
+loggedPassword = ''
+loggedUserType = ''
+loggedUserPermissions = ''
 
 while(appState != possibleStatesTupla[-1]):
     # Inicializacion 
+
+    if (loggedUserType == '' and appState == 'login'):
+        tipoIngresado = input('Ingrese cliente o admin:')
+        
+        while verificarTipo(tipoIngresado) == False:
+            print('El tipo de usuario ingresado no es valido. Ingrese uno de los siguientes posibles')
+            for type in userTypes:
+                print(type['userType'])
+            tipoIngresado = input('Ingrese cliente o admin:')
+        
+        loggedUserType = tipoIngresado
+        loggedUserPermissions = getPermisos(loggedUserType)
+
+    if loggedUserPermissions != None:
+        print(loggedUserPermissions)
+    else:
+        print('El tipo de usuario no existe')
 
     appState = input('Ingrese el proximo state: ')
     
@@ -79,6 +132,8 @@ while(appState != possibleStatesTupla[-1]):
     
     # Manejo de funcionalidades en base al state
     
+    printDivider()
+
     # ---Funcionalidad verPerfiles
     # ------- Pendiente validacion de input
     if appState == 'verPerfiles':
