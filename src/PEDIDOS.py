@@ -76,29 +76,6 @@ menu = [
     ["Ensalada Mixta", 7500, "ensalada", 18],
     ["Ensalada Caprese", 8000, "ensalada", 15]
 ]
-recetas = [
-    {
-        "nombre": "Bife de Chorizo",
-        "ingredientes": [
-            {"Bife de Chorizo": 1},
-            {"Sal":"al gusto"},
-            {"Pimienta" : "al gusto"}
-        ],
-        "tiempo_preparacion": "30 minutos",
-        "instrucciones": "Sazonar el bife y asar a la parrilla."
-    },
-    {
-        "nombre": "Ensalada Caesar",
-        "ingredientes": [
-            {"nombre": "Lechuga", "cantidad": "1 cabeza"},
-            {"nombre": "Pollo", "cantidad": "200 g"},
-            {"nombre": "Aderezo Caesar", "cantidad": "al gusto"},
-            {"nombre": "Crutones", "cantidad": "al gusto"}
-        ],
-        "tiempo_preparacion": "15 minutos",
-        "instrucciones": "Mezclar todos los ingredientes y servir."
-    }
-]
 """inventario para almacenar ingredientes y sus cantidades"""
 inventario = {
     "Bife de Chorizo": 10,  # Cantidad en unidades
