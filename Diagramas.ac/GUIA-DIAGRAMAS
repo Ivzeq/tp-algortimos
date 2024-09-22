@@ -1,0 +1,8 @@
+
+1.Recepcion #diagrama de actividades---> //empleado.recepcionista//
+2.Pedidos #diagrama de actividades---> //empleado.cocinero//
+3.Salon #diagrama de actividades---> //empleado.mesero//
+4.Inventario #diagrama de actividades---> //empleado.administrador.inventario//
+5.configuraciones #diagrama de actividades---> //empleado.administrador.configuraciones//
+
+FLUJO DE CLIENTE----> //diagrama.cliente//
