@@ -34,6 +34,13 @@ def getPermisos (type):
     else:
         return None
 
+def verificarPermisos (state, permisos):
+    stateValido = False
+    for permiso in permisos:
+        if permiso == state:
+            stateValido = True
+    return stateValido
+    
 def printDivider ():
     print('''
             ===============================================================================================
@@ -45,11 +52,11 @@ possibleStatesTupla = ('login', 'verPerfiles', 'verMesas', 'finalizado')
 userTypes = [
     {
        "userType": 'admin',
-       "permisos": ['verPerfiles', 'verMesas']
+       "permisos": ['verPerfiles', 'verMesas', 'finalizado']
     },
     {
        "userType": 'client',
-       "permisos": ['verMesas']
+       "permisos": ['verMesas', 'finalizado']
     }
 ]
 
@@ -99,35 +106,30 @@ appState = 'login'
 loggedUser = ''
 loggedPassword = ''
 loggedUserType = ''
-loggedUserPermissions = ''
+loggedUserPermissions = None
 
 while(appState != possibleStatesTupla[-1]):
     # Inicializacion 
 
     if (loggedUserType == '' and appState == 'login'):
-        tipoIngresado = input('Ingrese cliente o admin:')
+        tipoIngresado = input('Ingrese client o admin:')
         
         while verificarTipo(tipoIngresado) == False:
             print('El tipo de usuario ingresado no es valido. Ingrese uno de los siguientes posibles')
             for type in userTypes:
-                print(type['userType'])
-            tipoIngresado = input('Ingrese cliente o admin:')
+                print('-',type['userType'])
+            tipoIngresado = input('Ingrese un tipo de usuario valido:')
         
         loggedUserType = tipoIngresado
         loggedUserPermissions = getPermisos(loggedUserType)
 
-    if loggedUserPermissions != None:
-        print(loggedUserPermissions)
-    else:
-        print('El tipo de usuario no existe')
-
     appState = input('Ingrese el proximo state: ')
     
     # Verificacion de state
-    while appState not in possibleStatesTupla:
+    while (appState not in possibleStatesTupla) | (verificarPermisos(appState,loggedUserPermissions) == False):
         print('El state ingresado no es valido. Ingrese uno de los siguientes posibles')
-        for state in possibleStatesTupla:
-            print(possibleStatesTupla.index(state), '-', state)
+        for state in loggedUserPermissions:
+            print(loggedUserPermissions.index(state), '-', state)
         appState = input('Ingrese el proximo state: ')
     
     # Manejo de funcionalidades en base al state
