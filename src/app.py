@@ -1,16 +1,18 @@
-"""imporatciones"""
+"""importaciones"""
 """variables"""
 pedidos=[
-    {'nombre': 'Tomas',
+    {'nombre': 'tomas',
      'plato 1': ["bife de chorizo","1","En preparacion"],
      'plato 2': ["asado de tira","1","En preparacion"]},
-    {'nombre': 'Juan',
+    {'nombre': 'juan',
      'plato 1': ["bife de chorizo","1","En preparacion"],
      'plato 2': ["asado de tira","2","En preparacion"]}
         ]
 
 menu = [
-    # Platos de carne"""elultimo es stock
+    #Matriz con columnas: Plato, Precio, Categoría, Stock
+
+    # Platos de carne"
     ["Bife de Chorizo", 15000, "carne", 10],
     ["Asado de Tira", 12800, "carne", 8],
     ["Milanesa de Ternera", 12000, "carne", 15],
@@ -206,7 +208,7 @@ recetas = [
         "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
     }
 ]
-possibleStatesTupla = ('login', 'verPerfiles', 'verMesas', 'Pedir',"pedidos",'finalizado')
+possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','finalizado')
 
 userTypes = [
     {
@@ -215,7 +217,7 @@ userTypes = [
     },
     {
        "userType": 'cliente',
-       "permisos": ['verMesas', 'Pedir', 'finalizado']
+       "permisos": ['operar', 'finalizado']
     }
 ]
 
@@ -232,6 +234,7 @@ users = [
     }
 ]
 mesas = [
+    #Identificador de mesa, estado, nombre de quien reservo, cantidad actual o reservada de personas, cantidad maxima de personas en la mesa
     {
         "idMesa": '1',
         "estado": 'libre',
@@ -377,32 +380,24 @@ def printDivider ():
 
 def verMenu(menu):
     # Imprimo el encabezado de la tabla
-    print(f"{'Plato':<25} {'Precio':<10} {'Categoría':<10}")
-    print("-" * 40)  # Línea divisoria
+    print(f"\n{'Plato':<25} {'Precio':<10} {'Categoría':<10}")
+    print("-" * 45)  # Línea divisoria
 
     for plato in menu:
-        # Creo una lista solo con los 3 primeros elementos
-        detalles = plato[:3]
-
-        # Imprimo los elementos de la lista con formato "tabla"
-        print(f"{detalles[0]:<25} {detalles[1]:<10} {detalles[2]:<10}")
-
-    '''otra opcion: 
-    [print(plato[:3]) for plato in menu]'''
+        print(f"{plato[0]:<25} {plato[1]:<10} {plato[2]:<10}")
     
-    '''Si podemos meter rebanado y comprension de listas en otro lado, esto queda mas lindo:
-    for plato in menu:
-        print(f"{plato[0]:<20} {plato[1]:<10} {plato[2]:<10}")'''
+    input("\nEnter para continuar")
+
     
 
 def hacerPedido(nombre):
-    """se modifico EL CODIGO PARA QUE SEA COMPATIBLE CON LAS DEMAS FUNCIONES."""
-    lista_auxiliar=[]
+    
+    listaAuxiliar=[]
     
     #Inicio el pedido (diccionario) con el nombre para usarlo luego
     pedido = {"nombre":nombre}
     #Asumo que ya vio el menu
-    plato = input("Ingrese nombre de plato (0 para terminar): ")
+    plato = input("\nIngrese nombre de plato (0 para terminar): ")
 
     while plato != "0": #El input me da 0 en formato string
         encontrado = False #Variable para chequear que el plato elegido este en el menu
@@ -412,25 +407,25 @@ def hacerPedido(nombre):
                 cant = int(input(f"Seleccione una cantidad (disponible {item[3]}): "))
                 if cant <= item[3]: #Si hay suficiente stock
                     
-                    lista_auxiliar.clear()
+                    listaAuxiliar.clear()
                     i=len(pedido)-1
                     """es un indice auxiliar para poder agregar platos con id segun los que existan"""
                     if len(pedido)>1:
-                        lista_platos=list(pedido.keys())
+                        listaPlatos=list(pedido.keys())
                         
 
                         
                         for i in range(1,len(pedido)):
-                            print("ingresamos a LA VERIFICACION DE 2UNIDAD")
-                            print(pedido[lista_platos[i]])
-                            if plato==pedido[lista_platos[i]][0]:
-                                pedido[lista_platos[i]][1]+=cant
+                            #Verifico si ya se pidio el mismo plato en este pedido
+                            if plato==pedido[listaPlatos[i]][0]:
+                                pedido[listaPlatos[i]][1]+=cant
                     else:
+                        #Si se agrega un plato nuevo
                         i=i+1
-                        lista_auxiliar.append(plato)
-                        lista_auxiliar.append(cant)
-                        lista_auxiliar.append("En preparacion")
-                        pedido["plato "+str(i)] =lista_auxiliar.copy()
+                        listaAuxiliar.append(plato)
+                        listaAuxiliar.append(cant)
+                        listaAuxiliar.append("En preparacion")
+                        pedido["plato "+str(i)] =listaAuxiliar.copy()
                     item[3] -= cant #Resta la cantidad pedida al stock                   
                     print(f"Has agregado {cant} de {plato} a tu pedido.")
                 else:
@@ -439,12 +434,12 @@ def hacerPedido(nombre):
         if encontrado == False:
             print("Ese plato no se encuentra en el menú.")
 
-        plato = input("Seleccione su plato (0 para terminar): ")
+        plato = input("\nSeleccione su plato (0 para terminar): ")
         
     print("Gracias por su pedido!")
     if len(pedido)>1:
         pedidos.append(pedido)
-    input("enter para continuar")
+    input("\nEnter para continuar")
     
 
 def reservar(nombre):
@@ -453,12 +448,12 @@ def reservar(nombre):
             print(f"Mesa {mesa["idMesa"]}: max {mesa["maxPersonas"]} personas")
     reserva = (input("Que mesa quiere reservar?"))
     comensales = int(input("Para cuantas personas es la reserva?"))
-    mesa_encontrada = False
+    mesaEncontrada = False
     reservado = False
     for mesa in mesas:
         #Verifico que la mesa sea valida y que haya elegido una libre
         if mesa["idMesa"] == reserva and mesa["estado"] == "libre":
-            mesa_encontrada = True
+            mesaEncontrada = True
             if comensales <= mesa["maxPersonas"]:
                 #Si todo es correcto, actualizo la info de la mesa
                 reservado = True
@@ -471,51 +466,53 @@ def reservar(nombre):
                 print(f"La mesa {reserva} tiene capacidad para {mesa['maxPersonas']} personas.")
             break
     
-    if mesa_encontrada == False:
+    if mesaEncontrada == False:
         #Se selecciono una mesa que no existe o que no esta libre
         print("No se encontró la mesa solicitada o no se encuentra disponible.")
     elif reservado == True:
         #Se realizo correctamente la reserva
-        print(f"Gracias por su reserva, {nombre}")
+        print(f"Gracias por su reserva, {nombre.capitalize()}")
     else:
         #Se intento reservar para mas personas que la capacidad de la mesa
         print("Reserva no realizada.")
+    input("\nEnter para continuar")
 
     
 def verPedidos(nombre):
-    pedidos_cliente = [pedido for pedido in pedidos if pedido["nombre"] == nombre]
-    if len(pedidos_cliente) > 0:
-        print(f"Pedidos de {nombre}:")
+    pedidosCliente = [pedido for pedido in pedidos if pedido["nombre"] == nombre]
+    if len(pedidosCliente) > 0:
+        print(f"Pedidos de {nombre.capitalize()}:")
         i = 1
-        for pedido in pedidos_cliente:
+        for pedido in pedidosCliente:
             print(f"Pedido {i}: {pedido}")
             i += 1
         
         opcion = input("¿Desea cancelar algún pedido? (s/n): ").lower()
         if opcion == 's':
-            num_pedido = int(input("Ingrese el número de pedido que desea cancelar: ")) - 1
-            if 0 <= num_pedido < len(pedidos_cliente):
-                pedidos.remove(pedidos_cliente[num_pedido])
+            numPedido = int(input("Ingrese el número de pedido que desea cancelar: ")) - 1
+            if 0 <= numPedido < len(pedidosCliente):
+                pedidos.remove(pedidosCliente[numPedido])
                 print("Pedido cancelado.")
             else:
                 print("Número de pedido inválido.")
     else:
         print("Usted no tiene pedidos activos.")
+    input("\nEnter para continuar")
         
 def verReservas(nombre):
-    reservas_cliente = [mesa for mesa in mesas if mesa["reserva"] == nombre]
-    if len(reservas_cliente) > 0:
-        print(f"Reservas de {nombre}:")
+    reservasCliente = [mesa for mesa in mesas if mesa["reserva"] == nombre]
+    if len(reservasCliente) > 0:
+        print(f"Reservas de {nombre.capitalize()}:")
         i = 1
-        for mesa in reservas_cliente:
+        for mesa in reservasCliente:
             print(f"Reserva {i}: Mesa {mesa['idMesa']} para {mesa['cantPersonas']} personas")
             i += 1
 
         opcion = input("¿Desea cancelar alguna reserva? (s/n): ").lower()
         if opcion == 's':
             num_reserva = int(input("Ingrese el número de la reserva que desea cancelar: ")) - 1
-            if 0 <= num_reserva < len(reservas_cliente):
-                mesa_cancelada = reservas_cliente[num_reserva]
+            if 0 <= num_reserva < len(reservasCliente):
+                mesa_cancelada = reservasCliente[num_reserva]
                 mesa_cancelada["estado"] = "libre"
                 mesa_cancelada["reserva"] = "sin reserva"
                 mesa_cancelada["cantPersonas"] = 0
@@ -524,26 +521,24 @@ def verReservas(nombre):
                 print("Número de reserva inválido.")
     else:
         print("No tiene reservas activas.")
+        
+    input("\nEnter para continuar")
 
 def cliente():
-    pedidos=[]
-    nombre = input("Ingrese su nombre: ")
-    limp()
-    print("Bienvenido, ", nombre)
 
-    opcion = int(input("Seleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
+    nombre = input("Ingrese su nombre: ").lower()
+    limp()
+    print("Bienvenido, ", nombre.capitalize())
+
+    opcion = int(input("\n\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
 
     while opcion <0 or opcion >5:
-        limp()
-        opcion = int(input("Opcion invalida.\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
+        opcion = int(input("\nOpcion invalida.\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
     
-    limp()
     while opcion !=0:    
         if opcion == 1:
             verMenu(menu)
-            input("Enter para continuar")
         elif opcion == 2:
-            limp()
             verMenu(menu)            
             hacerPedido(nombre)
         elif opcion == 3:
@@ -552,11 +547,10 @@ def cliente():
             verPedidos(nombre)
         else:
             verReservas(nombre)
-        limp()
-        opcion = int(input("Seleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
+        opcion = int(input("\n\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
     print("Gracias!")
 
-def menu_admin_pedidos():
+def menuAdminPedidos():
     opcion=int(input("""
 1.Ver pedidos
 2.Administrar pedidos
@@ -577,7 +571,7 @@ Ingrese numero de opcion="""))
 
     return opcion
 
-def menu_administrar_pedidos():
+def menuAdministrarPedidos():
     opcion=int(input("""
 1.Ver pedidos
 2.Administrar pedidos
@@ -598,7 +592,7 @@ Ingrese numero de opcion="""))
 
     return opcion
 
-def menu_opciones_administracion():
+def menuOpcionesAdministracion():
     
     opcion=int(input("""
 1.Sin hacer
@@ -617,7 +611,7 @@ Ingrese numero de opcion="""))
 Ingrese numero de opcion="""))
     return opcion
 
-def impresion_pedidos(pedidos,bool,pos):
+def impresionPedidos(pedidos,bool,pos):
     """recibe como formato el pedidos
     pedidos=[{
                 nombre:xx
@@ -628,16 +622,19 @@ def impresion_pedidos(pedidos,bool,pos):
                 PARA NO REPETIR CLAVES"""
     if bool:
         print(f"\nPEDIDOS")
+        nroPedido = 1
         for elemento in pedidos:
             largo=len(elemento)
             claves=list(elemento.keys())
             """creo un alista con los nombres de las keys del diccionario para usarla como indice"""
-            print(f"Nombre:{elemento["nombre"]}")
+            print(f"\nPedido {nroPedido}:")
+            print(f"Nombre:{elemento["nombre"].capitalize()}")
             for i in range(1,largo):
                 print(f"plato {i}:{elemento[claves[i]]}")
+            nroPedido += 1
             
     else:
-        print(f"\nPedido de {pedidos[pos].get("nombre")}")
+        print(f"\nPedido de {pedidos[pos].get("nombre").capitalize()}")
         largo=len(pedidos[pos])
         claves=list(pedidos[pos].keys())
         """creo un alista con los nombres de las keys del diccionario para usarla como indice"""
@@ -645,12 +642,10 @@ def impresion_pedidos(pedidos,bool,pos):
             print(f"plato {i}:{pedidos[pos][claves[i]]}")
 
     return
-def administrar_pedidos(pedidos):
+def administrarPedidos(pedidos):
     opcion=0
-    impresion_pedidos(pedidos,True,0)
-    nom_pedido=input(f"Ingrese nombre del comensal")
-    nom_pedido=nom_pedido.lower()
-    nom_pedido=nom_pedido.capitalize()
+    impresionPedidos(pedidos,True,0)
+    nom_pedido=input("Ingrese nombre del comensal: ").lower()
     i=0
     limp()
     while i<len(pedidos) and pedidos[i].get("nombre")!=nom_pedido:
@@ -659,9 +654,9 @@ def administrar_pedidos(pedidos):
         print("no encontrado")
         return 
     else:
-        impresion_pedidos(pedidos,False,i)
+        impresionPedidos(pedidos,False,i)
         plato=input("ingrese numero de plato a modificar")
-        opcion=menu_opciones_administracion()
+        opcion=menuOpcionesAdministracion()
         if opcion==1:
             pedidos[i]["plato " + str(plato)][2]="Sin hacer"
             
@@ -679,17 +674,17 @@ def administrar_pedidos(pedidos):
             
         """DEBERIAMOS HACER UN BUCLE PARA QUE MODIFIQUE CADA PLATO"""
         return pedidos
-def impresion_recetas(recetas):
+def impresionRecetas(recetas):
     i=0
-    for elemento in recetas:
+    for elemento in recetas: #Imprime los nombres de las recetas
         print(f"{elemento.get("nombre")}")
-    nombre=input("Ingrese nombre de plato=").capitalize()
+    nombre=input("Ingrese nombre de plato: ").capitalize()
     limp()
     while i<len(recetas) and recetas[i].get("nombre")!=nombre:
         i=i+1
     if i>=len(recetas):
         print("nombre no encontrado")
-    else:
+    else: #Si encuentra el plato
         for clave,valor in recetas[i].items():
             if clave=="ingredientes":
                 largo=len(recetas[i]["ingredientes"])
@@ -698,40 +693,65 @@ def impresion_recetas(recetas):
             else:
                 print(f"{clave} : {valor}")
                 
-def impresion_inventario(inventario):
+def impresionInventario(inventario):
     for clave,valor in inventario.items():
         print(f"{clave}:{valor}")
-def solicitar_ingredientes(inventario):
-    impresion_inventario(inventario)
+
+def solicitarIngredientes(inventario):
+    impresionInventario(inventario)
     nombre=input("ingrese nombre del producto a agregar").capitalize()
     cantidad=int(input("ingrese cantidad a pedir"))
     """modificar ingredientes"""
     return inventario
-def repriorizar_pedidos(pedidos):
-    impresion_pedidos(pedidos,True,0)
-    num_pedido=int(input("Ingrese numero de pedido"))
-    num_pedidob=int(input("ingrese numero de pedido para intercambiar"))
-    aux=pedidos[num_pedido-1]
-    pedidos[num_pedido-1]=pedidos[num_pedidob-1]
-    pedidos[num_pedidob-1]=aux
-    print("intercambio hecho")
-    impresion_pedidos(pedidos,True,0)
+
+def repriorizarPedidos(pedidos):
+    impresionPedidos(pedidos, True, 0)
+
+    # Solicito el numero del pedido que se desea mover y ajusto el indice
+    numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
+
+    # Verifico que el numero de pedido sea valido
+    while numPedido < 0 or numPedido >= len(pedidos):
+        print("Número de pedido inválido.")
+        numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
+
+    # Solicito la nueva posicion a la que se desea mover y ajusto el indice
+    nuevaPos = int(input("Ingrese la nueva posición (1 para la primera): ")) - 1
+
+    pedidoMovido = pedidos[numPedido]
+
+    # Elimino el pedido de su posicion original
+    pedidos = pedidos[:numPedido] + pedidos[numPedido + 1:]
+
+    # Si la nueva posicion excede la longitud de la lista, lo agrego al final
+    if nuevaPos >= len(pedidos):
+        pedidos.append(pedidoMovido)
+    # Si ingresa 0 o negativo, lo pone primero en la lista
+    elif nuevaPos <= 0:
+        pedidos = [pedidoMovido] + pedidos[:]
+    else:
+        # Inserto el pedido en la nueva posicion usando rebanado
+        pedidos = pedidos[:nuevaPos] + [pedidoMovido] + pedidos[nuevaPos:]
+
+    print("Repriorización hecha.")
+    impresionPedidos(pedidos, True, 0)
     return pedidos
 
-def impresion_permisos(lista):
+def impresionPermisos(lista):
     print("Opciones:")
     for elemento  in lista:
         print(f"{elemento}")
-def muestra_mesas_perfiles(dato):
+
+def muestraMesasPerfiles(dato):
     if type(dato)==list:
         for elemento in dato:
             for clave,valor in elemento.items():
-                print(f"\n{clave}:{valor}")
-            input("Enter para continuar")
+                print(f"{clave}:{valor}")
+            print("-" * 20)
     else:
         for clave,valor in dato.items():
             print(f"{clave}:{valor}")
-        input("Enter para continuar")
+    input("\nEnter para continuar")
 
 # Ejecucion
 """PROGRAMA"""
@@ -752,7 +772,7 @@ while(appState != possibleStatesTupla[-1]):
         loggedUserPermissions = getPermisos(loggedUserType)
         
     limp()
-    impresion_permisos(loggedUserPermissions)
+    impresionPermisos(loggedUserPermissions)
     appState = input('Ingrese opcion (cadena de caracteres): ')
 
             
@@ -777,7 +797,7 @@ while(appState != possibleStatesTupla[-1]):
         if perfil == None:
             print('El perfil no existe')
         else:
-            muestra_mesas_perfiles(perfil)
+            muestraMesasPerfiles(perfil)
             
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
@@ -788,35 +808,35 @@ while(appState != possibleStatesTupla[-1]):
         if mesa == None:
             print('La mesa no existe')
         else:
-            muestra_mesas_perfiles(mesa)
+            muestraMesasPerfiles(mesa)
             
-    if appState == 'Pedir':
+    if appState == 'operar':
         cliente()
     if appState=="pedidos":
         condicion_general=1
         while condicion_general==1:
-            opcion=menu_admin_pedidos()
+            opcion=menuAdminPedidos()
             limp()
             if opcion==1:
                 """mostrar lista de diccionarios de pedidos"""
-                impresion_pedidos(pedidos,True,0)
+                impresionPedidos(pedidos,True,0)
                 input("Enter para conitnuar")
                 limp()
             elif opcion==2:
                 while condicion==1:
-                    pedidos=administrar_pedidos(pedidos)
+                    pedidos=administrarPedidos(pedidos)
                     condicion=int(input("Seguir modificando pedidos 1/Si 2/No"))
                     limp()
             elif opcion==3:
-                impresion_recetas(recetas)
+                impresionRecetas(recetas)
                 input("Enter para continuar")
                 limp()
             elif opcion==4:
-                inventario=solicitar_ingredientes(inventario)
+                inventario=solicitarIngredientes(inventario)
                 input("Enter para continuar")
                 limp()
             elif opcion==5:
-                pedidos=repriorizar_pedidos(pedidos)
+                pedidos=repriorizarPedidos(pedidos)
                 input("Enter para continuar")
                 limp()
             elif opcion==6:
