@@ -1,19 +1,12 @@
 """imporatciones"""
 """variables"""
 pedidos=[
-    {'nombre': 'Michael',
-     'plato 1': ["nombre","cantidad","EN PREPARACION"],
-     'plato 2': ["nombre","cantidad","EN PREPARACION"],
-     'plato 3': ["nombre","cantidad","EN PREPARACION"]},
+    {'nombre': 'Tomas',
+     'plato 1': ["bife de chorizo","1","En preparacion"],
+     'plato 2': ["asado de tira","1","En preparacion"]},
     {'nombre': 'Juan',
-     'plato 1': ["nombre","cantidad","EN PREPARACION"],
-     'plato 2': ["nombre","cantidad","EN PREPARACION"],
-     'plato 3': ["nombre","cantidad","EN PREPARACION"]},
-    {'nombre': 'Martin',
-     'plato 1': ["nombre","cantidad","EN PREPARACION"],
-     'plato 2': ["nombre","cantidad","EN PREPARACION"],
-     'plato 3': ["nombre","cantidad","EN PREPARACION"]
-     }
+     'plato 1': ["bife de chorizo","1","En preparacion"],
+     'plato 2': ["asado de tira","2","En preparacion"]}
         ]
 
 mesas = [
@@ -244,15 +237,15 @@ recetas = [
         "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
     }
 ]
-possibleStatesTupla = ('login', 'verPerfiles', 'verMesas', 'Pedir',"recepcion","pedidos",'finalizado')
+possibleStatesTupla = ('login', 'verPerfiles', 'verMesas', 'Pedir',"pedidos",'finalizado')
 
 userTypes = [
     {
        "userType": 'admin',
-       "permisos": ['verPerfiles', 'verMesas',"recepcion","pedidos",'finalizado']
+       "permisos": ['verPerfiles', 'verMesas',"pedidos",'finalizado']
     },
     {
-       "userType": 'client',
+       "userType": 'cliente',
        "permisos": ['verMesas', 'Pedir', 'finalizado']
     }
 ]
@@ -326,7 +319,48 @@ condicion=1
 
 
 """funciones"""
-
+def limp():
+    print("""
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          """)
 def getPerfiles (id):
     if id == 'all':
         return userTypes
@@ -344,8 +378,7 @@ def getMesas (id):
         for mesa in mesas:
             if mesa['idMesa'] == id:
                 return mesa
-            else: 
-                return None
+    return None
 
 def verificarTipo (type):
     tipoValido = False
@@ -400,7 +433,7 @@ def hacerPedido(nombre):
     #Inicio el pedido (diccionario) con el nombre para usarlo luego
     pedido = {"nombre":nombre}
     #Asumo que ya vio el menu
-    plato = input("Seleccione su plato (0 para terminar): ")
+    plato = input("Ingrese nombre de plato (0 para terminar): ")
 
     while plato != "0": #El input me da 0 en formato string
         encontrado = False #Variable para chequear que el plato elegido este en el menu
@@ -526,18 +559,23 @@ def verReservas(nombre):
 def cliente():
     pedidos=[]
     nombre = input("Ingrese su nombre: ")
-
+    limp()
     print("Bienvenido, ", nombre)
 
     opcion = int(input("Seleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
 
     while opcion <0 or opcion >5:
+        limp()
         opcion = int(input("Opcion invalida.\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
-
+    
+    limp()
     while opcion !=0:    
         if opcion == 1:
             verMenu(menu)
+            input("Enter para continuar")
         elif opcion == 2:
+            limp()
+            verMenu(menu)            
             hacerPedido(nombre)
         elif opcion == 3:
             reservar(nombre)
@@ -545,6 +583,7 @@ def cliente():
             verPedidos(nombre)
         else:
             verReservas(nombre)
+        limp()
         opcion = int(input("Seleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
     print("Gracias!")
 
@@ -555,7 +594,8 @@ def menu_admin_pedidos():
 3.Consultar recetas
 4.Solicitar aumento de ingredientes
 5.Repriorizar Pedidos
-6.Salir"""))
+6.Salir
+Ingrese numero de opcion="""))
     while opcion<1 or opcion>6:
         opcion=int(input("""
 1.Ver pedidos
@@ -563,7 +603,8 @@ def menu_admin_pedidos():
 3.Consultar recetas
 4.Solicitar aumento de ingredientes
 5.Repriorizar Pedidos
-6.Salir"""))
+6.Salir
+Ingrese numero de opcion="""))
 
     return opcion
 
@@ -574,7 +615,8 @@ def menu_administrar_pedidos():
 3.Consultar recetas
 4.Solicitar aumento de ingredientes
 5.Repriorizar Pedidos
-6.Salir"""))
+6.Salir
+Ingrese numero de opcion="""))
     while opcion<1 or opcion>6:
         opcion=int(input("""
 1.Ver pedidos
@@ -582,7 +624,8 @@ def menu_administrar_pedidos():
 3.Consultar recetas
 4.Solicitar aumento de ingredientes
 5.Repriorizar Pedidos
-6.Salir"""))
+6.Salir
+Ingrese numero de opcion="""))
 
     return opcion
 
@@ -594,7 +637,7 @@ def menu_opciones_administracion():
 3.listo
 4.Entregado
 5.Rechazado
-"""))
+Ingrese numero de opcion="""))
     while opcion<1 or opcion>6:
         opcion=int(input("""
 1.Sin hacer
@@ -602,7 +645,7 @@ def menu_opciones_administracion():
 3.listo
 4.Entregado
 5.Rechazado
-"""))
+Ingrese numero de opcion="""))
     return opcion
 
 def impresion_pedidos(pedidos,bool,pos):
@@ -640,14 +683,13 @@ def administrar_pedidos(pedidos):
     nom_pedido=nom_pedido.lower()
     nom_pedido=nom_pedido.capitalize()
     i=0
+    limp()
     while i<len(pedidos) and pedidos[i].get("nombre")!=nom_pedido:
         i=i+1
     if i>=len(pedidos):
         print("no encontrado")
         return 
     else:
-        """Si se encontro pedido"""
-        print(f"Pedido encontrado")
         impresion_pedidos(pedidos,False,i)
         plato=input("ingrese numero de plato a modificar")
         opcion=menu_opciones_administracion()
@@ -672,9 +714,8 @@ def impresion_recetas(recetas):
     i=0
     for elemento in recetas:
         print(f"{elemento.get("nombre")}")
-    nombre=input("ingrese nombre de plato").capitalize()
-    print(nombre)
-    
+    nombre=input("Ingrese nombre de plato=").capitalize()
+    limp()
     while i<len(recetas) and recetas[i].get("nombre")!=nombre:
         i=i+1
     if i>=len(recetas):
@@ -682,7 +723,9 @@ def impresion_recetas(recetas):
     else:
         for clave,valor in recetas[i].items():
             if clave=="ingredientes":
-                print("funcion para subimprimir esto")
+                largo=len(recetas[i]["ingredientes"])
+                for j in range(largo):
+                    print(f"Ingrediente \"{j}\"={recetas[i+1]["ingredientes"][j]}")
             else:
                 print(f"{clave} : {valor}")
                 
@@ -706,8 +749,20 @@ def repriorizar_pedidos(pedidos):
     impresion_pedidos(pedidos,True,0)
     return pedidos
 
-
-
+def impresion_permisos(lista):
+    print("Opciones:")
+    for elemento  in lista:
+        print(f"{elemento}")
+def muestra_mesas_perfiles(dato):
+    if type(dato)==list:
+        for elemento in dato:
+            for clave,valor in elemento.items():
+                print(f"\n{clave}:{valor}")
+            input("Enter para continuar")
+    else:
+        for clave,valor in dato.items():
+            print(f"{clave}:{valor}")
+        input("Enter para continuar")
 
 # Ejecucion
 """PROGRAMA"""
@@ -716,7 +771,7 @@ while(appState != possibleStatesTupla[-1]):
     # Inicializacion 
 
     if (loggedUserType == '' and appState == 'login'):
-        tipoIngresado = input('Ingrese client o admin:')
+        tipoIngresado = input('Ingrese "cliente" o "admin":')
         
         while verificarTipo(tipoIngresado) == False:
             print('El tipo de usuario ingresado no es valido. Ingrese uno de los siguientes posibles')
@@ -727,75 +782,74 @@ while(appState != possibleStatesTupla[-1]):
         loggedUserType = tipoIngresado
         loggedUserPermissions = getPermisos(loggedUserType)
         
-        printDivider()
+    limp()
+    impresion_permisos(loggedUserPermissions)
+    appState = input('Ingrese opcion (cadena de caracteres): ')
 
-    appState = input('Ingrese el proximo state: ')
-    
+            
     # Verificacion de state
-    print(appState)
-    print(loggedUserPermissions)
+
     while (appState not in possibleStatesTupla) | (verificarPermisos(appState,loggedUserPermissions) == False):
-        print('El state ingresado no es valido. Ingrese uno de los siguientes posibles')
+        print('La opcion ingresada no es valido. Ingrese uno de los siguientes posibles')
         for state in loggedUserPermissions:
             print(loggedUserPermissions.index(state), '-', state)
-        appState = input('Ingrese el proximo state: ')
+        appState = input('Ingrese opcion (cadena de caracteres): ')
     
     
     
-    
+    limp()
     # Manejo de funcionalidades en base al state
-
     # ---Funcionalidad verPerfiles
-    # ------- Pendiente validacion de input
-    
-    
-    
-    
-    
-    
-    
-    
+    # ------- Pendiente validacion de inpu
     if appState == 'verPerfiles':
         idPerfil = input('Ingrese all para ver todos los perfiles o el nombre exacto del userType: ')
         
         perfil = getPerfiles(idPerfil)
-
         if perfil == None:
             print('El perfil no existe')
         else:
-            print(perfil)
-
+            muestra_mesas_perfiles(perfil)
+            
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
     if appState == 'verMesas':
         idMesa = input('Ingrese all para ver todas las mesas o el id de la mesa: ')
-        
+        limp()
         mesa = getMesas(idMesa)
-
         if mesa == None:
             print('La mesa no existe')
         else:
-            print(mesa)
-
+            muestra_mesas_perfiles(mesa)
+            
     if appState == 'Pedir':
         cliente()
-        
     if appState=="pedidos":
+        condicion_general=1
         while condicion_general==1:
             opcion=menu_admin_pedidos()
+            limp()
             if opcion==1:
                 """mostrar lista de diccionarios de pedidos"""
                 impresion_pedidos(pedidos,True,0)
+                input("Enter para conitnuar")
+                limp()
             elif opcion==2:
                 while condicion==1:
                     pedidos=administrar_pedidos(pedidos)
                     condicion=int(input("Seguir modificando pedidos 1/Si 2/No"))
+                    limp()
             elif opcion==3:
                 impresion_recetas(recetas)
+                input("Enter para continuar")
+                limp()
             elif opcion==4:
                 inventario=solicitar_ingredientes(inventario)
+                input("Enter para continuar")
+                limp()
             elif opcion==5:
                 pedidos=repriorizar_pedidos(pedidos)
+                input("Enter para continuar")
+                limp()
             elif opcion==6:
                 print("FIN ROL EMPLEADO.COCINERO")
                 condicion_general=0
@@ -803,4 +857,3 @@ while(appState != possibleStatesTupla[-1]):
     # Finalizacion
     if(appState == possibleStatesTupla[-1]):
         print('La ejecucion finalizo')
-    printDivider()
