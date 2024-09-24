@@ -9,37 +9,6 @@ pedidos=[
      'plato 2': ["asado de tira","2","En preparacion"]}
         ]
 
-mesas = [
-    {
-        "idMesa": '1',
-        "estado": 'libre',
-        "cantPersonas": 0,
-        "maxPersonas" : 4
-    },
-    {
-        "idMesa": '2',
-        "estado": 'menu',
-        "cantPersonas": 0,
-        "maxPersonas" : 2
-    },
-    {
-        "idMesa": '3',
-        "estado": 'esperando comida',
-        "cantPersonas": 0,
-        "maxPersonas" : 6
-    },
-    {
-        "idMesa": '4',
-        "estado": 'comiendo',
-        "cantPersonas": 0,
-        "maxPersonas" : 4
-    },
-    {
-        "idMesa": '5',
-        "estado": 'abonado',
-        "cantPersonas": 0,
-        "maxPersonas" : 8
-    }]
 menu = [
     # Platos de carne"""elultimo es stock
     ["Bife de Chorizo", 15000, "carne", 10],
