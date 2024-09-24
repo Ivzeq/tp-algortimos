@@ -372,7 +372,24 @@ def verificarPermisos (state, permisos):
         if permiso == state:
             stateValido = True
     return stateValido
-    
+
+
+#Falta incorporarlos en algun menu para admins
+def getClientesReservas():
+    personas = set([mesa["reserva"] for mesa in mesas if mesa["reserva"] != "sin reserva"])
+    print(personas)
+
+def getClientesPedidos():
+    personas = set([pedido["nombre"] for pedido in pedidos])
+    print(personas)
+
+def reservasYPedidos(cliente):
+    intersec = getClientesPedidos & getClientesReservas
+    personas = set([persona for persona in intersec])
+    print(personas)
+
+
+
 def printDivider ():
     print('''
             ===============================================================================================
