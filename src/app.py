@@ -766,7 +766,7 @@ def muestra_mesas_perfiles(dato):
 
 # Ejecucion
 """PROGRAMA"""
-
+limp()
 while(appState != possibleStatesTupla[-1]):
     # Inicializacion 
 
