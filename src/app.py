@@ -390,22 +390,6 @@ def reservasYPedidos(cliente):
 
 
 
-def printDivider ():
-    print('''
-            ===============================================================================================
-          ''')
-
-def verMenu(menu):
-    # Imprimo el encabezado de la tabla
-    print(f"\n{'Plato':<25} {'Precio':<10} {'Categoría':<10}")
-    print("-" * 45)  # Línea divisoria
-
-    for plato in menu:
-        print(f"{plato[0]:<25} {plato[1]:<10} {plato[2]:<10}")
-    
-    input("\nEnter para continuar")
-
-    
 
 def hacerPedido(nombre):
     
@@ -541,30 +525,69 @@ def verReservas(nombre):
         
     input("\nEnter para continuar")
 
+def client_menu():
+    limp()
+    opcion = int(input(f"""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║               Bienvenido               ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Menu                               ║
+║ 2 → Realizar pedido                    ║
+║ 3 → Realizar reserva                   ║
+║ 4 → Ver estado de reserva              ║
+║ 5 → ver estado de pedidos              ║
+║ 6 → Salir                              ║
+╚════════════════════════════════════════╝   
+>>"""))
+    return opcion
+
+def mostrar_menu_platos(menu):
+    limp()
+    print(f"""
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║                     🍽 RESTAURANTE🍽                    ║
+║                      Menu de platos                   ║
+║                                                       ║
+╠═══════════════════════════════════════════════════════╣
+║{'Num':<4}║{'Plato':<28}║{'Precio':<10}║{'Categoría':<10}║
+╠═══════════════════════════════════════════════════════╣""")
+    for plato in menu:
+        print(f"║{(menu.index(plato)+1):<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} {"║":<20}")
+    print("""╚═══════════════════════════════════════════════════════╝""")
+    input("Presione Enter para continuar>>")
+
 def cliente():
 
-    nombre = input("Ingrese su nombre: ").lower()
+    nombre = input("Ingrese su nombre:\n>>").capitalize()
+    opcion = client_menu()
     limp()
-    print("Bienvenido, ", nombre.capitalize())
-
-    opcion = int(input("\n\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
-
-    while opcion <0 or opcion >5:
-        opcion = int(input("\nOpcion invalida.\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
     
-    while opcion !=0:    
+    while opcion <1 or opcion >6:
+        input("Opcion invalida\nENTER para continuar")
+        
+        opcion = client_menu()
+        limp()
+    while opcion !=6:    
         if opcion == 1:
-            verMenu(menu)
+            mostrar_menu_platos(menu)
+            limp()
         elif opcion == 2:
-            verMenu(menu)            
+            mostrar_menu_platos(menu)     
             hacerPedido(nombre)
         elif opcion == 3:
             reservar(nombre)
         elif opcion == 4:
             verPedidos(nombre)
-        else:
+        elif opcion==5:
             verReservas(nombre)
-        opcion = int(input("\n\nSeleccione un numero de opcion:\n1. Ver Menu\n2. Pedidos\n3. Reservas\n4. Ver estado de su pedido\n5. Ver estado de su reserva\n0. Salir\n"))
+        opcion = client_menu()
+    limp()
     print("Gracias!")
 
 def menuAdminPedidos():
@@ -754,10 +777,54 @@ def repriorizarPedidos(pedidos):
     impresionPedidos(pedidos, True, 0)
     return pedidos
 
-def impresionPermisos(lista):
-    print("Opciones:")
-    for elemento  in lista:
-        print(f"{elemento}")
+def impresionPermisos(userType,appState):
+    limp()
+    if userType=="cliente":
+        appState=input("""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║                Cliente                 ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Iniciar                            ║
+║ 2 → Salir                              ║
+║                                        ║
+║                                        ║
+╚════════════════════════════════════════╝
+>>""")
+        if appState=="1":
+            appState="operar"
+        elif appState=="2":
+            appState="finalizado"
+    elif userType=="admin":
+        appState=input("""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║             Administrador              ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Perfiles                           ║
+║ 2 → Mesas                              ║
+║ 3 → Pedidos                            ║
+║ 4 → Salir                              ║
+╚════════════════════════════════════════╝
+>>""")
+        if appState=="1":
+            appState="verPerfiles"
+        elif appState=="2":
+            appState="verMesas"
+        elif appState=="3":
+            appState="pedidos"
+        elif appState=="4":
+            appState="finalizado"        
+    return appState
+        
 
 def muestraMesasPerfiles(dato):
     if type(dato)==list:
@@ -770,6 +837,7 @@ def muestraMesasPerfiles(dato):
             print(f"{clave}:{valor}")
     input("\nEnter para continuar")
 
+
 # Ejecucion
 """PROGRAMA"""
 limp()
@@ -777,29 +845,59 @@ while(appState != possibleStatesTupla[-1]):
     # Inicializacion 
 
     if (loggedUserType == '' and appState == 'login'):
-        tipoIngresado = input('Ingrese "cliente" o "admin":')
-        
+        tipoIngresado =input("""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Cliente                            ║
+║ 2 → Administrador                      ║
+╚════════════════════════════════════════╝          
+>>""")
+        if tipoIngresado=="1":
+            tipoIngresado="cliente"
+        elif tipoIngresado=="2":
+            tipoIngresado="admin"
+        limp()
         while verificarTipo(tipoIngresado) == False:
-            print('El tipo de usuario ingresado no es valido. Ingrese uno de los siguientes posibles')
-            for type in userTypes:
-                print('-',type['userType'])
-            tipoIngresado = input('Ingrese un tipo de usuario valido:')
+            print('>>El tipo de usuario ingresado no es valido.')
+            input(">>Enter para continuar")
+            limp()
+            tipoIngresado =input("""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Cliente                            ║
+║ 2 → Administrador                      ║
+╚════════════════════════════════════════╝          
+>>""")
+            if tipoIngresado=="1":
+                tipoIngresado="cliente"
+            elif tipoIngresado=="2":
+                tipoIngresado="admin"
         
         loggedUserType = tipoIngresado
         loggedUserPermissions = getPermisos(loggedUserType)
         
     limp()
-    impresionPermisos(loggedUserPermissions)
-    appState = input('Ingrese opcion (cadena de caracteres): ')
 
-            
+    
+    
+    appState=impresionPermisos(tipoIngresado,appState)
     # Verificacion de state
-
     while (appState not in possibleStatesTupla) | (verificarPermisos(appState,loggedUserPermissions) == False):
-        print('La opcion ingresada no es valido. Ingrese uno de los siguientes posibles')
-        for state in loggedUserPermissions:
-            print(loggedUserPermissions.index(state), '-', state)
-        appState = input('Ingrese opcion (cadena de caracteres): ')
+        limp()
+        print('>>La opcion ingresada no es valido. Ingrese uno de los siguientes posibles')
+        input(">>Enter para continuar")
+        limp()
+        appState=impresionPermisos(tipoIngresado,appState)
     
     
     
