@@ -1,13 +1,20 @@
 """importaciones"""
+import copy
 """variables"""
-pedidos=[
+"""pedidos=[
     {'nombre': 'tomas',
      'plato 1': ["bife de chorizo","1","En preparacion"],
      'plato 2': ["asado de tira","1","En preparacion"]},
     {'nombre': 'juan',
      'plato 1': ["bife de chorizo","1","En preparacion"],
      'plato 2': ["asado de tira","2","En preparacion"]}
-        ]
+        ]"""
+pedidos=[
+    {"nombre":'tomas',
+     'platos':[["bife de chorizo","1","En preparacion"],
+               ["asado de tira","1","En preparacion"]
+               ]},
+]
 
 menu = [
     #Matriz con columnas: Plato, Precio, Categoría, Stock
@@ -375,6 +382,7 @@ def verificarPermisos (state, permisos):
 
 
 #Falta incorporarlos en algun menu para admins
+#MODIFICARLOS, SE CAMBIO LA ESTRUCTURA DE PEDIDOS
 def getClientesReservas():
     personas = set([mesa["reserva"] for mesa in mesas if mesa["reserva"] != "sin reserva"])
     print(personas)
@@ -397,49 +405,46 @@ def hacerPedido(nombre):
     
     #Inicio el pedido (diccionario) con el nombre para usarlo luego
     pedido = {"nombre":nombre}
-    #Asumo que ya vio el menu
-    plato = input("\nIngrese nombre de plato (0 para terminar): ")
-
-    while plato != "0": #El input me da 0 en formato string
-        encontrado = False #Variable para chequear que el plato elegido este en el menu
-        for item in menu:
-            if item[0].lower() == plato.lower(): #Toma el plato sin importar las mayusculas
-                encontrado = True
-                cant = int(input(f"Seleccione una cantidad (disponible {item[3]}): "))
-                if cant <= item[3]: #Si hay suficiente stock
-                    
-                    listaAuxiliar.clear()
-                    i=len(pedido)-1
-                    """es un indice auxiliar para poder agregar platos con id segun los que existan"""
-                    if len(pedido)>1:
-                        listaPlatos=list(pedido.keys())
-                        
-
-                        
-                        for i in range(1,len(pedido)):
-                            #Verifico si ya se pidio el mismo plato en este pedido
-                            if plato==pedido[listaPlatos[i]][0]:
-                                pedido[listaPlatos[i]][1]+=cant
-                    else:
-                        #Si se agrega un plato nuevo
-                        i=i+1
-                        listaAuxiliar.append(plato)
-                        listaAuxiliar.append(cant)
-                        listaAuxiliar.append("En preparacion")
-                        pedido["plato "+str(i)] =listaAuxiliar.copy()
-                    item[3] -= cant #Resta la cantidad pedida al stock                   
-                    print(f"Has agregado {cant} de {plato} a tu pedido.")
-                else:
-                    print("No hay suficiente stock para esa cantidad.")
-                break
-        if encontrado == False:
-            print("Ese plato no se encuentra en el menú.")
-
-        plato = input("\nSeleccione su plato (0 para terminar): ")
+    pedido["platos"]=[]
+    plato = int(input("\nIngrese numero de plato (0 para terminar): "))
+    
+    while plato<0 or plato>12:
+        plato = int(input("\nIngrese numero de plato (0 para terminar): "))    
+    
+    while plato != 0:
+        nombrePlato=menu[plato-1][0]
+        cant = int(input(f"Seleccione una cantidad (disponible {menu[plato-1][3]}): "))
+        if cant <= menu[plato-1][3]: #Si hay suficiente stock
+            listaAuxiliar.clear()
+            if len(pedido["platos"])>0:
+                flag=True
+                for elemento in pedido["platos"]:
+                    if elemento[0]==nombrePlato:
+                        flag=False
+                        elemento[1]+=cant
+                if flag:
+                    listaAuxiliar.append(nombrePlato)
+                    listaAuxiliar.append(cant)
+                    listaAuxiliar.append("En preparacion")
+                    pedido["platos"].append(listaAuxiliar.copy()) 
+            else:
+                listaAuxiliar.append(nombrePlato)
+                listaAuxiliar.append(cant)
+                listaAuxiliar.append("En preparacion")
+                pedido["platos"].append(listaAuxiliar.copy())
         
+            menu[plato-1][3] -= cant #Resta la cantidad pedida al stock                   
+            print(f"Has agregado {cant} de {nombrePlato} a tu pedido.")
+        else:
+            print("No hay suficiente stock para esa cantidad.")
+        plato = int(input("\nSeleccione su plato (0 para terminar): "))
     print("Gracias por su pedido!")
+    
+    ###verificacio de datos salientes
+    print("ESTE ES SU PEDIDO ACTUAL")
+    print(pedido)
     if len(pedido)>1:
-        pedidos.append(pedido)
+        pedidos.append(copy.deepcopy(pedido))#DEEPCOPY PARA EVITAR ERROR DE MUTABILIDAD EN ESTRUCTURAS ANIDADAS
     input("\nEnter para continuar")
     
 
