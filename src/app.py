@@ -399,13 +399,9 @@ def reservasYPedidos(cliente):
 
 
 
-def hacerPedido(nombre):
+def hacerPedido(nombre,pedido):
     
     listaAuxiliar=[]
-    
-    #Inicio el pedido (diccionario) con el nombre para usarlo luego
-    pedido = {"nombre":nombre}
-    pedido["platos"]=[]
     plato = int(input("\nIngrese numero de plato (0 para terminar): "))
     
     while plato<0 or plato>12:
@@ -426,7 +422,7 @@ def hacerPedido(nombre):
                     listaAuxiliar.append(nombrePlato)
                     listaAuxiliar.append(cant)
                     listaAuxiliar.append("En preparacion")
-                    pedido["platos"].append(listaAuxiliar.copy()) 
+                    pedido["platos"].append(listaAuxiliar.copy())
             else:
                 listaAuxiliar.append(nombrePlato)
                 listaAuxiliar.append(cant)
@@ -482,25 +478,44 @@ def reservar(nombre):
         #Se intento reservar para mas personas que la capacidad de la mesa
         print("Reserva no realizada.")
     input("\nEnter para continuar")
+def impresionPedidosIndividuales(diccionario):
+
+    print(f"""
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║                     🍽 RESTAURANTE🍽                    ║
+{"║":<20}Pedidos de → {diccionario["nombre"].capitalize():<23}║                    
+║                                                       ║
+║                                                       ║
+╠═══════════════════════════════════════════════════════╣
+║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
+╠═══════════════════════════════════════════════════════╣""")
+    for plato in diccionario["platos"]:
+        print(f"║{(diccionario["platos"].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
+    print("""╚═══════════════════════════════════════════════════════╝""")
+    input("Presione Enter para continuar>>")
+          
+    
+
 
     
 def verPedidos(nombre):
-    pedidosCliente = [pedido for pedido in pedidos if pedido["nombre"] == nombre]
+
+    for pedido in pedidos:
+        if pedido["nombre"]==nombre:
+            pedidos.index(pedido)
+            pedidosCliente=pedido#este debe estar enlazado al diccionario original para aplicar cambios
+            
     if len(pedidosCliente) > 0:
-        print(f"Pedidos de {nombre.capitalize()}:")
-        i = 1
-        for pedido in pedidosCliente:
-            print(f"Pedido {i}: {pedido}")
-            i += 1
-        
+        impresionPedidosIndividuales(pedidosCliente)
+        #ESTO DEBERIA SER OTRA FUNCION
         opcion = input("¿Desea cancelar algún pedido? (s/n): ").lower()
         if opcion == 's':
-            numPedido = int(input("Ingrese el número de pedido que desea cancelar: ")) - 1
-            if 0 <= numPedido < len(pedidosCliente):
-                pedidos.remove(pedidosCliente[numPedido])
-                print("Pedido cancelado.")
-            else:
-                print("Número de pedido inválido.")
+            numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
+            while numPedido<0 or numPedido>len(pedidosCliente):
+                numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
+            del pedidosCliente["platos"][numPedido]
+            print("Pedido cancelado.")
     else:
         print("Usted no tiene pedidos activos.")
     input("\nEnter para continuar")
@@ -544,8 +559,8 @@ def client_menu():
 ║ 1 → Menu                               ║
 ║ 2 → Realizar pedido                    ║
 ║ 3 → Realizar reserva                   ║
-║ 4 → Ver estado de reserva              ║
-║ 5 → ver estado de pedidos              ║
+║ 4 → Ver estado de pedidos              ║
+║ 5 → ver estado de reserva              ║
 ║ 6 → Salir                              ║
 ╚════════════════════════════════════════╝   
 >>"""))
@@ -570,6 +585,11 @@ def mostrar_menu_platos(menu):
 def cliente():
 
     nombre = input("Ingrese su nombre:\n>>").capitalize()
+    
+    
+    pedido={"nombre":nombre,
+            "platos":[]}
+    
     opcion = client_menu()
     limp()
     
@@ -584,12 +604,14 @@ def cliente():
             limp()
         elif opcion == 2:
             mostrar_menu_platos(menu)     
-            hacerPedido(nombre)
+            hacerPedido(nombre,pedido)
+            
         elif opcion == 3:
             reservar(nombre)
         elif opcion == 4:
             verPedidos(nombre)
         elif opcion==5:
+            print(pedidos)
             verReservas(nombre)
         opcion = client_menu()
     limp()
