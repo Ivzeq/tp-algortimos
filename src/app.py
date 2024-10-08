@@ -251,14 +251,14 @@ mesas = [
     },
     {
         "idMesa": '2',
-        "estado": 'menu',
+        "estado": 'libre',
         "reserva": 'sin reserva',
         "cantPersonas": 0,
         "maxPersonas" : 2
     },
     {
         "idMesa": '3',
-        "estado": 'esperando comida',
+        "estado": 'libre',
         "reserva": 'sin reserva',
         "cantPersonas": 0,
         "maxPersonas" : 6
@@ -276,6 +276,13 @@ mesas = [
         "reserva": 'sin reserva',
         "cantPersonas": 0,
         "maxPersonas" : 8
+    },
+    {
+        "idMesa": '6',
+        "estado": 'abonado',
+        "reserva": 'sin reserva',
+        "cantPersonas": 0,
+        "maxPersonas" : 16
     }
 ]
 
@@ -298,6 +305,48 @@ condicion=1
 
 
 """funciones"""
+def impresionMesas(mesas):
+    """
+    Esta funcion recibe la estructutura de datos mesa y realiza una impresion
+    la estructura debe contener una cantidad de mesas de numero PAR
+    """
+    if len(mesas)%2==0:
+        print(f"""
+╔═════════════════════════════════════════════╗
+║                                             ║
+║            🍽 RESTAURANTE🍽                   ║
+║                   Mesas                     ║
+║                                             ║""")
+        for i in range(0,len(mesas),2):
+            print(f"""╠═════════════════════════════════════════════╣
+{"║":<2}{"Mesa →":<17}{(mesas[i]["idMesa"]):<4}{"║":<2}{"Mesa →":<17}{(mesas[i+1]["idMesa"]):<4}║
+╠═════════════════════════════════════════════╣
+{"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}{"Estado →":<9}{(mesas[i+1]["estado"][0:12].capitalize()):>12}║
+{"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}{"Reserva →":<9}{(mesas[i+1]["reserva"][0:12].capitalize()):>12}║
+{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):<4}{"║":<2}{"Personas →":<17}{(mesas[i+1]["cantPersonas"]):<4}║
+{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):<4}{"║":<2}{"Limite →":<17}{(mesas[i+1]["maxPersonas"]):<4}║""")       
+        input(f"╚═════════════════════════════════════════════╝\n>>Enter para continuar")      
+    else:
+        print(f"""
+╔══════════════════════╗
+║                      ║
+║   🍽 RESTAURANTE🍽     ║
+║     Mesas            ║
+║                      ║""")
+        for i in range(0,len(mesas)):
+            print(f"""╠══════════════════════╣
+{"║":<2}{"Mesa → ".center(12)}{mesas[i]["idMesa"]:<9}║
+╠══════════════════════╣
+{"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}
+{"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}
+{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):<4}{"║":<2}
+{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):<4}{"║":<2}""")
+       
+        input(f"╚══════════════════════╝\n>>Enter para continuar")  
+    
+    
+    
+    
 def limp():
     print("""
           
@@ -444,12 +493,15 @@ def hacerPedido(nombre,pedido):
     input("\nEnter para continuar")
     
 
+
+
+
 def reservar(nombre):
-    for mesa in mesas: #Muestro las mesas que estan libres
-        if mesa["estado"] == "libre":
-            print(f"Mesa {mesa["idMesa"]}: max {mesa["maxPersonas"]} personas")
-    reserva = (input("Que mesa quiere reservar?"))
-    comensales = int(input("Para cuantas personas es la reserva?"))
+    
+    impresionMesas(mesas)#solo modificamos la impresion de las mesas
+    
+    reserva = (input(f">>Que mesa quiere reservar?\n>>"))
+    comensales = int(input(f">>Para cuantas personas es la reserva?\n>>"))
     mesaEncontrada = False
     reservado = False
     for mesa in mesas:
@@ -465,12 +517,12 @@ def reservar(nombre):
                 print(f"Mesa {reserva} reservada para {comensales} personas.")
             else:
                 #Si quiere reservar para mas personas que la capacidad de la mesa
-                print(f"La mesa {reserva} tiene capacidad para {mesa['maxPersonas']} personas.")
+                print(f">>La mesa {reserva} tiene capacidad para {mesa['maxPersonas']} personas.")
             break
     
     if mesaEncontrada == False:
         #Se selecciono una mesa que no existe o que no esta libre
-        print("No se encontró la mesa solicitada o no se encuentra disponible.")
+        print(">>La mesa solicitada no se encuentra disponible.")
     elif reservado == True:
         #Se realizo correctamente la reserva
         print(f"Gracias por su reserva, {nombre.capitalize()}")
@@ -502,12 +554,12 @@ def impresionPedidosIndividuales(diccionario):
 def verPedidos(nombre):
 
     for pedido in pedidos:
-        if pedido["nombre"]==nombre:
+        if pedido["nombre"]==nombre:#buscamos el diccionacario de pedido de nuestro cliente\nombre
             pedidos.index(pedido)
             pedidosCliente=pedido#este debe estar enlazado al diccionario original para aplicar cambios
             
-    if len(pedidosCliente) > 0:
-        impresionPedidosIndividuales(pedidosCliente)
+    if len(pedidosCliente) > 0:#verifica que el el pedido exista
+        impresionPedidosIndividuales(pedidosCliente)#llamada a funcion para imprimir diccionarios
         #ESTO DEBERIA SER OTRA FUNCION
         opcion = input("¿Desea cancelar algún pedido? (s/n): ").lower()
         if opcion == 's':
@@ -520,15 +572,15 @@ def verPedidos(nombre):
         print("Usted no tiene pedidos activos.")
     input("\nEnter para continuar")
         
-def verReservas(nombre):
-    reservasCliente = [mesa for mesa in mesas if mesa["reserva"] == nombre]
-    if len(reservasCliente) > 0:
-        print(f"Reservas de {nombre.capitalize()}:")
-        i = 1
-        for mesa in reservasCliente:
-            print(f"Reserva {i}: Mesa {mesa['idMesa']} para {mesa['cantPersonas']} personas")
-            i += 1
 
+
+
+def verReservas(nombre):
+    
+    reservasCliente = [mesa for mesa in mesas if mesa["reserva"] == nombre]#enlazamos si es que nuestro cliente tiene nombre, obtenemos una lista de diccionarios
+    if len(reservasCliente) > 0:# si existe el diccionario que coincida con el nombre avanzamos
+        print(f"Reservas de {nombre.capitalize()}:")
+        impresionMesas(reservasCliente)
         opcion = input("¿Desea cancelar alguna reserva? (s/n): ").lower()
         if opcion == 's':
             num_reserva = int(input("Ingrese el número de la reserva que desea cancelar: ")) - 1
@@ -611,7 +663,6 @@ def cliente():
         elif opcion == 4:
             verPedidos(nombre)
         elif opcion==5:
-            print(pedidos)
             verReservas(nombre)
         opcion = client_menu()
     limp()
