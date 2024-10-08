@@ -305,6 +305,18 @@ condicion=1
 
 
 """funciones"""
+def mostrarUserTypes(userTypes):
+    #debe recibir una lista de dicts
+    print(f"""
+╔══════════════════════════════════════════════════════════════╗
+║ {'Usuarios':<15}║{'Permisos':<45}║
+╠══════════════════════════════════════════════════════════════╣""")
+    for userType in userTypes:#va a recorrer la lista de dicts
+        permisos = ', '.join(userType['permisos']).lower()#unifica los elementos de la clave "permisos"
+        print(f"║ {userType['userType'].capitalize():<15}║{permisos:<45}║")
+    print("╚══════════════════════════════════════════════════════════════╝")
+    input(">>Enter para continuar\n")
+
 def impresionMesas(mesas):
     """
     Esta funcion recibe la estructutura de datos mesa y realiza una impresion
@@ -319,28 +331,28 @@ def impresionMesas(mesas):
 ║                                             ║""")
         for i in range(0,len(mesas),2):
             print(f"""╠═════════════════════════════════════════════╣
-{"║":<2}{"Mesa →":<17}{(mesas[i]["idMesa"]):<4}{"║":<2}{"Mesa →":<17}{(mesas[i+1]["idMesa"]):<4}║
+{"║":<2}{"Mesa →":<17}{(mesas[i]["idMesa"]):>4}{"║":<2}{"Mesa →":<17}{(mesas[i+1]["idMesa"]):>4}║
 ╠═════════════════════════════════════════════╣
 {"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}{"Estado →":<9}{(mesas[i+1]["estado"][0:12].capitalize()):>12}║
 {"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}{"Reserva →":<9}{(mesas[i+1]["reserva"][0:12].capitalize()):>12}║
-{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):<4}{"║":<2}{"Personas →":<17}{(mesas[i+1]["cantPersonas"]):<4}║
-{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):<4}{"║":<2}{"Limite →":<17}{(mesas[i+1]["maxPersonas"]):<4}║""")       
+{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}{"Personas →":<17}{(mesas[i+1]["cantPersonas"]):>4}║
+{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}{"Limite →":<17}{(mesas[i+1]["maxPersonas"]):>4}║""")       
         input(f"╚═════════════════════════════════════════════╝\n>>Enter para continuar")      
     else:
         print(f"""
 ╔══════════════════════╗
 ║                      ║
 ║   🍽 RESTAURANTE🍽     ║
-║     Mesas            ║
+║         Mesas        ║
 ║                      ║""")
         for i in range(0,len(mesas)):
             print(f"""╠══════════════════════╣
-{"║":<2}{"Mesa → ".center(12)}{mesas[i]["idMesa"]:<9}║
+{"║":<5}{"Mesa → ".center(12)}{mesas[i]["idMesa"]:<6}║
 ╠══════════════════════╣
 {"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}
 {"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}
-{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):<4}{"║":<2}
-{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):<4}{"║":<2}""")
+{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}
+{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}""")
        
         input(f"╚══════════════════════╝\n>>Enter para continuar")  
     
@@ -393,19 +405,23 @@ def getPerfiles (id):
     if id == 'all':
         return userTypes
     else:
+        contenedorPerfil=[]
         for userType in userTypes:
             if userType['userType'] == id:
-                return userType
-            else: 
-                return None
+                contenedorPerfil.append(userType)#verificar por que es que no devuelve ciente
+                #pero si devuelve admin
+                return contenedorPerfil
+    return None
 
 def getMesas (id):
     if id == 'all':
         return mesas
     else:
+        contenedorMesa=[]#para almacenar el diccionario mesa
         for mesa in mesas:
             if mesa['idMesa'] == id:
-                return mesa
+                contenedorMesa.append(mesa)#Agregamos el diccioanrio a una lista porque la funcion impresionMesas espera una lista de mesas que puede tener todas o tmb solo 1 mesa
+                return contenedorMesa
     return None
 
 def verificarTipo (type):
@@ -902,20 +918,6 @@ def impresionPermisos(userType,appState):
         elif appState=="4":
             appState="finalizado"        
     return appState
-        
-
-def muestraMesasPerfiles(dato):
-    if type(dato)==list:
-        for elemento in dato:
-            for clave,valor in elemento.items():
-                print(f"{clave}:{valor}")
-            print("-" * 20)
-    else:
-        for clave,valor in dato.items():
-            print(f"{clave}:{valor}")
-    input("\nEnter para continuar")
-
-
 # Ejecucion
 """PROGRAMA"""
 limp()
@@ -985,23 +987,22 @@ while(appState != possibleStatesTupla[-1]):
     # ------- Pendiente validacion de inpu
     if appState == 'verPerfiles':
         idPerfil = input('Ingrese all para ver todos los perfiles o el nombre exacto del userType: ')
-        
         perfil = getPerfiles(idPerfil)
         if perfil == None:
             print('El perfil no existe')
         else:
-            muestraMesasPerfiles(perfil)
+            mostrarUserTypes(perfil)
             
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
     if appState == 'verMesas':
-        idMesa = input('Ingrese all para ver todas las mesas o el id de la mesa: ')
+        idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ')
         limp()
         mesa = getMesas(idMesa)
         if mesa == None:
             print('La mesa no existe')
         else:
-            muestraMesasPerfiles(mesa)
+            impresionMesas(mesa)
             
     if appState == 'operar':
         cliente()
