@@ -11,8 +11,16 @@ import copy
         ]"""
 pedidos=[
     {"nombre":'tomas',
+     'platos':[["suprema","1","En preparacion"],
+               ["milanesa de ternera","1","En preparacion"]
+               ]},
+    {"nombre":'juan',
      'platos':[["bife de chorizo","1","En preparacion"],
                ["asado de tira","1","En preparacion"]
+               ]},
+    {"nombre":'sofia',
+     'platos':[["ensalada","1","En preparacion"],
+               ["milanesa de ternera","1","En preparacion"]
                ]},
 ]
 
@@ -548,12 +556,10 @@ def reservar(nombre):
     input("\nEnter para continuar")
 def impresionPedidosIndividuales(diccionario):
 
-    print(f"""
-╔═══════════════════════════════════════════════════════╗
+    print(f"""╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
 {"║":<20}Pedidos de → {diccionario["nombre"].capitalize():<23}║                    
-║                                                       ║
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
@@ -567,7 +573,7 @@ def impresionPedidosIndividuales(diccionario):
 
 
     
-def verPedidos(nombre):
+def verPedidos(nombre):#esta funcion solo debe recibir el nombre duelo del pedido
 
     for pedido in pedidos:
         if pedido["nombre"]==nombre:#buscamos el diccionacario de pedido de nuestro cliente\nombre
@@ -685,129 +691,109 @@ def cliente():
     print("Gracias!")
 
 def menuAdminPedidos():
-    opcion=int(input("""
-1.Ver pedidos
-2.Administrar pedidos
-3.Consultar recetas
-4.Solicitar aumento de ingredientes
-5.Repriorizar Pedidos
-6.Salir
-Ingrese numero de opcion="""))
+    opcion = int(input(f"""
+
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║               Bienvenido               ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Ver pedidos                        ║
+║ 2 → Administrar pedidos                ║
+║ 3 → Consultar recetas                  ║
+║ 4 → Solicitar aumento de ingredientes  ║
+║ 5 → Repriorizar Pedidos                ║
+║ 6 → Salir                              ║
+╚════════════════════════════════════════╝   
+>>Ingrese numero de opcion\n
+>>"""))
     while opcion<1 or opcion>6:
-        opcion=int(input("""
-1.Ver pedidos
-2.Administrar pedidos
-3.Consultar recetas
-4.Solicitar aumento de ingredientes
-5.Repriorizar Pedidos
-6.Salir
-Ingrese numero de opcion="""))
-
-    return opcion
-
-def menuAdministrarPedidos():
-    opcion=int(input("""
-1.Ver pedidos
-2.Administrar pedidos
-3.Consultar recetas
-4.Solicitar aumento de ingredientes
-5.Repriorizar Pedidos
-6.Salir
-Ingrese numero de opcion="""))
-    while opcion<1 or opcion>6:
-        opcion=int(input("""
-1.Ver pedidos
-2.Administrar pedidos
-3.Consultar recetas
-4.Solicitar aumento de ingredientes
-5.Repriorizar Pedidos
-6.Salir
-Ingrese numero de opcion="""))
-
+        opcion = int(input(f"""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║               Bienvenido               ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Ver pedidos                        ║
+║ 2 → Administrar pedidos                ║
+║ 3 → Consultar recetas                  ║
+║ 4 → Solicitar aumento de ingredientes  ║
+║ 5 → Repriorizar Pedidos                ║
+║ 6 → Salir                              ║
+╚════════════════════════════════════════╝   
+>>Ingrese numero de opcion\n
+>>"""))
     return opcion
 
 def menuOpcionesAdministracion():
     
-    opcion=int(input("""
-1.Sin hacer
-2.En preparacion
-3.listo
-4.Entregado
-5.Rechazado
-Ingrese numero de opcion="""))
+    opcion = int(input(f"""
+╔═══════════════════════════════════════╗
+║                                       ║
+║           🍽 RESTAURANTE🍽              ║
+║        Opciones de Administración     ║
+║                                       ║
+╠═══════════════════════════════════════╣
+║ Seleccione el estado del pedido:      ║
+╠═══════════════════════════════════════╣
+║ [1] Sin hacer                         ║
+║ [2] En preparación                    ║
+║ [3] Listo                             ║
+║ [4] Entregado                         ║
+║ [5] Rechazado                         ║
+╚═══════════════════════════════════════╝
+>>Ingrese número de opción\n>>"""))
     while opcion<1 or opcion>6:
-        opcion=int(input("""
-1.Sin hacer
-2.En preparacion
-3.listo
-4.Entregado
-5.Rechazado
-Ingrese numero de opcion="""))
+        opcion = int(input(f"""
+╔═══════════════════════════════════════╗
+║                                       ║
+║           🍽 RESTAURANTE🍽              ║
+║        Opciones de Administración     ║
+║                                       ║
+╠═══════════════════════════════════════╣
+║ Seleccione el estado del pedido:      ║
+╠═══════════════════════════════════════╣
+║ [1] Sin hacer                         ║
+║ [2] En preparación                    ║
+║ [3] Listo                             ║
+║ [4] Entregado                         ║
+║ [5] Rechazado                         ║
+╚═══════════════════════════════════════╝
+>>Ingrese número de opción\n>>"""))
     return opcion
-
-def impresionPedidos(pedidos,bool,pos):
-    """recibe como formato el pedidos
-    pedidos=[{
-                nombre:xx
-                "plato"+ str([i]):[nombre_plato,cantidad,estado],
-                }
-                ..]
-                FIJARSE QUE EL QUE HACE PEDIDOS AL MOMENTO DE AGREGAR PEDIDOS DEBE AGREGARLOS CON UN INDICE COMO AYUDA
-                PARA NO REPETIR CLAVES"""
-    if bool:
-        print(f"\nPEDIDOS")
-        nroPedido = 1
-        for elemento in pedidos:
-            largo=len(elemento)
-            claves=list(elemento.keys())
-            """creo un alista con los nombres de las keys del diccionario para usarla como indice"""
-            print(f"\nPedido {nroPedido}:")
-            print(f"Nombre:{elemento["nombre"].capitalize()}")
-            for i in range(1,largo):
-                print(f"plato {i}:{elemento[claves[i]]}")
-            nroPedido += 1
-            
-    else:
-        print(f"\nPedido de {pedidos[pos].get("nombre").capitalize()}")
-        largo=len(pedidos[pos])
-        claves=list(pedidos[pos].keys())
-        """creo un alista con los nombres de las keys del diccionario para usarla como indice"""
-        for i in range(1,largo):
-            print(f"plato {i}:{pedidos[pos][claves[i]]}")
-
-    return
-def administrarPedidos(pedidos):
+def administrarPedidos(pedidos):#REVISAR PORQUE NO PUEDO VOLVER A ADMINISTRAR PEDIDOS LUEGO DE MODIFICARLOS 1 VEZ
     opcion=0
-    impresionPedidos(pedidos,True,0)
-    nom_pedido=input("Ingrese nombre del comensal: ").lower()
-    i=0
-    limp()
-    while i<len(pedidos) and pedidos[i].get("nombre")!=nom_pedido:
-        i=i+1
-    if i>=len(pedidos):
-        print("no encontrado")
-        return 
-    else:
-        impresionPedidos(pedidos,False,i)
-        plato=input("ingrese numero de plato a modificar")
-        opcion=menuOpcionesAdministracion()
-        if opcion==1:
-            pedidos[i]["plato " + str(plato)][2]="Sin hacer"
-            
-        elif opcion==2:
-            pedidos[i]["plato " + str(plato)][2]="En preparacion"
-            
-        elif opcion==3:
-            pedidos[i]["plato " + str(plato)][2]="Listo"
-            
-        elif opcion==4:
-            pedidos[i]["plato " + str(plato)][2]="Entregado"
-            
-        elif opcion==5:
-            pedidos[i]["plato " + str(plato)][2]="Rechazado"
-            
-        """DEBERIAMOS HACER UN BUCLE PARA QUE MODIFIQUE CADA PLATO"""
-        return pedidos
+    contador=0
+    for elemento in pedidos:
+        contador+=1
+        print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+        impresionPedidosIndividuales(elemento)
+    numPedido=int(input(">>Ingrese numero de pedido a modificar\n>> "))
+    
+    impresionPedidosIndividuales(pedidos[numPedido-1])
+    plato=int(input("ingrese numero de plato a modificar"))
+    opcion=menuOpcionesAdministracion()
+    if opcion==1:
+        pedidos[numPedido-1]["platos"][plato-1][2]="Sin hacer"
+        
+    elif opcion==2:
+        pedidos[numPedido-1]["platos"][plato-1][2]="En preparacion"
+        
+    elif opcion==3:
+        pedidos[numPedido-1]["platos"][plato-1][2]="Listo"
+        
+    elif opcion==4:
+        pedidos[numPedido-1]["platos"][plato-1][2]="Entregado"
+        
+    elif opcion==5:
+        pedidos[numPedido-1]["platos"][plato-1][2]="Rechazado"
+    return pedidos
 def impresionRecetas(recetas):
     i=0
     for elemento in recetas: #Imprime los nombres de las recetas
@@ -839,8 +825,11 @@ def solicitarIngredientes(inventario):
     return inventario
 
 def repriorizarPedidos(pedidos):
-    impresionPedidos(pedidos, True, 0)
-
+    contador=0
+    for elemento in pedidos:
+        contador+=1
+        print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+        impresionPedidosIndividuales(elemento)
     # Solicito el numero del pedido que se desea mover y ajusto el indice
     numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
 
@@ -851,12 +840,9 @@ def repriorizarPedidos(pedidos):
 
     # Solicito la nueva posicion a la que se desea mover y ajusto el indice
     nuevaPos = int(input("Ingrese la nueva posición (1 para la primera): ")) - 1
-
     pedidoMovido = pedidos[numPedido]
-
     # Elimino el pedido de su posicion original
     pedidos = pedidos[:numPedido] + pedidos[numPedido + 1:]
-
     # Si la nueva posicion excede la longitud de la lista, lo agrego al final
     if nuevaPos >= len(pedidos):
         pedidos.append(pedidoMovido)
@@ -867,8 +853,7 @@ def repriorizarPedidos(pedidos):
         # Inserto el pedido en la nueva posicion usando rebanado
         pedidos = pedidos[:nuevaPos] + [pedidoMovido] + pedidos[nuevaPos:]
 
-    print("Repriorización hecha.")
-    impresionPedidos(pedidos, True, 0)
+    print("Repriorización hecha.")  
     return pedidos
 
 def impresionPermisos(userType,appState):
@@ -1009,12 +994,15 @@ while(appState != possibleStatesTupla[-1]):
     if appState=="pedidos":
         condicion_general=1
         while condicion_general==1:
+            condicion=1
             opcion=menuAdminPedidos()
             limp()
             if opcion==1:
-                """mostrar lista de diccionarios de pedidos"""
-                impresionPedidos(pedidos,True,0)
-                input("Enter para conitnuar")
+                contador=0
+                for elemento in pedidos:
+                    contador+=1
+                    print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+                    impresionPedidosIndividuales(elemento)
                 limp()
             elif opcion==2:
                 while condicion==1:
@@ -1031,7 +1019,11 @@ while(appState != possibleStatesTupla[-1]):
                 limp()
             elif opcion==5:
                 pedidos=repriorizarPedidos(pedidos)
-                input("Enter para continuar")
+                contador=0
+                for elemento in pedidos:
+                    contador+=1
+                    print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+                    impresionPedidosIndividuales(elemento)  
                 limp()
             elif opcion==6:
                 print("FIN ROL EMPLEADO.COCINERO")
