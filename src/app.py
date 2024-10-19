@@ -416,8 +416,7 @@ def getPerfiles (id):
         contenedorPerfil=[]
         for userType in userTypes:
             if userType['userType'] == id:
-                contenedorPerfil.append(userType)#verificar por que es que no devuelve ciente
-                #pero si devuelve admin
+                contenedorPerfil.append(userType)
                 return contenedorPerfil
     return None
 
@@ -666,7 +665,7 @@ def cliente():
     
     opcion = client_menu()
     limp()
-    
+    #EXCEPCION
     while opcion <1 or opcion >6:
         input("Opcion invalida\nENTER para continuar")
         
@@ -710,6 +709,7 @@ def menuAdminPedidos():
 ╚════════════════════════════════════════╝   
 >>Ingrese numero de opcion\n
 >>"""))
+    #EXCEPCION
     while opcion<1 or opcion>6:
         opcion = int(input(f"""
 ╔════════════════════════════════════════╗
@@ -767,19 +767,22 @@ def menuOpcionesAdministracion():
 ╚═══════════════════════════════════════╝
 >>Ingrese número de opción\n>>"""))
     return opcion
-def administrarPedidos(pedidos):#REVISAR PORQUE NO PUEDO VOLVER A ADMINISTRAR PEDIDOS LUEGO DE MODIFICARLOS 1 VEZ
+def administrarPedidos(pedidos):
     opcion=0
     contador=0
     for elemento in pedidos:
         contador+=1
         print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
         impresionPedidosIndividuales(elemento)
+    #EXCEPCION
     numPedido=int(input(">>Ingrese numero de pedido a modificar\n>> "))
-    
+    #EXCEPCION
     impresionPedidosIndividuales(pedidos[numPedido-1])
     plato=int(input("ingrese numero de plato a modificar"))
     opcion=menuOpcionesAdministracion()
+    #EXCEPCION EN CADA ACCESO
     if opcion==1:
+        
         pedidos[numPedido-1]["platos"][plato-1][2]="Sin hacer"
         
     elif opcion==2:
@@ -903,34 +906,18 @@ def impresionPermisos(userType,appState):
         elif appState=="4":
             appState="finalizado"        
     return appState
+
+
+
+
+
 # Ejecucion
 """PROGRAMA"""
 limp()
 while(appState != possibleStatesTupla[-1]):
     # Inicializacion 
-
-    if (loggedUserType == '' and appState == 'login'):
-        tipoIngresado =input("""
-╔════════════════════════════════════════╗
-║                                        ║
-║            🍽 RESTAURANTE🍽              ║
-║                                        ║
-╠════════════════════════════════════════╣
-║ Ingrese opcion:                        ║
-╠════════════════════════════════════════╣
-║ 1 → Cliente                            ║
-║ 2 → Administrador                      ║
-╚════════════════════════════════════════╝          
->>""")
-        if tipoIngresado=="1":
-            tipoIngresado="cliente"
-        elif tipoIngresado=="2":
-            tipoIngresado="admin"
-        limp()
-        while verificarTipo(tipoIngresado) == False:
-            print('>>El tipo de usuario ingresado no es valido.')
-            input(">>Enter para continuar")
-            limp()
+    while True:
+        if (loggedUserType == '' and appState == 'login'):
             tipoIngresado =input("""
 ╔════════════════════════════════════════╗
 ║                                        ║
@@ -943,18 +930,27 @@ while(appState != possibleStatesTupla[-1]):
 ║ 2 → Administrador                      ║
 ╚════════════════════════════════════════╝          
 >>""")
+            #DEBERIAMOS AGREGAR VALIDACION CON E.REGULARES COLO POR SI ESCRIBE CON CARACTERES
+            
             if tipoIngresado=="1":
                 tipoIngresado="cliente"
             elif tipoIngresado=="2":
                 tipoIngresado="admin"
-        
-        loggedUserType = tipoIngresado
-        loggedUserPermissions = getPermisos(loggedUserType)
-        
+            limp()
+        try:
+            if verificarTipo(tipoIngresado)==False:
+                raise ValueError
+        except ValueError as ms:
+            ms=str(ms)
+            print(f'>> El usuario ingresado no existe, ingrese uno valido: {ms}')
+        except Exception as error_mssg:
+            error_mssg=str(error_mssg)
+            print(f'Error : {error_mssg}')
+        else:
+            break
+    loggedUserType = tipoIngresado
+    loggedUserPermissions = getPermisos(loggedUserType)
     limp()
-
-    
-    
     appState=impresionPermisos(tipoIngresado,appState)
     # Verificacion de state
     while (appState not in possibleStatesTupla) | (verificarPermisos(appState,loggedUserPermissions) == False):
@@ -963,26 +959,36 @@ while(appState != possibleStatesTupla[-1]):
         input(">>Enter para continuar")
         limp()
         appState=impresionPermisos(tipoIngresado,appState)
-    
-    
-    
     limp()
     # Manejo de funcionalidades en base al state
     # ---Funcionalidad verPerfiles
     # ------- Pendiente validacion de inpu
     if appState == 'verPerfiles':
-        idPerfil = input('Ingrese all para ver todos los perfiles o el nombre exacto del userType: ')
-        perfil = getPerfiles(idPerfil)
-        if perfil == None:
-            print('El perfil no existe')
-        else:
-            mostrarUserTypes(perfil)
-            
+        
+        while True:
+            limp()
+            idPerfil = input('>> Ingrese all para ver todos los perfiles o el nombre exacto del userType: ')
+            try:
+                perfil = getPerfiles(idPerfil)
+                if perfil == None:
+                    raise ValueError
+            except ValueError as ms:
+                ms=str(ms)
+                print(f'>> El valor ingresado no es correcto, error -> {ms}')
+                input('>>ENTER para continuar')
+            except Exception as error_mssg:
+                error_mssg=str(error_mssg)
+                print(f'>> Ha ocurrido un error: {error_mssg}')
+                input('>>ENTER para continuar')
+            else:
+                break
+        mostrarUserTypes(perfil)
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
     if appState == 'verMesas':
         idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ')
         limp()
+        #EXCEPCION
         mesa = getMesas(idMesa)
         if mesa == None:
             print('La mesa no existe')
@@ -1007,6 +1013,7 @@ while(appState != possibleStatesTupla[-1]):
             elif opcion==2:
                 while condicion==1:
                     pedidos=administrarPedidos(pedidos)
+                    #EXCEPCION
                     condicion=int(input("Seguir modificando pedidos 1/Si 2/No"))
                     limp()
             elif opcion==3:
