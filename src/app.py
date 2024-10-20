@@ -224,7 +224,7 @@ recetas = [
         "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
     }
 ]
-possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','finalizado')
+possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','recepcion','finalizado')
 
 userTypes = [
     {
@@ -582,7 +582,7 @@ def impresionPedidosIndividuales(diccionario):
 
     
 def verPedidos(nombre):#esta funcion solo debe recibir el nombre duelo del pedido
-
+    pedidosCliente={}
     for pedido in pedidos:
         if pedido["nombre"]==nombre:#buscamos el diccionacario de pedido de nuestro cliente\nombre
             pedidos.index(pedido)
@@ -737,6 +737,18 @@ def menuAdminPedidos():
 
             
     return opcion
+
+def verificador_disponibilidad(cantidad_comensales,mesas):
+    """variables"""
+    global id_mesa
+    for elemento in mesas:
+        if elemento["maxPersonas"]>=cantidad_comensales and elemento["estado"]=="libre":
+            #"si hay disponibilidad de mesas"
+            id_mesa= elemento["idMesa"]
+            return True
+            #devuelve true y modifica el id de la mesa
+    return False
+
 
 def menuOpcionesAdministracion():
     
@@ -964,7 +976,7 @@ def impresionPermisos(userType,appState):
         if appState=="1":
             appState="verMesas"
         elif appState=="2":
-            pass
+            appState="recepcion"
         elif appState=="3":
             appState="finalizado" 
     return appState
@@ -1048,6 +1060,31 @@ while(appState != possibleStatesTupla[-1]):
         mostrarUserTypes(perfil)
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
+    if appState=="recepcion":
+        nombre=input(">> ingrese nombre de cliente :")
+        while True:
+            try:
+                cantidad_comensales=int(input("ingrese la cantidad de comensales:"))
+            except KeyboardInterrupt:
+                print(f'>> Interrupcion detectada\n>> Finalizando..')
+            except:
+                print(f'>> Opcion no valida\n>> Ingrese una opcion valida')
+                input('>> ENTER para continuar')
+            else:
+                break
+        
+        if verificador_disponibilidad(cantidad_comensales,mesas):
+            #entramos al if si solo la funcion verificador_disponibilidad devuelve true
+            print(f"hay disponibilidad de mesas, la mesa es {id_mesa}")
+            #modificamos el estado de la mesa buscandola por su id
+            for elemento in mesas:
+                if elemento["idMesa"]==id_mesa:
+                    elemento["reserva"]=nombre
+                    elemento["estado"]="reservado"
+                    elemento["cantPersonas"]=cantidad_comensales
+        else:
+            print(">> No hay disponibilidad de mesas")       
+        input('ENTER para continuar')
     if appState == 'verMesas':
         #EXCEPCION        
         while True:
@@ -1126,7 +1163,12 @@ while(appState != possibleStatesTupla[-1]):
                     appState='login'
                     loggedUserType=''
                     loggedUserPermissions=None
-                
+    if (loggedUserType == 'mesero' and appState == 'finalizado'):#solo para que el mesero pueda salir al menu de perfiles
+        appState='login'
+        loggedUserType=''
+        loggedUserPermissions=None
     # Finalizacion
     if(appState == possibleStatesTupla[-1]):
-        print('La ejecucion finalizo')
+        appState='login'
+        loggedUserType=''
+        loggedUserPermissions=None
