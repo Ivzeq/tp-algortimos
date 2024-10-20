@@ -710,15 +710,18 @@ def menuAdminPedidos():
 ╠════════════════════════════════════════╣
 ║ Ingrese opcion:                        ║
 ╠════════════════════════════════════════╣
-║ 1 → Ver pedidos                        ║
-║ 2 → Administrar pedidos                ║
-║ 3 → Consultar recetas                  ║
-║ 4 → Solicitar aumento de ingredientes  ║
-║ 5 → Repriorizar Pedidos                ║
-║ 6 → Salir                              ║
+║ 1 → Salon                              ║
+║ 2 → Ver pedidos                        ║
+║ 3 → Administrar pedidos                ║
+║ 4 → Consultar recetas                  ║
+║ 5 → Solicitar aumento de ingredientes  ║
+║ 6 → Repriorizar Pedidos                ║
+║ 7 → Salir                              ║
 ╚════════════════════════════════════════╝   
 >>Ingrese numero de opcion
 >>"""))
+            if opcion<1 or opcion>7:
+                raise ValueError
         except ValueError:
             print('>> Opcion ingresada no valida\n>> Ingrese una valida')
             input('>> Enter para continuar')
@@ -1092,27 +1095,44 @@ while(appState != possibleStatesTupla[-1]):
             opcion=menuAdminPedidos()
             limp()
             if opcion==1:
+                while True:
+                    try:
+                        idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ').lower()
+                        mesa= getMesas(idMesa)
+                        if mesa==None:
+                            raise ValueError
+                    except ValueError:
+                        print('>> Valor ingresado incorrecto')
+                        input('>> Enter para continuar')
+                    except Exception as ms:
+                        ms=str(ms)
+                        print('>> Ha ocurrido un error -> {ms}')
+                        input('>> Enter para continuar')
+                    else:
+                        break
+                impresionMesas(mesa)                
+            elif opcion==2:#salon
                 contador=0
                 for elemento in pedidos:
                     contador+=1
                     print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
                     impresionPedidosIndividuales(elemento)
                 limp()
-            elif opcion==2:
+            elif opcion==3:
                 while condicion==1:
                     pedidos=administrarPedidos(pedidos)
                     #EXCEPCION
                     condicion=int(input("Seguir modificando pedidos 1/Si 2/No"))
                     limp()
-            elif opcion==3:
+            elif opcion==4:
                 impresionRecetas(recetas)
                 input("Enter para continuar")
                 limp()
-            elif opcion==4:
+            elif opcion==5:
                 inventario=solicitarIngredientes(inventario)
                 input("Enter para continuar")
                 limp()
-            elif opcion==5:
+            elif opcion==6:
                 pedidos=repriorizarPedidos(pedidos)
                 contador=0
                 for elemento in pedidos:
@@ -1120,7 +1140,7 @@ while(appState != possibleStatesTupla[-1]):
                     print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
                     impresionPedidosIndividuales(elemento)  
                 limp()
-            elif opcion==6:
+            elif opcion==7:
                 condicion_general=0
                 
     # Finalizacion
