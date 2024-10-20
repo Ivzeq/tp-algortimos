@@ -1,5 +1,6 @@
 """importaciones"""
 import copy
+import sys
 """variables"""
 """pedidos=[
     {'nombre': 'tomas',
@@ -427,7 +428,7 @@ def getMesas (id):
         contenedorMesa=[]#para almacenar el diccionario mesa
         for mesa in mesas:
             if mesa['idMesa'] == id:
-                contenedorMesa.append(mesa)#Agregamos el diccioanrio a una lista porque la funcion impresionMesas espera una lista de mesas que puede tener todas o tmb solo 1 mesa
+                contenedorMesa.append(mesa)
                 return contenedorMesa
     return None
 
@@ -690,50 +691,47 @@ def cliente():
     print("Gracias!")
 
 def menuAdminPedidos():
-    opcion = int(input(f"""
+    while True:
+        try:
+            opcion =int(input(f"""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║               Bienvenido               ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Ver pedidos                        ║
+║ 2 → Administrar pedidos                ║
+║ 3 → Consultar recetas                  ║
+║ 4 → Solicitar aumento de ingredientes  ║
+║ 5 → Repriorizar Pedidos                ║
+║ 6 → Salir                              ║
+╚════════════════════════════════════════╝   
+>>Ingrese numero de opcion
+>>"""))
+        except ValueError:
+            print('>> Opcion ingresada no valida\n>> Ingrese una valida')
+            input('>> Enter para continuar')
+        except KeyboardInterrupt:
+            print('\n>> Interrupción detectada..\n>> Terminando tareas..\n>> Finalizando..')
+            sys.exit(0)
+        except Exception as ms:
+            ms=str(ms)
+            print(f'>> Ha ocurrido un error -> {ms}')
+            input('>> Enter para continuar')
+        else:
+            break
 
-╔════════════════════════════════════════╗
-║                                        ║
-║            🍽 RESTAURANTE🍽              ║
-║               Bienvenido               ║
-║                                        ║
-╠════════════════════════════════════════╣
-║ Ingrese opcion:                        ║
-╠════════════════════════════════════════╣
-║ 1 → Ver pedidos                        ║
-║ 2 → Administrar pedidos                ║
-║ 3 → Consultar recetas                  ║
-║ 4 → Solicitar aumento de ingredientes  ║
-║ 5 → Repriorizar Pedidos                ║
-║ 6 → Salir                              ║
-╚════════════════════════════════════════╝   
->>Ingrese numero de opcion\n
->>"""))
-    #EXCEPCION
-    while opcion<1 or opcion>6:
-        opcion = int(input(f"""
-╔════════════════════════════════════════╗
-║                                        ║
-║            🍽 RESTAURANTE🍽              ║
-║               Bienvenido               ║
-║                                        ║
-╠════════════════════════════════════════╣
-║ Ingrese opcion:                        ║
-╠════════════════════════════════════════╣
-║ 1 → Ver pedidos                        ║
-║ 2 → Administrar pedidos                ║
-║ 3 → Consultar recetas                  ║
-║ 4 → Solicitar aumento de ingredientes  ║
-║ 5 → Repriorizar Pedidos                ║
-║ 6 → Salir                              ║
-╚════════════════════════════════════════╝   
->>Ingrese numero de opcion\n
->>"""))
+            
     return opcion
 
 def menuOpcionesAdministracion():
     
-    opcion = int(input(f"""
+    while True:
+        try:
+            opcion = int(input(f"""
 ╔═══════════════════════════════════════╗
 ║                                       ║
 ║           🍽 RESTAURANTE🍽              ║
@@ -749,23 +747,19 @@ def menuOpcionesAdministracion():
 ║ [5] Rechazado                         ║
 ╚═══════════════════════════════════════╝
 >>Ingrese número de opción\n>>"""))
-    while opcion<1 or opcion>6:
-        opcion = int(input(f"""
-╔═══════════════════════════════════════╗
-║                                       ║
-║           🍽 RESTAURANTE🍽              ║
-║        Opciones de Administración     ║
-║                                       ║
-╠═══════════════════════════════════════╣
-║ Seleccione el estado del pedido:      ║
-╠═══════════════════════════════════════╣
-║ [1] Sin hacer                         ║
-║ [2] En preparación                    ║
-║ [3] Listo                             ║
-║ [4] Entregado                         ║
-║ [5] Rechazado                         ║
-╚═══════════════════════════════════════╝
->>Ingrese número de opción\n>>"""))
+            if opcion<1 or opcion>5:
+                raise ValueError
+        except ValueError:
+            print(f'>> Opcion invalida, Ingrese una opcion valida')
+            input('>> ENTER para continuar')
+        except KeyboardInterrupt:
+            print(f'>> Interrupcion detectada!\n>> Finalizando..')
+            sys.exit(0)
+        except Exception as ms:
+            ms=str(ms)
+            print(f'>> Ha ocurrido un error -> {ms}')
+        else:
+            break
     return opcion
 def administrarPedidos(pedidos):
     opcion=0
@@ -775,10 +769,45 @@ def administrarPedidos(pedidos):
         print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
         impresionPedidosIndividuales(elemento)
     #EXCEPCION
-    numPedido=int(input(">>Ingrese numero de pedido a modificar\n>> "))
+    while True:
+        try:
+            numPedido=int(input(">>Ingrese numero de pedido a modificar\n>> "))
+            listaAuxiliarPedidos=list(range(1,len(pedidos)+1))
+            if numPedido not in listaAuxiliarPedidos:
+                raise ValueError    
+            
+        except ValueError:
+            print('>> opcion ingresada no valida\n>> Ingrese una opcion valida')
+        except KeyboardInterrupt:
+            print(f'>> Interrupcion detectada\n>> Terminando tareas..\n>> Finalizando..')
+            sys.exit(0)
+        except Exception as ms:
+            ms=str(ms)
+            print('>> Ha ocurrido un error -> {ms}')
+        else:
+            break
     #EXCEPCION
     impresionPedidosIndividuales(pedidos[numPedido-1])
-    plato=int(input("ingrese numero de plato a modificar"))
+    while True:
+        try:
+            plato=int(input("ingrese numero de plato a modificar"))
+            listaAuxiliar=list(range(1,len(pedidos[numPedido-1]["platos"])+1))
+            if plato not in listaAuxiliar:
+                #el valor ingresado como numero de plato no existe
+                raise ValueError
+        except ValueError:
+            print('>> opcion ingresada no valida\n>> Ingrese numero de plato invalido')
+        except KeyboardInterrupt:
+            print(f'>> Interrupcion detectada\n>> Terminando tareas..\n>> Finalizando..')
+            sys.exit(0)
+        except Exception as ms:
+            ms=str(ms)
+            print('>> Ha ocurrido un error -> {ms}')
+        else:
+            break
+    
+    
+    
     opcion=menuOpcionesAdministracion()
     #EXCEPCION EN CADA ACCESO
     if opcion==1:
@@ -790,10 +819,8 @@ def administrarPedidos(pedidos):
         
     elif opcion==3:
         pedidos[numPedido-1]["platos"][plato-1][2]="Listo"
-        
     elif opcion==4:
         pedidos[numPedido-1]["platos"][plato-1][2]="Entregado"
-        
     elif opcion==5:
         pedidos[numPedido-1]["platos"][plato-1][2]="Rechazado"
     return pedidos
@@ -986,15 +1013,23 @@ while(appState != possibleStatesTupla[-1]):
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
     if appState == 'verMesas':
-        idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ')
-        limp()
-        #EXCEPCION
-        mesa = getMesas(idMesa)
-        if mesa == None:
-            print('La mesa no existe')
-        else:
-            impresionMesas(mesa)
-            
+        #EXCEPCION        
+        while True:
+            try:
+                idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ').lower()
+                mesa= getMesas(idMesa)
+                if mesa==None:
+                    raise ValueError
+            except ValueError:
+                print('>> Valor ingresado incorrecto')
+                input('>> Enter para continuar')
+            except Exception as ms:
+                ms=str(ms)
+                print('>> Ha ocurrido un error -> {ms}')
+                input('>> Enter para continuar')
+            else:
+                break
+        impresionMesas(mesa)
     if appState == 'operar':
         cliente()
     if appState=="pedidos":
