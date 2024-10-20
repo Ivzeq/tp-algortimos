@@ -944,27 +944,7 @@ def impresionPermisos(userType,appState):
         elif appState=="4":
             appState="finalizado"  
     elif userType=='cocinero':
-        appState=input("""
-╔════════════════════════════════════════╗
-║                                        ║
-║            🍽 RESTAURANTE🍽              ║
-║                Cocinero                ║
-║                                        ║
-╠════════════════════════════════════════╣
-║ Ingrese opcion:                        ║
-╠════════════════════════════════════════╣
-║ 1 → Pedidos                            ║
-║ 2 → Mesas                              ║
-║ 3 → Salir                              ║
-║                                        ║
-╚════════════════════════════════════════╝
->>""")
-        if appState=="1":
-            appState="pedidos"
-        elif appState=="2":
-            appState="verMesas"
-        elif appState=="3":
-            appState="finalizado"        
+        appState="pedidos"      
     elif userType=='mesero':
         appState=input("""
 ╔════════════════════════════════════════╗
@@ -1142,6 +1122,10 @@ while(appState != possibleStatesTupla[-1]):
                 limp()
             elif opcion==7:
                 condicion_general=0
+                if (loggedUserType == 'cocinero' and appState == 'pedidos'):#solo para que el cocinero pueda salir al menu de perfiles
+                    appState='login'
+                    loggedUserType=''
+                    loggedUserPermissions=None
                 
     # Finalizacion
     if(appState == possibleStatesTupla[-1]):
