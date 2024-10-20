@@ -234,6 +234,14 @@ userTypes = [
     {
        "userType": 'cliente',
        "permisos": ['operar', 'finalizado']
+    },
+    {
+       "userType": 'cocinero',
+       "permisos": ['pedidos','verMesas', 'finalizado']
+    },
+    {
+       "userType": 'mesero',
+       "permisos": ['verMesas', 'recepcion','finalizado']
     }
 ]
 
@@ -931,13 +939,52 @@ def impresionPermisos(userType,appState):
         elif appState=="3":
             appState="pedidos"
         elif appState=="4":
+            appState="finalizado"  
+    elif userType=='cocinero':
+        appState=input("""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║                Cocinero                ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Pedidos                            ║
+║ 2 → Mesas                              ║
+║ 3 → Salir                              ║
+║                                        ║
+╚════════════════════════════════════════╝
+>>""")
+        if appState=="1":
+            appState="pedidos"
+        elif appState=="2":
+            appState="verMesas"
+        elif appState=="3":
             appState="finalizado"        
+    elif userType=='mesero':
+        appState=input("""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║                Mesero                  ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opcion:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Salon                              ║
+║ 2 → Recepcion                          ║
+║ 3 → Salir                              ║
+║                                        ║
+╚════════════════════════════════════════╝
+>>""")    
+        if appState=="1":
+            appState="verMesas"
+        elif appState=="2":
+            pass
+        elif appState=="3":
+            appState="finalizado" 
     return appState
-
-
-
-
-
 # Ejecucion
 """PROGRAMA"""
 limp()
@@ -955,6 +1002,8 @@ while(appState != possibleStatesTupla[-1]):
 ╠════════════════════════════════════════╣
 ║ 1 → Cliente                            ║
 ║ 2 → Administrador                      ║
+║ 3 → Cocinero                           ║
+║ 4 → Mesero                             ║
 ╚════════════════════════════════════════╝          
 >>""")
             #DEBERIAMOS AGREGAR VALIDACION CON E.REGULARES COLO POR SI ESCRIBE CON CARACTERES
@@ -963,6 +1012,10 @@ while(appState != possibleStatesTupla[-1]):
                 tipoIngresado="cliente"
             elif tipoIngresado=="2":
                 tipoIngresado="admin"
+            elif tipoIngresado=="3":
+                tipoIngresado="cocinero"
+            elif tipoIngresado=="4":
+                tipoIngresado="mesero"                
             limp()
         try:
             if verificarTipo(tipoIngresado)==False:
@@ -1068,7 +1121,6 @@ while(appState != possibleStatesTupla[-1]):
                     impresionPedidosIndividuales(elemento)  
                 limp()
             elif opcion==6:
-                print("FIN ROL EMPLEADO.COCINERO")
                 condicion_general=0
                 
     # Finalizacion
