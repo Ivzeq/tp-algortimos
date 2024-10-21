@@ -227,7 +227,7 @@ recetas = [
         "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
     }
 ]
-possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','recepcion','finalizado')
+possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','reservar','recepcion','finalizado')
 
 userTypes = [
     {
@@ -236,7 +236,7 @@ userTypes = [
     },
     {
        "userType": 'cliente',
-       "permisos": ['operar', 'finalizado']
+       "permisos": ['operar','reservar', 'finalizado']
     },
     {
        "userType": 'cocinero',
@@ -1003,14 +1003,16 @@ def impresionPermisos(userType,appState):
 ║ Ingrese opcion:                        ║
 ╠════════════════════════════════════════╣
 ║ 1 → Iniciar                            ║
-║ 2 → Salir                              ║
-║                                        ║
+║ 2 → Reservas                           ║
+║ 3 → Salir                              ║
 ║                                        ║
 ╚════════════════════════════════════════╝
 >>""")
         if appState=="1":
             appState="operar"
-        elif appState=="2":
+        elif appState=="2":#m
+            appState="reservar"
+        elif appState=="3":
             appState="finalizado"
     elif userType=="admin":
         appState=input("""
@@ -1186,6 +1188,50 @@ while(appState != possibleStatesTupla[-1]):
         impresionMesas(mesa)
     if appState == 'operar':
         cliente()
+    if appState == 'reservar':
+        while True:
+            try:
+                nombre = input("Ingrese su nombre:\n>>").capitalize()
+                if nombre=='' or nombre.isspace():
+                    raise ValueError
+                if not(nombre.isalpha()):
+                    raise ValueError
+            except ValueError:
+                print(f'>> Opcion ingresada no valida\n>> Ingrese una valida')    
+            else:
+                break
+            
+            
+        while True:
+            mensaje="""
+╔════════════════════════════════════════╗
+║                                        ║
+║            🍽 RESTAURANTE🍽              ║
+║               Reservas                 ║
+║                                        ║
+╠════════════════════════════════════════╣
+║ Ingrese opción:                        ║
+╠════════════════════════════════════════╣
+║ 1 → Reservar                           ║
+║ 2 → Ver reservas                       ║
+║ 3 → Salir                              ║
+╚════════════════════════════════════════╝          
+>>"""
+            opcion=excepcionNumeroEnteros(mensaje)
+            while opcion<1 or opcion>3:
+                opcion=excepcionNumeroEnteros(mensaje)
+            if opcion==1:
+                reservar(nombre)
+            elif opcion==2:
+                verReservas(nombre)
+            elif opcion==3:
+                appState='login'
+                break
+                
+
+
+            
+
     if appState=="pedidos":
         condicion_general=1
         while condicion_general==1:
