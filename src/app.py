@@ -648,11 +648,11 @@ def verReservas(nombre):
     if len(reservasCliente) > 0:# si existe el diccionario que coincida con el nombre avanzamos
         print(f"Reservas de {nombre.capitalize()}:")
         impresionMesas(reservasCliente)
-        opcion = input("¿Desea cancelar alguna reserva? (s/n): ").lower()
-        
-        
-        
-        if opcion == 's':
+        opcion=excepcionNumeroEnteros(">> ¿Desea cancelar alguna reserva?\n>> 1 -> Si\n>> 2 -> No ")
+        while (opcion !=1 and opcion!=2):
+            print(">> Opcion invalida")
+            opcion=excepcionNumeroEnteros(">> ¿Desea cancelar alguna reserva?\n>> 1 -> Si\n>> 2 -> No ")
+        if opcion == 1:
             aux=[mesa["idMesa"] for mesa in reservasCliente]
             numMesa=str(excepcionNumeroEnteros(f"Ingrese el número de mesa de la reserva que desea cancelar: ")) 
             while numMesa not in aux:
