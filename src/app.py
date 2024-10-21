@@ -12,14 +12,17 @@ import sys
         ]"""
 pedidos=[
     {"nombre":'tomas',
+     "mesa":'1',
      'platos':[["suprema","1","En preparacion"],
                ["milanesa de ternera","1","En preparacion"]
                ]},
     {"nombre":'juan',
+     "mesa":'2',
      'platos':[["bife de chorizo","1","En preparacion"],
                ["asado de tira","1","En preparacion"]
                ]},
     {"nombre":'sofia',
+     "mesa":'3',
      'platos':[["ensalada","1","En preparacion"],
                ["milanesa de ternera","1","En preparacion"]
                ]},
@@ -481,9 +484,14 @@ def reservasYPedidos(cliente):
 
 
 def hacerPedido(nombre,pedido):
-    
     listaAuxiliar=[]
+    
+    
+    
     plato = int(input("\nIngrese numero de plato (0 para terminar): "))
+
+    
+    #EXCEPCION    
     
     while plato<0 or plato>12:
         plato = int(input("\nIngrese numero de plato (0 para terminar): "))    
@@ -516,12 +524,8 @@ def hacerPedido(nombre,pedido):
             print("No hay suficiente stock para esa cantidad.")
         plato = int(input("\nSeleccione su plato (0 para terminar): "))
     print("Gracias por su pedido!")
-    
-    ###verificacio de datos salientes
-    print("ESTE ES SU PEDIDO ACTUAL")
-    print(pedido)
     if len(pedido)>1:
-        pedidos.append(copy.deepcopy(pedido))#DEEPCOPY PARA EVITAR ERROR DE MUTABILIDAD EN ESTRUCTURAS ANIDADAS
+        pedidos.append(copy.deepcopy(pedido))
     input("\nEnter para continuar")
     
 
@@ -567,7 +571,7 @@ def impresionPedidosIndividuales(diccionario):
     print(f"""╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
-{"║":<20}Pedidos de → {diccionario["nombre"].capitalize():<23}║                    
+{"║":<2}Pedidos de → {diccionario["nombre"].capitalize():<31}Mesa -> {diccionario["mesa"]:<2}║                    
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
@@ -664,12 +668,29 @@ def mostrar_menu_platos(menu):
     print("""╚═══════════════════════════════════════════════════════╝""")
     input("Presione Enter para continuar>>")
 
-def cliente():
-
+def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver como modificar la mesa,
+    listaIds=[]
     nombre = input("Ingrese su nombre:\n>>").capitalize()
-    
-    
+    while True:
+        try:
+            numeroMesa=input('>> Ingrese numero de mesa')
+            int(numeroMesa)
+            listaIds=[mesa['idMesa'] for mesa in mesas]
+            if numeroMesa not in listaIds:
+                raise ValueError
+            for mesa in mesas:
+                if mesa['idMesa']==numeroMesa and mesa['estado']!='libre':
+                    raise ValueError
+        except ValueError:
+            print(f'>> Opcion no valida, Ingrese una valida')
+            input('ENTER para continuar')    
+        except:
+            print('>> Ha ocurrido un error')
+            input('ENTER para continuar')
+        else:
+            break 
     pedido={"nombre":nombre,
+            "mesa":numeroMesa,
             "platos":[]}
     
     opcion = client_menu()
