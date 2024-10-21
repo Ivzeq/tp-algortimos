@@ -688,10 +688,8 @@ def client_menu():
 ╠════════════════════════════════════════╣
 ║ 1 → Menu                               ║
 ║ 2 → Realizar pedido                    ║
-║ 3 → Realizar reserva                   ║
-║ 4 → Ver estado de pedidos              ║
-║ 5 → ver estado de reserva              ║
-║ 6 → Salir                              ║
+║ 3 → Ver estado de pedidos              ║
+║ 4 → Salir                              ║
 ╚════════════════════════════════════════╝   
 >>"""))
         except ValueError:
@@ -757,28 +755,22 @@ def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver c
     opcion = client_menu()
     limp()
     #EXCEPCION
-    while opcion <1 or opcion >6:
+    while opcion <1 or opcion >4:
         input("Opcion invalida\nENTER para continuar")
         opcion = client_menu()
         limp()
-    while opcion !=6:    
+    while opcion !=4:    
         if opcion == 1:
             mostrar_menu_platos(menu)
             limp()
         elif opcion == 2:
             mostrar_menu_platos(menu)     
-            hacerPedido(nombre,pedido)
-            
+            hacerPedido(nombre,pedido)            
         elif opcion == 3:
-            reservar(nombre)
-        elif opcion == 4:
             verPedidos(nombre)
-        elif opcion==5:
-            verReservas(nombre)
-        opcion = client_menu()
+        opcion=client_menu()
     limp()
     print("Gracias!")
-
 def menuAdminPedidos():
     while True:
         try:
