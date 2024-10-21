@@ -484,21 +484,35 @@ def reservasYPedidos(cliente):
 
 
 def hacerPedido(nombre,pedido):
+    def verificacion(self):
+        print('del obejto')
     listaAuxiliar=[]
     
-    
-    
-    plato = int(input("\nIngrese numero de plato (0 para terminar): "))
-
-    
-    #EXCEPCION    
-    
-    while plato<0 or plato>12:
-        plato = int(input("\nIngrese numero de plato (0 para terminar): "))    
-    
+    while True:
+        try:
+            plato = int(input("\nIngrese numero de plato (0 para terminar): "))
+            if plato not in (list(range(0,13))):
+                raise ValueError
+        except ValueError:
+            print(' >>Opcion ingresada no valida\n>> Ingrese una opcion valida')
+        else:
+            break
     while plato != 0:
         nombrePlato=menu[plato-1][0]
-        cant = int(input(f"Seleccione una cantidad (disponible {menu[plato-1][3]}): "))
+        
+        while True:
+            try:
+                cant = int(input(f"Seleccione una cantidad (disponible {menu[plato-1][3]}): "))
+                if cant > menu[plato-1][3]:
+                    raise ValueError
+            except ValueError:
+                print(f'>> Opcion ingresada no valida\n>> Ingrese opcion valida')
+            except Exception as ms:
+                ms=str(ms)
+                print(f'>>ha ocurrido un error -> {ms}')
+            else:
+                break
+        
         if cant <= menu[plato-1][3]: #Si hay suficiente stock
             listaAuxiliar.clear()
             if len(pedido["platos"])>0:
@@ -520,24 +534,44 @@ def hacerPedido(nombre,pedido):
         
             menu[plato-1][3] -= cant #Resta la cantidad pedida al stock                   
             print(f"Has agregado {cant} de {nombrePlato} a tu pedido.")
-        else:
-            print("No hay suficiente stock para esa cantidad.")
-        plato = int(input("\nSeleccione su plato (0 para terminar): "))
+        while True:
+            try:
+                plato = int(input("\nIngrese numero de plato (0 para terminar): "))
+                if plato not in (list(range(0,13))):
+                    raise ValueError
+            except ValueError:
+                print(' >>Opcion ingresada no valida\n>> Ingrese una opcion valida')
+            else:
+                break            
     print("Gracias por su pedido!")
     if len(pedido)>1:
         pedidos.append(copy.deepcopy(pedido))
     input("\nEnter para continuar")
     
-
+def excepcionNumeroEnteros(mensaje):
+    """Esta funcion tiene como fin manejar errores cuando el suusario debe ingresar un dato del tipo entero, retorna un entero"""
+    variable=0
+    while True:
+        try:
+            variable=int(input(mensaje))
+        except ValueError:
+            print(f'>> Opcion ingresada no valida\n>> Ingresar opcion valida')
+        except Exception as ms:
+            ms=str(ms)
+            print(f'>> Ha ocurrido un error -> {ms}')
+        else:
+            break
+    return variable
+            
+    
 
 
 
 def reservar(nombre):
     
-    impresionMesas(mesas)#solo modificamos la impresion de las mesas
-    
-    reserva = (input(f">>Que mesa quiere reservar?\n>>"))
-    comensales = int(input(f">>Para cuantas personas es la reserva?\n>>"))
+    impresionMesas(mesas)
+    reserva=str(excepcionNumeroEnteros(f">>Que mesa quiere reservar?\n>>"))
+    comensales=excepcionNumeroEnteros(f">>Para cuantas personas es la reserva?\n>>")
     mesaEncontrada = False
     reservado = False
     for mesa in mesas:
@@ -555,7 +589,6 @@ def reservar(nombre):
                 #Si quiere reservar para mas personas que la capacidad de la mesa
                 print(f">>La mesa {reserva} tiene capacidad para {mesa['maxPersonas']} personas.")
             break
-    
     if mesaEncontrada == False:
         #Se selecciono una mesa que no existe o que no esta libre
         print(">>La mesa solicitada no se encuentra disponible.")
@@ -616,16 +649,23 @@ def verReservas(nombre):
         print(f"Reservas de {nombre.capitalize()}:")
         impresionMesas(reservasCliente)
         opcion = input("¿Desea cancelar alguna reserva? (s/n): ").lower()
+        
+        
+        
         if opcion == 's':
-            num_reserva = int(input("Ingrese el número de la reserva que desea cancelar: ")) - 1
-            if 0 <= num_reserva < len(reservasCliente):
-                mesa_cancelada = reservasCliente[num_reserva]
-                mesa_cancelada["estado"] = "libre"
-                mesa_cancelada["reserva"] = "sin reserva"
-                mesa_cancelada["cantPersonas"] = 0
-                print(f"Reserva de la Mesa {mesa_cancelada['idMesa']} cancelada.")
-            else:
-                print("Número de reserva inválido.")
+            aux=[mesa["idMesa"] for mesa in reservasCliente]
+            numMesa=str(excepcionNumeroEnteros(f"Ingrese el número de mesa de la reserva que desea cancelar: ")) 
+            while numMesa not in aux:
+                numMesa=str(excepcionNumeroEnteros(f"Ingrese el número de mesa de la reserva que desea cancelar: "))    
+            for mesa in reservasCliente:
+                if mesa["idMesa"]==numMesa:
+                    mesa_cancelada=mesa
+            mesa_cancelada["estado"] = "libre"
+            mesa_cancelada["reserva"] = "sin reserva"
+            mesa_cancelada["cantPersonas"] = 0
+            print(f"Reserva de la Mesa {mesa_cancelada['idMesa']} cancelada.")
+        else:
+            pass
     else:
         print("No tiene reservas activas.")
         
@@ -633,7 +673,11 @@ def verReservas(nombre):
 
 def client_menu():
     limp()
-    opcion = int(input(f"""
+    
+    
+    while True:
+        try:
+            opcion = int(input(f"""
 ╔════════════════════════════════════════╗
 ║                                        ║
 ║            🍽 RESTAURANTE🍽              ║
@@ -650,6 +694,13 @@ def client_menu():
 ║ 6 → Salir                              ║
 ╚════════════════════════════════════════╝   
 >>"""))
+        except ValueError:
+            print(f'>>Opcion ingresada no valida\n>>Ingrese una valida')
+        except Exception as ms:
+            ms=str(ms)
+            print(f'>> Ha ocurrido un error ->{ms}')
+        else:
+            break
     return opcion
 
 def mostrar_menu_platos(menu):
@@ -670,7 +721,17 @@ def mostrar_menu_platos(menu):
 
 def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver como modificar la mesa,
     listaIds=[]
-    nombre = input("Ingrese su nombre:\n>>").capitalize()
+    while True:
+        try:
+            nombre = input("Ingrese su nombre:\n>>").capitalize()
+            if nombre=='' or nombre.isspace():
+                raise ValueError
+            if not(nombre.isalpha()):
+                raise ValueError
+        except ValueError:
+            print(f'>> Opcion ingresada no valida\n>> Ingrese una valida')    
+        else:
+            break
     while True:
         try:
             numeroMesa=input('>> Ingrese numero de mesa')
@@ -698,7 +759,6 @@ def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver c
     #EXCEPCION
     while opcion <1 or opcion >6:
         input("Opcion invalida\nENTER para continuar")
-        
         opcion = client_menu()
         limp()
     while opcion !=6:    
