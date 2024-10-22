@@ -672,11 +672,9 @@ def verReservas(nombre):
     input("\nEnter para continuar")
 
 def client_menu():
-    limp()
-    
-    
     while True:
         try:
+            limp()
             opcion = int(input(f"""
 ╔════════════════════════════════════════╗
 ║                                        ║
@@ -692,8 +690,11 @@ def client_menu():
 ║ 4 → Salir                              ║
 ╚════════════════════════════════════════╝   
 >>"""))
+            if opcion<1 or opcion>4:
+                raise ValueError
         except ValueError:
             print(f'>>Opcion ingresada no valida\n>>Ingrese una valida')
+            input('>> Enter para continuar')
         except Exception as ms:
             ms=str(ms)
             print(f'>> Ha ocurrido un error ->{ms}')
@@ -755,10 +756,6 @@ def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver c
     opcion = client_menu()
     limp()
     #EXCEPCION
-    while opcion <1 or opcion >4:
-        input("Opcion invalida\nENTER para continuar")
-        opcion = client_menu()
-        limp()
     while opcion !=4:    
         if opcion == 1:
             mostrar_menu_platos(menu)
