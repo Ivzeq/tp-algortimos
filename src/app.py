@@ -544,8 +544,6 @@ def hacerPedido(nombre,pedido):
             else:
                 break            
     print("Gracias por su pedido!")
-    if len(pedido)>1:
-        pedidos.append(copy.deepcopy(pedido))
     input("\nEnter para continuar")
     
 def excepcionNumeroEnteros(mensaje):
@@ -618,22 +616,17 @@ def impresionPedidosIndividuales(diccionario):
 
 
     
-def verPedidos(nombre):#esta funcion solo debe recibir el nombre duelo del pedido
-    pedidosCliente={}
-    for pedido in pedidos:
-        if pedido["nombre"]==nombre:#buscamos el diccionacario de pedido de nuestro cliente\nombre
-            pedidos.index(pedido)
-            pedidosCliente=pedido#este debe estar enlazado al diccionario original para aplicar cambios
-            
-    if len(pedidosCliente) > 0:#verifica que el el pedido exista
-        impresionPedidosIndividuales(pedidosCliente)#llamada a funcion para imprimir diccionarios
+def verPedidos(pedido):#esta funcion solo debe recibir el nombre duelo del pedido
+
+    if len(pedido['platos']) > 0:#verifica que el el pedido exista
+        impresionPedidosIndividuales(pedido)#llamada a funcion para imprimir diccionarios
         #ESTO DEBERIA SER OTRA FUNCION
         opcion = input("¿Desea cancelar algún pedido? (s/n): ").lower()
         if opcion == 's':
             numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
-            while numPedido<0 or numPedido>len(pedidosCliente):
+            while numPedido<0 or numPedido>len(pedido):
                 numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
-            del pedidosCliente["platos"][numPedido]
+            del pedido["platos"][numPedido]
             print("Pedido cancelado.")
     else:
         print("Usted no tiene pedidos activos.")
@@ -752,7 +745,7 @@ def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver c
     pedido={"nombre":nombre,
             "mesa":numeroMesa,
             "platos":[]}
-    
+    #VAMOS A HACER TODAS LAS MODIFICACIONES SOBRE ESTE PEDIDO, Y LUEGO CUANDO SALGAMOS, LO ACOPLAMOS A PEDIDOS
     opcion = client_menu()
     limp()
     #EXCEPCION
@@ -764,9 +757,11 @@ def cliente():#ahora la funcion crea pedidos con el atributo idmesa, luego ver c
             mostrar_menu_platos(menu)     
             hacerPedido(nombre,pedido)            
         elif opcion == 3:
-            verPedidos(nombre)
+            verPedidos(pedido)
         opcion=client_menu()
     limp()
+    if len(pedido['platos']>0):
+        pedidos.append(copy.deepcopy(pedido))
     print("Gracias!")
 def menuAdminPedidos():
     while True:
