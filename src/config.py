@@ -1,14 +1,18 @@
 import sys
-import json 
+import json
+import os
 
 while True:
     try:
-        with open('src/datos/pedidos.json','r+') as ar:
-            contenido=ar.read()
-            if contenido!="":
-                pedidos=json.loads(contenido)
-            else:
-                pedidos=[]
+        pedidos_path = 'src/datos/pedidos.json'
+        pedidos = []
+        if os.path.exists(pedidos_path):
+            with open(pedidos_path, 'r') as ar:
+                contenido = ar.read()
+                if contenido:
+                    pedidos = json.loads(contenido)
+        else:
+            with open(pedidos_path, 'w') as ar:
                 ar.write(json.dumps(pedidos))
     except FileNotFoundError:
         print('>>El archvio no existe o la direccion esta mal')

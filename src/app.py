@@ -485,7 +485,7 @@ def reservasYPedidos(cliente):
 
 def hacerPedido(nombre,pedido):
     def verificacion(self):
-        print('del obejto')
+        print('del objeto')
     listaAuxiliar=[]
     
     while True:
@@ -547,7 +547,7 @@ def hacerPedido(nombre,pedido):
     input("\nEnter para continuar")
     
 def excepcionNumeroEnteros(mensaje):
-    """Esta funcion tiene como fin manejar errores cuando el suusario debe ingresar un dato del tipo entero, retorna un entero"""
+    """Esta funcion tiene como fin manejar errores cuando el ususario debe ingresar un dato del tipo entero, retorna un entero"""
     variable=0
     while True:
         try:
@@ -602,13 +602,13 @@ def impresionPedidosIndividuales(diccionario):
     print(f"""╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
-{"║":<2}Pedidos de → {diccionario["nombre"].capitalize():<31}Mesa -> {diccionario["mesa"]:<2}║                    
+{"║":<2}Pedidos de → {diccionario["nombre"].capitalize():<31}Mesa → {diccionario["mesa"]:<2} ║                    
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
 ╠═══════════════════════════════════════════════════════╣""")
     for plato in diccionario["platos"]:
-        print(f"║{(diccionario["platos"].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
+        print(f"║{(diccionario['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
     print("""╚═══════════════════════════════════════════════════════╝""")
     input("Presione Enter para continuar>>")
           
@@ -707,7 +707,7 @@ def mostrar_menu_platos(menu):
 ║{'Num':<4}║{'Plato':<28}║{'Precio':<10}║{'Categoría':<10}║
 ╠═══════════════════════════════════════════════════════╣""")
     for plato in menu:
-        print(f"║{(menu.index(plato)+1):<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} {"║":<20}")
+        print(f"║{(menu.index(plato)+1):<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} ║")
     print("""╚═══════════════════════════════════════════════════════╝""")
     input("Presione Enter para continuar>>")
 
@@ -854,7 +854,7 @@ def administrarPedidos(pedidos):
     contador=0
     for elemento in pedidos:
         contador+=1
-        print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+        print(f"{'Pedido numero: ' + str(contador):^55}")
         impresionPedidosIndividuales(elemento)
     #EXCEPCION
     while True:
@@ -915,7 +915,7 @@ def administrarPedidos(pedidos):
 def impresionRecetas(recetas):
     i=0
     for elemento in recetas: #Imprime los nombres de las recetas
-        print(f"{elemento.get("nombre")}")
+        print(f"{elemento.get('nombre')}")
     nombre=input("Ingrese nombre de plato: ").capitalize()
     limp()
     while i<len(recetas) and recetas[i].get("nombre")!=nombre:
@@ -927,7 +927,7 @@ def impresionRecetas(recetas):
             if clave=="ingredientes":
                 largo=len(recetas[i]["ingredientes"])
                 for j in range(largo):
-                    print(f"Ingrediente \"{j}\"={recetas[i+1]["ingredientes"][j]}")
+                    print(f"Ingrediente \"{j}\"={recetas[i]['ingredientes'][j]}")
             else:
                 print(f"{clave} : {valor}")
                 
@@ -946,7 +946,7 @@ def repriorizarPedidos(pedidos):
     contador=0
     for elemento in pedidos:
         contador+=1
-        print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+        print(f"{'Pedido numero: ' + str(contador):^55}")
         impresionPedidosIndividuales(elemento)
     # Solicito el numero del pedido que se desea mover y ajusto el indice
     numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
@@ -1243,7 +1243,7 @@ while(appState != possibleStatesTupla[-1]):
                 contador=0
                 for elemento in pedidos:
                     contador+=1
-                    print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+                    print(f"{'Pedido numero: ' + str(contador):^55}")
                     impresionPedidosIndividuales(elemento)
                 limp()
             elif opcion==3:
@@ -1265,7 +1265,7 @@ while(appState != possibleStatesTupla[-1]):
                 contador=0
                 for elemento in pedidos:
                     contador+=1
-                    print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+                    print(f"{'Pedido numero: ' + str(contador):^55}")
                     impresionPedidosIndividuales(elemento)  
                 limp()
             elif opcion==7:
