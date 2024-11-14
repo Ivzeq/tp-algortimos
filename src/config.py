@@ -4,8 +4,9 @@ import os
 
 while True:
     try:
-        pedidos_path = 'src/datos/pedidos.json'
+        pedidos_path = 'tp-algortimos/src/datos/pedidos.json'
         pedidos = []
+        #print(os.path.exists(pedidos_path))#verificacion
         if os.path.exists(pedidos_path):
             with open(pedidos_path, 'r') as ar:
                 contenido = ar.read()
@@ -314,7 +315,7 @@ id_mesa={}
 opcion=0
 condicion_general=1
 condicion=1
-direcciones=['src/UI/menuPerfiles.txt','src/UI/menuCliente.txt','src/UI/menuAdministrador.txt','src/UI/menuMesero.txt','src/UI/menuCocinero.txt','src/UI/opcionesCliente.txt','src/UI/estadosPedidos.txt','src/UI/opcionesReservas.txt']
+direcciones=['tp-algortimos/src/UI/menuPerfiles.txt','tp-algortimos/src/UI/menuCliente.txt','tp-algortimos/src/UI/menuAdministrador.txt','tp-algortimos/src/UI/menuMesero.txt','tp-algortimos/src/UI/menuCocinero.txt','tp-algortimos/src/UI/opcionesCliente.txt','tp-algortimos/src/UI/estadosPedidos.txt','tp-algortimos/src/UI/opcionesReservas.txt']
 for dir in direcciones:        
     with open(dir,'r',encoding='utf-8') as archivo:
         auxiliar=archivo.read()
