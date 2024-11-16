@@ -156,7 +156,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
                 contador=0
                 for elemento in config.pedidos:
                     contador+=1
-                    print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+                    print(f"{'>> Pedido numero → ' + str(contador):^55}")
                     fn.impresionPedidosIndividuales(elemento)
                 config.limp()
             elif config.opcion==3:
@@ -177,7 +177,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
                 contador=0
                 for elemento in config.pedidos:
                     contador+=1
-                    print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+                    print(f"{'>> Pedido numero → ' + str(contador):^55}")
                     fn.impresionPedidosIndividuales(elemento)  
                 config.limp()
             elif config.opcion==7:

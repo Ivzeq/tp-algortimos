@@ -164,14 +164,14 @@ def impresionPedidosIndividuales(diccionario):#chk
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
 ╠═══════════════════════════════════════════════════════╣""")
-    for plato in diccionario["platos"]:
-        print(f"║{(diccionario["platos"].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
+    for plato in diccionario['platos']:
+        print(f"║{(diccionario['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
     print("""╚═══════════════════════════════════════════════════════╝""")
     input("Presione Enter para continuar>>")
 def impresionRecetas(recetas):#chk
     i=0
     for elemento in recetas: #Imprime los nombres de las recetas
-        print(f"{elemento.get("nombre")}")
+        print(f"{elemento.get('nombre')}")
     nombre=input("Ingrese nombre de plato: ").capitalize()
     config.limp()
     while i<len(recetas) and recetas[i].get("nombre")!=nombre:
@@ -183,7 +183,7 @@ def impresionRecetas(recetas):#chk
             if clave=="ingredientes":
                 largo=len(recetas[i]["ingredientes"])
                 for j in range(largo):
-                    print(f"Ingrediente \"{j}\"={recetas[i+1]["ingredientes"][j]}")
+                    print(f"Ingrediente \"{j}\"={recetas[i+1]['ingredientes'][j]}")
             else:
                 print(f"{clave} : {valor}")   
 def mostrar_menu_platos(menu):#chk
@@ -197,8 +197,8 @@ def mostrar_menu_platos(menu):#chk
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<4}║{'Plato':<28}║{'Precio':<10}║{'Categoría':<10}║
 ╠═══════════════════════════════════════════════════════╣""")
-    for plato in menu:
-        print(f"║{(menu.index(plato)+1):<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} {"║":<20}")
+    for idx, plato in enumerate(menu, start=1):
+        print(f"║{idx:<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} ║")
     print("""╚═══════════════════════════════════════════════════════╝""")
     input("Presione Enter para continuar>>")
 
@@ -210,7 +210,7 @@ def verPedidos(pedido):#chk
             numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
             while numPedido<0 or numPedido>len(pedido):
                 numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
-            del pedido["platos"][numPedido]
+            del pedido['platos'][numPedido]
             print("Pedido cancelado.")
     else:
         print("Usted no tiene pedidos activos.")
@@ -284,9 +284,9 @@ def hacerPedido(pedido):#chk
                 break
         if cant <= config.menu[plato-1][3]: #Si hay suficiente stock
             listaAuxiliar.clear()
-            if len(pedido["platos"])>0:
+            if len(pedido['platos'])>0:
                 flag=True
-                for elemento in pedido["platos"]:
+                for elemento in pedido['platos']:
                     if elemento[0]==nombrePlato:
                         flag=False
                         elemento[1]+=cant
@@ -294,12 +294,12 @@ def hacerPedido(pedido):#chk
                     listaAuxiliar.append(nombrePlato)
                     listaAuxiliar.append(cant)
                     listaAuxiliar.append("En preparacion")
-                    pedido["platos"].append(listaAuxiliar.copy())
+                    pedido['platos'].append(listaAuxiliar.copy())
             else:
                 listaAuxiliar.append(nombrePlato)
                 listaAuxiliar.append(cant)
                 listaAuxiliar.append("En preparacion")
-                pedido["platos"].append(listaAuxiliar.copy())
+                pedido['platos'].append(listaAuxiliar.copy())
         
             config.menu[plato-1][3] -= cant #Resta la cantidad pedida al stock                   
             print(f"Has agregado {cant} de {nombrePlato} a tu pedido.")
@@ -462,7 +462,7 @@ def administrarPedidos(pedidos):#chk
     contador=0
     for elemento in pedidos:
         contador+=1
-        print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+        print(f"{'>> Pedido numero → ' + str(contador):^55}")
         impresionPedidosIndividuales(elemento)
     while True:
         try:
@@ -525,7 +525,7 @@ def repriorizarPedidos(pedidos):#chk
     contador=0
     for elemento in pedidos:
         contador+=1
-        print(f"{">>"}{("Pedido numero → "+str(contador)).center(55)}")
+        print(f"{'>> Pedido numero → ' + str(contador):^55}")
         impresionPedidosIndividuales(elemento)
     # Solicito el numero del pedido que se desea mover y ajusto el indice
     numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
