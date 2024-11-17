@@ -2,9 +2,19 @@ import sys
 import json
 import os
 
+def buscar_archivo(nombre_archivo, directorio_base):
+    for root, dirs, files in os.walk(directorio_base):
+        #OS.WALK devuelve una tupla con 3 elementos, directorio actual, lista de subdirectorios, lista de files en el actual
+        if nombre_archivo in files:
+            #CHK si el nombre del archivo que buscamos aparece en la lista de files
+            return os.path.join(root, nombre_archivo)
+    return None
+directorio_base=os.path.dirname(os.path.abspath(__file__))
+nombre_archivo='pedidos.json'
+pedidos_path = buscar_archivo(nombre_archivo,directorio_base)
+
 while True:
     try:
-        pedidos_path = 'tp-algortimos/src/datos/pedidos.json'
         pedidos = []
         #print(os.path.exists(pedidos_path))#verificacion
         if os.path.exists(pedidos_path):
@@ -25,7 +35,6 @@ while True:
         sys.exit(0)
     else:
         break
-
 menu = [
     #Matriz con columnas: Plato, Precio, Categoría, Stock
 
