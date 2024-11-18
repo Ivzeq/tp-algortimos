@@ -3,10 +3,9 @@ from config import *
 import json
 
 
-"""def test_config():
+def test_config():
     with open(configPath,'r') as archivo:
         exec(archivo.read())
-"""
 def test_guardadoPedidos():
     guardadoPedidos(pedidos)
     with open(pedidosPath,'r') as archivo:
@@ -27,7 +26,7 @@ def test_getMesas():
     assert type(getMesas('1'))==list
     assert 1==len(getMesas('1'))
     
-#PARA CUNADO UNA PRUEBA NECESTIA UN INPUT DEBERIMAOS USAR MOCK PERO
+#PARA CUANDO UNA PRUEBA NECESItA UN INPUT DEBERIMAOS USAR MOCK PERO
 #VAMOS A UTILIZAR UNA ETIQUETA Y LUEGO AL MOMENTO DE EJECUTAR LAS PRUBAS
 #PONEMOS COMO CONDICION QUE EJECUTA SEGUN LA ETIQUETA
 #CON MARCA pytest -s -m s_input SIN MARCA pytest -v -m "not s_input"
