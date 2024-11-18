@@ -7,7 +7,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
     # Inicializacion 
     while True:
         if (config.loggedUserType == '' and config.appState == 'login'):
-            tipoIngresado =input(config.ui[0])
+            tipoIngresado =input(config.ui[5])
             #DEBERIAMOS AGREGAR VALIDACION CON E.REGULARES COLO POR SI ESCRIBE CON CARACTERES
             if tipoIngresado=="1":
                 tipoIngresado="cliente"

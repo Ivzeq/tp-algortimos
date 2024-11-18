@@ -33,7 +33,7 @@ def verificarPermisos (state, permisos):#CHK
 def impresionPermisos(userType,appState):#CHK
     config.limp()
     if userType=="cliente":
-        appState=input(config.ui[1])
+        appState=input(config.ui[2])
         if appState=="1":
             appState="operar"
         elif appState=="2":#m
@@ -41,7 +41,7 @@ def impresionPermisos(userType,appState):#CHK
         elif appState=="3":
             appState="finalizado"
     elif userType=="admin":
-        appState=input(config.ui[2])
+        appState=input(config.ui[1])
         if appState=="1":
             appState="verPerfiles"
         elif appState=="2":
@@ -53,7 +53,7 @@ def impresionPermisos(userType,appState):#CHK
     elif userType=='cocinero':
         appState="pedidos"      
     elif userType=='mesero':
-        appState=input(config.ui[3])    
+        appState=input(config.ui[4])    
         if appState=="1":
             appState="verMesas"
         elif appState=="2":
@@ -219,7 +219,7 @@ def verPedidos(pedido):#chk
 def menuOpcionesAdministracion():#chk
     while True:
         try:
-            opcion = int(input(config.ui[6]))
+            opcion = int(input(config.ui[0]))
             if opcion<1 or opcion>5:
                 raise ValueError
         except ValueError:
@@ -246,7 +246,7 @@ def client_menu():
     while True:
         try:
             config.limp()
-            opcion = int(input(config.ui[5]))
+            opcion = int(input(config.ui[6]))
             if opcion<1 or opcion>4:
                 raise ValueError
         except ValueError:
@@ -441,7 +441,7 @@ def verReservas(nombre):#chk
 def menuAdminPedidos():#chk
     while True:
         try:
-            opcion =int(input(config.ui[4]))
+            opcion =int(input(config.ui[3]))
             if opcion<1 or opcion>7:
                 raise ValueError
         except ValueError:
