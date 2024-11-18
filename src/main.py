@@ -63,12 +63,12 @@ while(config.appState != config.possibleStatesTupla[-1]):
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
     if config.appState=="recepcion":
-        nombre=input(">> ingrese nombre de cliente :")
+        nombre=input(">> Ingrese nombre de cliente\n<< ")
         while True:
             try:
-                cantidad_comensales=int(input("ingrese la cantidad de comensales:"))
+                cantidad_comensales=int(input(">> Ingrese la cantidad de comensales\n<< "))
             except KeyboardInterrupt:
-                print(f'>> Interrupcion detectada\n>> Finalizando..')
+                print(f'>> Fin..')
             except:
                 print(f'>> Opcion no valida\n>> Ingrese una opcion valida')
                 input('>> ENTER para continuar')
@@ -77,12 +77,12 @@ while(config.appState != config.possibleStatesTupla[-1]):
         
         if fn.verificador_disponibilidad(cantidad_comensales,config.mesas):
             #entramos al if si solo la funcion verificador_disponibilidad devuelve true
-            print(f"hay disponibilidad de mesas, la mesa es {config.id_mesa}")
+            print(f">> Hay disponibilidad de mesas, la mesa es la numero: {config.id_mesa}")
             #modificamos el estado de la mesa buscandola por su id
             for elemento in config.mesas:
                 if elemento["idMesa"]==config.id_mesa:
                     elemento["reserva"]=nombre
-                    elemento["estado"]="reservado"
+                    elemento["estado"]="ocupado"
                     elemento["cantPersonas"]=cantidad_comensales
         else:
             print(">> No hay disponibilidad de mesas")       
