@@ -108,24 +108,24 @@ while(config.appState != config.possibleStatesTupla[-1]):
     if config.appState == 'reservar':
         while True:
             try:
-                nombre = input("Ingrese su nombre:\n>>").capitalize()
+                nombre = input(">> Ingrese su nombre:\n<< ").capitalize()
                 if nombre=='' or nombre.isspace():
                     raise ValueError
                 if not(nombre.isalpha()):
                     raise ValueError
             except ValueError:
-                print(f'>> Opcion ingresada no valida\n>> Ingrese una valida')    
+                print(f'>> Opcion ingresada no valida\n<< Ingrese una valida')    
             else:
                 break
-            
-            
         while True:
             config.opcion=fn.excepcionNumeroEnteros(config.ui[7])
             while config.opcion<1 or config.opcion>3:
                 config.opcion=fn.excepcionNumeroEnteros(config.ui[7])
             if config.opcion==1:
+                config.limp()
                 fn.reservar(nombre)
             elif config.opcion==2:
+                config.limp()
                 fn.verReservas(nombre)
             elif config.opcion==3:
                 appState='login'
@@ -151,13 +151,15 @@ while(config.appState != config.possibleStatesTupla[-1]):
                         input('>> Enter para continuar')
                     else:
                         break
-                fn.impresionMesas(mesa)                
+                fn.impresionMesas(mesa)
+                input('>> Enter para continuar')               
             elif config.opcion==2:
                 contador=0
                 for elemento in config.pedidos:
                     contador+=1
                     print(f"{'>> Pedido numero → ' + str(contador):^55}")
                     fn.impresionPedidosIndividuales(elemento)
+                input('>> Enter para continuar ')
                 config.limp()
             elif config.opcion==3:
                 while config.condicion==1:
@@ -179,6 +181,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
                     contador+=1
                     print(f"{'>> Pedido numero → ' + str(contador):^55}")
                     fn.impresionPedidosIndividuales(elemento)  
+                input('>> Enter para continuar ')
                 config.limp()
             elif config.opcion==7:
                 config.condicion_general=0

@@ -136,7 +136,7 @@ def impresionMesas(mesas):#chk
 {"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}{"Reserva →":<9}{(mesas[i+1]["reserva"][0:12].capitalize()):>12}║
 {"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}{"Personas →":<17}{(mesas[i+1]["cantPersonas"]):>4}║
 {"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}{"Limite →":<17}{(mesas[i+1]["maxPersonas"]):>4}║""")       
-        input(f"╚═════════════════════════════════════════════╝\n>>Enter para continuar")      
+        print(f"╚═════════════════════════════════════════════╝")      
     else:
         print(f"""
 ╔══════════════════════╗
@@ -153,7 +153,7 @@ def impresionMesas(mesas):#chk
 {"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}
 {"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}""")
        
-        input(f"╚══════════════════════╝\n>>Enter para continuar")  
+        print(f"╚══════════════════════╝")  
 def impresionPedidosIndividuales(diccionario):#chk
 
     print(f"""╔═══════════════════════════════════════════════════════╗
@@ -167,7 +167,7 @@ def impresionPedidosIndividuales(diccionario):#chk
     for plato in diccionario['platos']:
         print(f"║{(diccionario['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
     print("""╚═══════════════════════════════════════════════════════╝""")
-    input("Presione Enter para continuar>>")
+
 def impresionRecetas(recetas):#chk
     i=0
     for elemento in recetas: #Imprime los nombres de las recetas
@@ -200,7 +200,6 @@ def mostrar_menu_platos(menu):#chk
     for idx, plato in enumerate(menu, start=1):
         print(f"║{idx:<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} ║")
     print("""╚═══════════════════════════════════════════════════════╝""")
-    input("Presione Enter para continuar>>")
 
 def verPedidos(pedido):#chk
     if len(pedido['platos']) > 0:#verifica que tenga pedidos
@@ -211,10 +210,10 @@ def verPedidos(pedido):#chk
             while numPedido<0 or numPedido>len(pedido):
                 numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
             del pedido['platos'][numPedido]
-            print("Pedido cancelado.")
+            print(">> Plato cancelado!")
+            input('>> Enter para continuar')
     else:
         print("Usted no tiene pedidos activos.")
-    input("\nEnter para continuar")
     return pedido
 def menuOpcionesAdministracion():#chk
     while True:
@@ -261,7 +260,7 @@ def hacerPedido(pedido):#chk
     listaAuxiliar=[]
     while True:
         try:
-            plato = int(input("\nIngrese numero de plato (0 para terminar): "))
+            plato = int(input(">> Ingrese numero de plato (0 para terminar): \n<< "))
             if plato not in (list(range(0,13))):
                 raise ValueError
         except ValueError:
@@ -272,7 +271,7 @@ def hacerPedido(pedido):#chk
         nombrePlato=config.menu[plato-1][0]
         while True:
             try:
-                cant = int(input(f"Seleccione una cantidad (disponible {config.menu[plato-1][3]}): "))
+                cant = int(input(f">> Ingrese una cantidad (Cantidad disponible: {config.menu[plato-1][3]})\n<<  "))
                 if cant > config.menu[plato-1][3]:
                     raise ValueError
             except ValueError:
@@ -302,26 +301,23 @@ def hacerPedido(pedido):#chk
                 pedido['platos'].append(listaAuxiliar.copy())
         
             config.menu[plato-1][3] -= cant #Resta la cantidad pedida al stock                   
-            print(f"Has agregado {cant} de {nombrePlato} a tu pedido.")
+            print(f">> Has agregado {cant} de {nombrePlato} a tu pedido.")
         while True:
             try:
-                plato = int(input("\nIngrese numero de plato (0 para terminar): "))
+                plato = int(input(">> Ingrese numero de plato (0 para terminar): \n<< "))
                 if plato not in (list(range(0,13))):
                     raise ValueError
             except ValueError:
                 print(' >>Opcion ingresada no valida\n>> Ingrese una opcion valida')
             else:
                 break   
-    
-    
-             
-    print("Gracias por su pedido!")
-    input("\nEnter para continuar")
+    print(">> Gracias por su pedido!")
+    input(">> Enter para continuar")
 def cliente():#chk
     listaIds=[]
     while True:
         try:
-            nombre = input("Ingrese su nombre:\n>>").capitalize()
+            nombre = input(">> Ingrese su nombre:\n<< ").capitalize()
             if nombre=='' or nombre.isspace():
                 raise ValueError
             if not(nombre.isalpha()):
@@ -332,7 +328,7 @@ def cliente():#chk
             break
     while True:
         try:
-            numeroMesa=input('>> Ingrese numero de mesa')
+            numeroMesa=input('>> Ingrese numero de la mesa\n<< ')
             int(numeroMesa)
             listaIds=[mesa['idMesa'] for mesa in config.mesas]
             if numeroMesa not in listaIds:
@@ -361,6 +357,7 @@ def cliente():#chk
     while opcion !=4:    
         if opcion == 1:
             mostrar_menu_platos(config.menu)
+            input("Presione Enter para continuar>>")
             config.limp()
         elif opcion == 2:
             mostrar_menu_platos(config.menu)     
@@ -464,6 +461,7 @@ def administrarPedidos(pedidos):#chk
         contador+=1
         print(f"{'>> Pedido numero → ' + str(contador):^55}")
         impresionPedidosIndividuales(elemento)
+    input('>> Enter para continuar ')
     while True:
         try:
             numPedido=int(input(">>Ingrese numero de pedido a modificar\n>> "))
