@@ -62,7 +62,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
         
     if config.appState=='cerrarMesa':
         #fn.cerrarOrden()
-
+        pass
             
         
     
