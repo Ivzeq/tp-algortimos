@@ -3,15 +3,20 @@ import json
 import os
 
 def buscar_archivo(nombre_archivo, directorio_base):
-    for root, dirs, files in os.walk(directorio_base):
-        #OS.WALK devuelve una tupla con 3 elementos, directorio actual, lista de subdirectorios, lista de files en el actual
-        if nombre_archivo in files:
-            #CHK si el nombre del archivo que buscamos aparece en la lista de files
-            return os.path.join(root, nombre_archivo)
-    return None
+    if nombre_archivo!='':
+        for root, dirs, files in os.walk(directorio_base):
+            #OS.WALK devuelve una tupla con 3 elementos, directorio actual, lista de subdirectorios, lista de files en el actual
+            if nombre_archivo in files:
+                #CHK si el nombre del archivo que buscamos aparece en la lista de files
+                return os.path.join(root)
+        return None
+    else:
+        for root, dirs, files in os.walk((directorio_base)):
+            return os.path.join(root),files
+        
 directorio_base=os.path.dirname(os.path.abspath(__file__))
 nombre_archivo='pedidos.json'
-pedidos_path = buscar_archivo(nombre_archivo,directorio_base)
+pedidos_path = os.path.join((buscar_archivo(nombre_archivo,directorio_base)),nombre_archivo)
 
 while True:
     try:
@@ -320,13 +325,15 @@ loggedPassword = ''
 loggedUserType = ''
 loggedUserPermissions = None
 id_mesa={}
-
 opcion=0
 condicion_general=1
 condicion=1
-direcciones=['tp-algortimos/src/UI/menuPerfiles.txt','tp-algortimos/src/UI/menuCliente.txt','tp-algortimos/src/UI/menuAdministrador.txt','tp-algortimos/src/UI/menuMesero.txt','tp-algortimos/src/UI/menuCocinero.txt','tp-algortimos/src/UI/opcionesCliente.txt','tp-algortimos/src/UI/estadosPedidos.txt','tp-algortimos/src/UI/opcionesReservas.txt']
-for dir in direcciones:        
-    with open(dir,'r',encoding='utf-8') as archivo:
+
+directorio_base=os.path.join(os.path.dirname(os.path.abspath(__file__)),'UI')
+direccion_base,files=buscar_archivo('',directorio_base)
+
+for file in files:        
+    with open(os.path.join(direccion_base,file),'r',encoding='utf-8') as archivo:
         auxiliar=archivo.read()
     ui.append(auxiliar)
 def limp(): 
