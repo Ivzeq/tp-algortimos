@@ -112,8 +112,6 @@ def excepcionNumeroEnteros(mensaje):
             break
     return variable
 
-
-
 #FUNCIONES DE IMPRESION
 def getMesas (id):#CHK
     if id == 'all':
