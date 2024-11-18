@@ -243,7 +243,7 @@ def impresionInventario(inventario):#chk
 
 
 
-
+#FUNCIONES QUE REQUIEREN INPUT
 #FUNCIONES DE CLIENTE
 def client_menu():
     while True:
@@ -437,10 +437,6 @@ def verReservas(nombre):#chk
     else:
         print("No tiene reservas activas.")
     input("\nEnter para continuar")
-  
-  
-  
-  
 #FUNCIONES DE COCINERO
 def menuAdminPedidos():#chk
     while True:
@@ -515,10 +511,6 @@ def administrarPedidos(pedidos):#chk
         pedidos[numPedido-1]["platos"][plato-1][2]="Rechazado"
     guardadoPedidos(pedidos)
     return pedidos
-
-    
-
-
     
 def solicitarIngredientes(inventario):#chk
     impresionInventario(inventario)

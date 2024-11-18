@@ -8,6 +8,7 @@ directorio_base=os.path.join(directorio_base,'datos')
 pedidosPath = os.path.join((directorio_base),'pedidos.json')
 mesasPath=os.path.join((directorio_base),'mesas.json')
 filesPath=os.path.join(os.path.dirname(os.path.abspath(__file__)),'UI')
+configPath=os.path.abspath(__file__)
 while True:
     try:
         pedidos = []
