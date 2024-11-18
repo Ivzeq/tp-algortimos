@@ -7,11 +7,17 @@ import json
 def guardadoPedidos(pedidos):
     """recibe una estructura pedidos modificada y la guarda en el archivo json "pedidos" """
     try:
-        with open('src/datos/pedidos.json','w') as archivo:
+        with open(config.pedidosPath,'w') as archivo:
             archivo.write(json.dumps(pedidos))    
     except Exception as er:
         print(f'>>ERROR con escritura de datos {er}')
-    
+def guardadoMesas(mesas):
+    """recibe 'mesas' y la guarda en el archivo json 'mesas' """
+    try:
+        with open(config.mesasPath,'w') as archivo:
+            archivo.write(json.dumps(mesas))
+    except Exception as er:
+        print(f'>>ERROR con escritura de datos {er}')
 def verificarTipo (type):#CHK
     tipoValido = False
     for userType in config.userTypes:
@@ -373,6 +379,7 @@ def cliente():#chk
         config.mesas[int(numeroMesa)-1]['estado']='ocupado'
         config.mesas[int(numeroMesa)-1]['reserva']=nombre
         config.mesas[int(numeroMesa)-1]['cantPersonas']=cantPersonas
+        guardadoMesas(config.mesas)
     print("Gracias!")
 def reservar(nombre):#chk    
     impresionMesas(config.mesas)
@@ -390,6 +397,7 @@ def reservar(nombre):#chk
                 mesa["estado"] = "reservado"
                 mesa["reserva"] = nombre
                 mesa["cantPersonas"] = comensales
+                guardadoMesas(config.mesas)
                 print(f"Mesa {reserva} reservada para {comensales} personas.")
             else:
                 #Si quiere reservar para mas personas que la capacidad de la mesa
