@@ -84,6 +84,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
                     elemento["reserva"]=nombre
                     elemento["estado"]="ocupado"
                     elemento["cantPersonas"]=cantidad_comensales
+                    fn.guardadoMesas(config.mesas)
         else:
             print(">> No hay disponibilidad de mesas")       
         input('ENTER para continuar')
