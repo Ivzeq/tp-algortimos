@@ -1,34 +1,24 @@
 import sys
 import json
-import os
-
-def buscar_archivo(nombre_archivo, directorio_base):
-    if nombre_archivo!='':
-        for root, dirs, files in os.walk(directorio_base):
-            #OS.WALK devuelve una tupla con 3 elementos, directorio actual, lista de subdirectorios, lista de files en el actual
-            if nombre_archivo in files:
-                #CHK si el nombre del archivo que buscamos aparece en la lista de files
-                return os.path.join(root)
-        return None
-    else:
-        for root, dirs, files in os.walk((directorio_base)):
-            return os.path.join(root),files
-        
+import os        
 directorio_base=os.path.dirname(os.path.abspath(__file__))
-nombre_archivo='pedidos.json'
-pedidos_path = os.path.join((buscar_archivo(nombre_archivo,directorio_base)),nombre_archivo)
-
+#c:\Users\MOB\Desktop\Programacion\Github\tp-algortimos\src
+directorio_base=os.path.join(directorio_base,'datos')
+#c:\Users\MOB\Desktop\Programacion\Github\tp-algortimos\src\datos
+pedidosPath = os.path.join((directorio_base),'pedidos.json')
+mesasPath=os.path.join((directorio_base),'mesas.json')
+filesPath=os.path.join(os.path.dirname(os.path.abspath(__file__)),'UI')
 while True:
     try:
         pedidos = []
         #print(os.path.exists(pedidos_path))#verificacion
-        if os.path.exists(pedidos_path):
-            with open(pedidos_path, 'r') as ar:
+        if os.path.exists(pedidosPath):
+            with open(pedidosPath, 'r') as ar:
                 contenido = ar.read()
                 if contenido:
                     pedidos = json.loads(contenido)
         else:
-            with open(pedidos_path, 'w') as ar:
+            with open(pedidosPath, 'w') as ar:
                 ar.write(json.dumps(pedidos))
     except FileNotFoundError:
         print('>>El archvio no existe o la direccion esta mal')
@@ -272,8 +262,7 @@ users = [
        "role": 'admin'
     }
 ]
-mesas = [
-    #Identificador de mesa, estado, nombre de quien reservo, cantidad actual o reservada de personas, cantidad maxima de personas en la mesa
+mesasB = [
     {
         "idMesa": '1',
         "estado": 'libre',
@@ -317,9 +306,33 @@ mesas = [
         "maxPersonas" : 6
     }
 ]
+
+try:
+    if os.path.exists(mesasPath):
+        with open(mesasPath, 'r+') as archivo:
+            contenido = archivo.read()
+            if contenido!='':
+                mesas = json.loads(contenido)
+            else:
+                archivo.seek(0)
+                archivo.write(json.dumps(mesasB))
+                archivo.truncate()
+                archivo.seek(0)
+                contenido=archivo.read()
+                mesas=json.loads(contenido)
+    else:
+        with open(mesasPath, 'w') as ar:
+            ar.write(json.dumps(mesasB))
+except FileNotFoundError:
+    print('>>El archvio no existe o la direccion esta mal')
+    input('>>ENTER para continuar')
+    sys.exit(0)
+except Exception as er:
+    print(f'>>Error->{er}')
+    input('>>ENTER para continuar')
+    sys.exit(0)
 ui=[]
 appState = 'login'
-
 loggedUser = ''
 loggedPassword = ''
 loggedUserType = ''
@@ -329,11 +342,9 @@ opcion=0
 condicion_general=1
 condicion=1
 
-directorio_base=os.path.join(os.path.dirname(os.path.abspath(__file__)),'UI')
-direccion_base,files=buscar_archivo('',directorio_base)
-
+files=[f for f in os.listdir(filesPath)]
 for file in files:        
-    with open(os.path.join(direccion_base,file),'r',encoding='utf-8') as archivo:
+    with open(os.path.join(filesPath,file),'r',encoding='utf-8') as archivo:
         auxiliar=archivo.read()
     ui.append(auxiliar)
 def limp(): 
