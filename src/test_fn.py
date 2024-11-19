@@ -33,4 +33,4 @@ def test_cerrarOrden():
 #CON MARCA pytest -s -m s_input SIN MARCA pytest -v -m "not s_input"
 #MARCA=@pytest.mark.s_input
 
-#test_cerrarOrden()
+test_cerrarOrden()

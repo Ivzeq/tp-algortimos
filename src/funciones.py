@@ -275,31 +275,34 @@ def cerrarOrden():
             break            
     numMesa=config.pedidos[numPedido-1]['mesa']#AGARRAMOS EL ID DE LA MESA DEL PEDIDO
     pedido=config.pedidos[numPedido-1]
-    config.mesas[int(numMesa)]['estado']='libre'
-    config.mesas[int(numMesa)]['reserva']='sin reserva'
-    config.mesas[int(numMesa)]['cantPersonas']=0
+    config.mesas[int(numMesa)-1]['estado']='libre'
+    config.mesas[int(numMesa)-1]['reserva']='sin reserva'
+    config.mesas[int(numMesa)-1]['cantPersonas']=0
     for plato in pedido['platos']:
         listanombres.append(plato[0])
     for elemento in config.menu:
         if elemento[0] in listanombres:
             precios[elemento[0]]=elemento[1]
-    print(f"""╔═══════════════════════════════════════════════════════╗
+    texto_pedido = f"""╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
 {"║":<2}Pedido  de → {pedido["nombre"].capitalize():<31}Mesa -> {pedido["mesa"]:<2}║                    
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
-║{'Cant':<3}║{'Plato':<28}║{'Precio':<6}║{'Subtotal':<15}║
-╠═══════════════════════════════════════════════════════╣""")
+║{'Cant':<3}║{'Plato':<28}║{'Precio':<6}║{'Subtotal':>14}║
+╠═══════════════════════════════════════════════════════╣"""
+    
     for plato in pedido['platos']:
-        print(f"║{plato[1]:<4}║{plato[0]:<28}║{precios[plato[0]]}║{(precios[plato[0]])*plato[1]}║")
-    print("""╚═══════════════════════════════════════════════════════╝""")
+        texto_pedido += f"\n║{plato[1]:<4}║{plato[0]:<28}║{precios[plato[0]]:>6}║{(precios[plato[0]])*plato[1]:>14}║"
+    texto_pedido += "\n╚═══════════════════════════════════════════════════════╝"
+    try:
+        with open(config.ticketsPath,'a', encoding='utf-8') as archivo:
+            archivo.write(texto_pedido+"\n")
+    except Exception as er:
+        print('>> Error al guardar el ticket ',er)
     del config.pedidos[numPedido-1]
     guardadoMesas(config.mesas)
     guardadoPedidos(config.pedidos)
-
-
-
 
 
 
