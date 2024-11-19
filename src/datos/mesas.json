@@ -1,31 +1,31 @@
 [
     {
-        "idMesa": "1",
+        "idMesa": 1,
         "estado": "ocupada",
         "cliente": "Michael"
     },
     {
-        "idMesa": "2",
+        "idMesa": 2,
         "estado": "Ocupada",
         "cliente": "Ale"
     },
     {
-        "idMesa": "3",
+        "idMesa": 3,
         "estado": "Libre",
         "cliente": "Sin reserva"
     },
     {
-        "idMesa": "4",
-        "estado": "Libre",
-        "cliente": "Sin reserva"
+        "idMesa": 4,
+        "estado": "Ocupada",
+        "cliente": "Ivan"
     },
     {
-        "idMesa": "5",
+        "idMesa": 5,
         "estado": "libre",
         "cliente": "sin reserva"
     },
     {
-        "idMesa": "6",
+        "idMesa": 6,
         "estado": "libre",
         "cliente": "sin reserva"
     }

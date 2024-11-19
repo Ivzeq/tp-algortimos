@@ -4,14 +4,14 @@
         "Bife de Chorizo",
         15000,
         "carne",
-        20
+        19
     ],
     [
         "AST",
         "Asado de Tira",
         12800,
         "carne",
-        22
+        17
     ],
     [
         "MLT",
@@ -25,7 +25,7 @@
         "Pollo al Horno",
         11000,
         "pollo",
-        19
+        18
     ],
     [
         "SNA",
@@ -74,13 +74,13 @@
         "Ensalada Mixta",
         7500,
         "ensalada",
-        49
+        45
     ],
     [
         "ECP",
         "Ensalada Caprese",
         8000,
         "ensalada",
-        24
+        22
     ]
 ]

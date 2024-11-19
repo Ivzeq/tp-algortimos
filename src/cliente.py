@@ -9,12 +9,13 @@ def cliente():
         numMesa = fn.intInput(f"Debe ingresar una mesa entre 1 y {len(cnf.mesas)}.\n>>")
 
     for mesa in cnf.mesas:
-            if mesa["idMesa"] == str(numMesa):
+            print(numMesa, mesa)
+            if mesa["idMesa"] == numMesa:
                 # Actualizar el estado y el cliente de la mesa
                 mesa["estado"] = "Ocupada"
                 mesa["cliente"] = nombre.capitalize()
                 break
-            cnf.guardarDatos(cnf.rutas["mesas"], cnf.mesas)
+    cnf.guardarDatos(cnf.rutas["mesas"], cnf.mesas)
 
     while True:
         opcion = fn.intInput(cnf.clienteUI)
