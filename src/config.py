@@ -27,19 +27,20 @@ permisosEstadosSalon = ("entregado", "pagado")
 admins = ({"admin": "ale"}, {"osyubdf": "michael"}, {"hsocne": "ivan"})
 
 rutas = {
-    "ingredientes": "tp-algoritmos-ale\\src\\datos\\ingredientes.json",
-    "menu": "tp-algoritmos-ale\\src\\datos\\menu.json",
-    "mesas": "tp-algoritmos-ale\\src\\datos\\mesas.json",
-    "pedidos": "tp-algoritmos-ale\\src\\datos\\pedidos.json",
-    "recetas": "tp-algoritmos-ale\\src\\datos\\recetas.json",
-    "compras": "tp-algoritmos-ale\\src\\datos\\compras.json",
-    "finalizados": "tp-algoritmos-ale\\src\\datos\\finalizados.json",
-    "log": "tp-algoritmos-ale\\src\\datos\\restaurant.log",
-    "estados": "tp-algoritmos-ale\\src\\UI\\estadosPedidos.txt",
-    "admin": "tp-algoritmos-ale\\src\\UI\\menuAdministrador.txt",
-    "cocina": "tp-algoritmos-ale\\src\\UI\\menuCocinero.txt",
-    "cliente": "tp-algoritmos-ale\\src\\UI\\menuCliente.txt",
-    "salon": "tp-algoritmos-ale\\src\\UI\\menuSalon.txt"
+    "ingredientes": "tp-algoritmos\\src\\datos\\ingredientes.json",
+    "menu": "tp-algoritmos\\src\\datos\\menu.json",
+    "mesas": "tp-algoritmos\\src\\datos\\mesas.json",
+    "pedidos": "tp-algoritmos\\src\\datos\\pedidos.json",
+    "recetas": "tp-algoritmos\\src\\datos\\recetas.json",
+    "compras": "tp-algoritmos\src\datos\compras.json",
+    "finalizados": "tp-algoritmos\\src\\datos\\finalizados.json",
+    "log": "tp-algoritmos\\src\\datos\\restaurant.log",
+    "estados": "tp-algoritmos\\src\\UI\\estadosPedidos.txt",
+    "admin": "tp-algoritmos\\src\\UI\\menuAdministrador.txt",
+    "cocina": "tp-algoritmos\\src\\UI\\menuCocinero.txt",
+    "cliente": "tp-algoritmos\\src\\UI\\menuCliente.txt",
+    "salon": "tp-algoritmos\\src\\UI\\menuSalon.txt",
+    "inicio": "tp-algoritmos\\src\\UI\\menuInicio.txt"
 }
 
 ingredientes = cargarDatos(rutas["ingredientes"])
@@ -54,3 +55,4 @@ adminUI = cargarUI(rutas["admin"])
 cocinaUI = cargarUI(rutas["cocina"])
 clienteUI = cargarUI(rutas["cliente"])
 salonUI = cargarUI(rutas["salon"])
+inicioUI = cargarUI(rutas["inicio"])

@@ -11,6 +11,7 @@
 ║ 3 → Avanzar pedidos                    ║
 ║ 4 → Cerrar mesa                        ║
 ║ 5 → Ingreso admin                      ║
+║ 6 → Salir                              ║
 ║                                        ║
 ╚════════════════════════════════════════╝
 >>Ingrese opción:

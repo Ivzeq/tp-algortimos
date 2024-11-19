@@ -189,7 +189,7 @@ def impresionIngredientes(ingredientes, columnas=3):
         for col in range(columnas):
             if i < len(columnasIngredientes[col]):  # Si hay suficientes ingredientes para esta fila
                 ingrediente = columnasIngredientes[col][i]
-                fila += f"{ingrediente['id']}: {ingrediente['nombre']:<30}  "
+                fila += f"|{ingrediente['id']}: {ingrediente['nombre']:<20} ({ingrediente['cantidad']})|  "
         print(fila)
 
 def verificarStock(codReceta, recetas,ingredientes):
@@ -377,7 +377,8 @@ def hacerPedido(nombre, mesa):#chk
             plato = intInput("\nIngrese numero de plato (0 para terminar):\n>>")
             if plato not in range(1, len(menu) + 1) and plato != 0:
                 raise ValueError
-        except ValueError:
+        except ValueError as e:
+            registrarExcepcion(e)
             print(' >>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
         else:
             break
@@ -389,9 +390,11 @@ def hacerPedido(nombre, mesa):#chk
                 cant = int(input(f"Seleccione una cantidad (disponible {menu[plato-1][4]}): "))
                 if cant > menu[plato-1][4]:
                     raise ValueError
-            except ValueError:
+            except ValueError as e:
+                registrarExcepcion(e)
                 print(f'>> Opcion ingresada no válida\n>> Ingrese opción válida')
             except Exception as ms:
+                registrarExcepcion(ms)
                 ms=str(ms)
                 print(f'>>Ha ocurrido un error -> {ms}')
             else:
@@ -420,7 +423,8 @@ def hacerPedido(nombre, mesa):#chk
                 plato = int(input("\nIngrese número de plato (0 para terminar):\n>>"))
                 if plato not in range(1, len(cnf.menu) + 1) and plato != 0:
                     raise ValueError
-            except ValueError:
+            except ValueError as e:
+                registrarExcepcion(e)
                 print('>>Opción ingresada no válida\n>> Ingrese una opción válida')
             else:
                 break
@@ -441,13 +445,13 @@ def hacerPedido(nombre, mesa):#chk
 
 def verPedido(nombre, mesa):
     pedidos = cnf.pedidos
-    pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == str(mesa)]
+    pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
     impresionPedidos(pedidosCliente)
     if len(pedidosCliente) > 0:
         confirma = confirmInput("\nDesea cancelar algun pedido? s/n\n>>")
         if confirma == 's' and len(pedidosCliente) >1:
             cancelado = intInput(f"Qué número de pedido desea cancelar? entre 1 y {len(pedidosCliente)}\n>>")
-            while cancelado not in range(1, len(pedidosCliente)):
+            while cancelado not in range(1, len(pedidosCliente)+1):
                 cancelado = intInput(f"Debe seleccionar un número entre 1 y {len(pedidosCliente)}\n>>")
             pedidos.remove(pedidosCliente[cancelado-1])
             guardarDatos(cnf.rutas["pedidos"], pedidos)

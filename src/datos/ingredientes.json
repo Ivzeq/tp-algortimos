@@ -7,27 +7,27 @@
     {
         "id": "SLT",
         "nombre": "Sal",
-        "cantidad": 76
+        "cantidad": 74
     },
     {
         "id": "PMT",
         "nombre": "Pimienta",
-        "cantidad": 70
+        "cantidad": 68
     },
     {
         "id": "TNR",
         "nombre": "Ternera",
-        "cantidad": 17
+        "cantidad": 15
     },
     {
         "id": "PNR",
         "nombre": "Pan rallado",
-        "cantidad": 38
+        "cantidad": 36
     },
     {
         "id": "HVO",
         "nombre": "Huevo",
-        "cantidad": 36
+        "cantidad": 34
     },
     {
         "id": "PLL",

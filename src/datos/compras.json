@@ -1,1 +1,17 @@
-[]
+[
+    {
+        "id": "ARZ",
+        "nombre": "Arroz",
+        "cantidad": 3
+    },
+    {
+        "id": "AZF",
+        "nombre": "Azafr\u00e1n",
+        "cantidad": 2
+    },
+    {
+        "id": "MRC",
+        "nombre": "Mariscos",
+        "cantidad": 2
+    }
+]

@@ -9,6 +9,7 @@
 ║ 1 → Ver menu                           ║
 ║ 2 → Realizar pedido                    ║
 ║ 3 → Ver estado de pedidos              ║
+║ 4 → Salir                              ║
 ║                                        ║
 ╚════════════════════════════════════════╝ 
 >>Ingrese opción:

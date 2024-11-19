@@ -1,24 +1,7 @@
 [
     {
-        "nombre": "Ale",
-        "mesa": 2,
-        "estado": "listo",
-        "platos": [
-            [
-                "asado de tira",
-                1,
-                "AST"
-            ],
-            [
-                "ensalada caprese",
-                2,
-                "ECP"
-            ]
-        ]
-    },
-    {
         "nombre": "Michael",
-        "mesa": "1",
+        "mesa": 1,
         "estado": "en preparaci\u00f3n",
         "platos": [
             [
@@ -30,6 +13,23 @@
                 "ensalada Caesar",
                 2,
                 "ECA"
+            ]
+        ]
+    },
+    {
+        "nombre": "Ale",
+        "mesa": 2,
+        "estado": "entregado",
+        "platos": [
+            [
+                "asado de tira",
+                1,
+                "AST"
+            ],
+            [
+                "ensalada caprese",
+                2,
+                "ECP"
             ]
         ]
     }
