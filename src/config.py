@@ -55,6 +55,8 @@ menu = [
     ["Ensalada Caprese", 8000, "ensalada", 15]
 ]
 
+
+
 """inventario para almacenar ingredientes y sus cantidades"""
 inventario = {
     "Bife de Chorizo": 10,  # Cantidad en unidades

@@ -48,7 +48,6 @@ while(config.appState != config.possibleStatesTupla[-1]):
     # ---Funcionalidad verPerfiles
     # ------- Pendiente validacion de inpu
     if config.appState == 'verPerfiles':
-        
         while True:
             config.limp()
             idPerfil = input('>> Ingrese all para ver todos los perfiles o el nombre exacto del userType: ')
@@ -65,6 +64,13 @@ while(config.appState != config.possibleStatesTupla[-1]):
             else:
                 break
         fn.mostrarUserTypes(perfil)
+        
+    if config.appState=='cerrarMesa':
+        #fn.cerrarOrden()
+        pass
+            
+        
+    
     # ---Funcionalidad verMesas
     # ------- Pendiente validacion de input
     if config.appState=="recepcion":

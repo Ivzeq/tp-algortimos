@@ -172,7 +172,6 @@ def impresionPedidosIndividuales(diccionario):#chk
     for plato in diccionario['platos']:
         print(f"║{(diccionario['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
     print("""╚═══════════════════════════════════════════════════════╝""")
-
 def impresionRecetas(recetas):#chk
     i=0
     for elemento in recetas: #Imprime los nombres de las recetas
@@ -205,7 +204,6 @@ def mostrar_menu_platos(menu):#chk
     for idx, plato in enumerate(menu, start=1):
         print(f"║{idx:<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} ║")
     print("""╚═══════════════════════════════════════════════════════╝""")
-
 def verPedidos(pedido):#chk
     if len(pedido['platos']) > 0:#verifica que tenga pedidos
         impresionPedidosIndividuales(pedido)#llamada a funcion para imprimir diccionarios
@@ -241,6 +239,74 @@ def menuOpcionesAdministracion():#chk
 def impresionInventario(inventario):#chk
     for clave,valor in inventario.items():
         print(f"{clave}:{valor}")
+
+
+
+
+
+
+
+
+
+
+
+def cerrarOrden():
+    listanombres=[]
+    contador=0
+    precios={}
+    for elemento in config.pedidos:
+        contador+=1
+        print(f"{'>> Pedido numero → ' + str(contador):^55}")
+        impresionPedidosIndividuales(elemento)
+    while True:
+        try:
+            numPedido=int(input(">>Ingrese numero de pedido a cerrar\n>> "))
+            listaAuxiliarPedidos=list(range(1,len(config.pedidos)+1))
+            if numPedido not in listaAuxiliarPedidos:
+                raise ValueError    
+        except ValueError:
+            print('>> opcion ingresada no valida\n>> Ingrese una opcion valida')
+        except KeyboardInterrupt:
+            print(f'>> Fin..')
+            sys.exit(0)
+        except Exception as ms:
+            print('>> Ha ocurrido un error -> {ms}')
+        else:
+            break            
+    numMesa=config.pedidos[numPedido-1]['mesa']#AGARRAMOS EL ID DE LA MESA DEL PEDIDO
+    pedido=config.pedidos[numPedido-1]
+    config.mesas[int(numMesa)]['estado']='libre'
+    config.mesas[int(numMesa)]['reserva']='sin reserva'
+    config.mesas[int(numMesa)]['cantPersonas']=0
+    for plato in pedido['platos']:
+        listanombres.append(plato[0])
+    for elemento in config.menu:
+        if elemento[0] in listanombres:
+            precios[elemento[0]]=elemento[1]
+    print(f"""╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║                     🍽 RESTAURANTE🍽                    ║
+{"║":<2}Pedido  de → {pedido["nombre"].capitalize():<31}Mesa -> {pedido["mesa"]:<2}║                    
+║                                                       ║
+╠═══════════════════════════════════════════════════════╣
+║{'Cant':<3}║{'Plato':<28}║{'Precio':<6}║{'Subtotal':<15}║
+╠═══════════════════════════════════════════════════════╣""")
+    for plato in pedido['platos']:
+        print(f"║{plato[1]:<4}║{plato[0]:<28}║{precios[plato[0]]}║{(precios[plato[0]])*plato[1]}║")
+    print("""╚═══════════════════════════════════════════════════════╝""")
+    del config.pedidos[numPedido-1]
+    guardadoMesas(config.mesas)
+    guardadoPedidos(config.pedidos)
+
+
+
+
+
+
+
+
+
+
 
 
 
