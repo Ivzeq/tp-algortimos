@@ -38,7 +38,7 @@ Repositorios para el TP de AED
 12. git
     - Se utilizó git desde el principio del proyecto para trabajar en conjunto
 
-## Temas a implementar en el hito 2
+## Temas a implementar en el hito 1
 
 - Matrices
 - Tuplas
