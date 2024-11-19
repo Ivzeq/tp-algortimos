@@ -233,7 +233,7 @@ recetas = [
         "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
     }
 ]
-possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','reservar','recepcion','finalizado')
+possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','reservar','recepcion','cerrarOrden','finalizado')
 
 userTypes = [
     {
@@ -250,7 +250,7 @@ userTypes = [
     },
     {
        "userType": 'mesero',
-       "permisos": ['verMesas', 'recepcion','finalizado']
+       "permisos": ['verMesas', 'recepcion','cerrarOrden','finalizado']
     }
 ]
 

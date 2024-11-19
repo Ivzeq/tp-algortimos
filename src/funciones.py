@@ -66,6 +66,8 @@ def impresionPermisos(userType,appState):#CHK
         elif appState=="2":
             appState="recepcion"
         elif appState=="3":
+            appState="cerrarOrden" 
+        elif appState=="4":
             appState="finalizado" 
     return appState
 
@@ -254,55 +256,59 @@ def cerrarOrden():
     listanombres=[]
     contador=0
     precios={}
-    for elemento in config.pedidos:
-        contador+=1
-        print(f"{'>> Pedido numero → ' + str(contador):^55}")
-        impresionPedidosIndividuales(elemento)
-    while True:
-        try:
-            numPedido=int(input(">>Ingrese numero de pedido a cerrar\n>> "))
-            listaAuxiliarPedidos=list(range(1,len(config.pedidos)+1))
-            if numPedido not in listaAuxiliarPedidos:
-                raise ValueError    
-        except ValueError:
-            print('>> opcion ingresada no valida\n>> Ingrese una opcion valida')
-        except KeyboardInterrupt:
-            print(f'>> Fin..')
-            sys.exit(0)
-        except Exception as ms:
-            print('>> Ha ocurrido un error -> {ms}')
-        else:
-            break            
-    numMesa=config.pedidos[numPedido-1]['mesa']#AGARRAMOS EL ID DE LA MESA DEL PEDIDO
-    pedido=config.pedidos[numPedido-1]
-    config.mesas[int(numMesa)-1]['estado']='libre'
-    config.mesas[int(numMesa)-1]['reserva']='sin reserva'
-    config.mesas[int(numMesa)-1]['cantPersonas']=0
-    for plato in pedido['platos']:
-        listanombres.append(plato[0])
-    for elemento in config.menu:
-        if elemento[0] in listanombres:
-            precios[elemento[0]]=elemento[1]
-    texto_pedido = f"""╔═══════════════════════════════════════════════════════╗
-║                                                       ║
-║                     🍽 RESTAURANTE🍽                    ║
-{"║":<2}Pedido  de → {pedido["nombre"].capitalize():<31}Mesa -> {pedido["mesa"]:<2}║                    
-║                                                       ║
-╠═══════════════════════════════════════════════════════╣
-║{'Cant':<3}║{'Plato':<28}║{'Precio':<6}║{'Subtotal':>14}║
-╠═══════════════════════════════════════════════════════╣"""
     
-    for plato in pedido['platos']:
-        texto_pedido += f"\n║{plato[1]:<4}║{plato[0]:<28}║{precios[plato[0]]:>6}║{(precios[plato[0]])*plato[1]:>14}║"
-    texto_pedido += "\n╚═══════════════════════════════════════════════════════╝"
-    try:
-        with open(config.ticketsPath,'a', encoding='utf-8') as archivo:
-            archivo.write(texto_pedido+"\n")
-    except Exception as er:
-        print('>> Error al guardar el ticket ',er)
-    del config.pedidos[numPedido-1]
-    guardadoMesas(config.mesas)
-    guardadoPedidos(config.pedidos)
+    if len(config.pedidos)>0:
+        for elemento in config.pedidos:
+            contador+=1
+            print(f"{'>> Pedido numero → ' + str(contador):^55}")
+            impresionPedidosIndividuales(elemento)
+        while True:
+            try:
+                numPedido=int(input(">>Ingrese numero de pedido a cerrar\n>> "))
+                listaAuxiliarPedidos=list(range(1,len(config.pedidos)+1))
+                if numPedido not in listaAuxiliarPedidos:
+                    raise ValueError    
+            except ValueError:
+                print('>> opcion ingresada no valida\n>> Ingrese una opcion valida')
+            except KeyboardInterrupt:
+                print(f'>> Fin..')
+                sys.exit(0)
+            except Exception as ms:
+                print('>> Ha ocurrido un error -> {ms}')
+            else:
+                break            
+        numMesa=config.pedidos[numPedido-1]['mesa']#AGARRAMOS EL ID DE LA MESA DEL PEDIDO
+        pedido=config.pedidos[numPedido-1]
+        config.mesas[int(numMesa)-1]['estado']='libre'
+        config.mesas[int(numMesa)-1]['reserva']='sin reserva'
+        config.mesas[int(numMesa)-1]['cantPersonas']=0
+        for plato in pedido['platos']:
+            listanombres.append(plato[0])
+        for elemento in config.menu:
+            if elemento[0] in listanombres:
+                precios[elemento[0]]=elemento[1]
+        texto_pedido = f"""╔═══════════════════════════════════════════════════════╗
+    ║                                                       ║
+    ║                     🍽 RESTAURANTE🍽                    ║
+    {"║":<2}Pedido  de → {pedido["nombre"].capitalize():<31}Mesa -> {pedido["mesa"]:<2}║                    
+    ║                                                       ║
+    ╠═══════════════════════════════════════════════════════╣
+    ║{'Cant':<3}║{'Plato':<28}║{'Precio':<6}║{'Subtotal':>14}║
+    ╠═══════════════════════════════════════════════════════╣"""
+        
+        for plato in pedido['platos']:
+            texto_pedido += f"\n║{plato[1]:<4}║{plato[0]:<28}║{precios[plato[0]]:>6}║{(precios[plato[0]])*plato[1]:>14}║"
+        texto_pedido += "\n╚═══════════════════════════════════════════════════════╝"
+        try:
+            with open(config.ticketsPath,'a', encoding='utf-8') as archivo:
+                archivo.write(texto_pedido+"\n")
+        except Exception as er:
+            print('>> Error al guardar el ticket ',er)
+        del config.pedidos[numPedido-1]
+        guardadoMesas(config.mesas)
+        guardadoPedidos(config.pedidos)
+    else:
+        input('>> No hay pedidos para cerrar\n<< Enter para continuar')
 
 
 

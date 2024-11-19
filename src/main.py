@@ -39,7 +39,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
     # Verificacion de state
     while (config.appState not in config.possibleStatesTupla) | (fn.verificarPermisos(config.appState,config.loggedUserPermissions) == False):
         config.limp()
-        print('>>La opcion ingresada no es valido. Ingrese uno de los siguientes posibles')
+        print('>>La opcion ingresada no es valida. Ingrese uno de los siguientes posibles')
         input(">>Enter para continuar")
         config.limp()
         config.appState=fn.impresionPermisos(tipoIngresado,config.appState)
@@ -65,9 +65,9 @@ while(config.appState != config.possibleStatesTupla[-1]):
                 break
         fn.mostrarUserTypes(perfil)
         
-    if config.appState=='cerrarMesa':
-        #fn.cerrarOrden()
-        pass
+    if config.appState=='cerrarOrden':
+        fn.cerrarOrden()
+        
             
         
     
