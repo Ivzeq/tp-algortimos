@@ -1,142 +1,103 @@
-import copy
-import sys
-import config
+import re
 import json
+import config as cnf
+import math
+from copy import deepcopy
+from functools import reduce
 
-#FUNCIONES EN RELACION A INICIO
-def guardadoPedidos(pedidos):
-    """recibe una estructura pedidos modificada y la guarda en el archivo json "pedidos" """
+class IngredienteInsuficiente(Exception):
+    pass
+
+def registrarExcepcion(e):
     try:
-        with open('src/datos/pedidos.json','w') as archivo:
-            archivo.write(json.dumps(pedidos))    
-    except Exception as er:
-        print(f'>>ERROR con escritura de datos {er}')
-    
-def verificarTipo (type):#CHK
-    tipoValido = False
-    for userType in config.userTypes:
-        if userType['userType'] == type:
-            tipoValido = True
-    return tipoValido
-def getPermisos (type):#CHK
-    for userType in config.userTypes:
-        if userType['userType'] == type:
-            return userType['permisos']
-    else:
-        return None
-def verificarPermisos (state, permisos):#CHK
-    stateValido = False
-    for permiso in permisos:
-        if permiso == state:
-            stateValido = True
-    return stateValido
-def impresionPermisos(userType,appState):#CHK
-    config.limp()
-    if userType=="cliente":
-        appState=input(config.ui[1])
-        if appState=="1":
-            appState="operar"
-        elif appState=="2":#m
-            appState="reservar"
-        elif appState=="3":
-            appState="finalizado"
-    elif userType=="admin":
-        appState=input(config.ui[2])
-        if appState=="1":
-            appState="verPerfiles"
-        elif appState=="2":
-            appState="verMesas"
-        elif appState=="3":
-            appState="pedidos"
-        elif appState=="4":
-            appState="finalizado"  
-    elif userType=='cocinero':
-        appState="pedidos"      
-    elif userType=='mesero':
-        appState=input(config.ui[3])    
-        if appState=="1":
-            appState="verMesas"
-        elif appState=="2":
-            appState="recepcion"
-        elif appState=="3":
-            appState="finalizado" 
-    return appState
+        archivo = open('tp-algoritmos-ale\\src\\datos\\restaurant.log', 'a')
+        try:
+            error = f"Tipo: {type(e)} - Mensaje: {str(e)}\n"
+            print(f"Ocurrió un error: {error}")
+            archivo.write(error)
+        finally:
+            archivo.close()
+    except Exception as logError:
+        print(f"Error al escribir en el log: {logError}")
 
-def getPerfiles (id):#CHK
-    if id == 'all':
-        return config.userTypes
-    else:
-        contenedorPerfil=[]
-        for userType in config.userTypes:
-            if userType['userType'] == id:
-                contenedorPerfil.append(userType)
-                return contenedorPerfil
-    return None
-def mostrarUserTypes(userTypes):#CHK
-    print(f"""
-╔══════════════════════════════════════════════════════════════╗
-║ {'Usuarios':<15}║{'Permisos':<45}║
-╠══════════════════════════════════════════════════════════════╣""")
-    for userType in userTypes:#va a recorrer la lista de dicts
-        permisos = ', '.join(userType['permisos']).lower()#unifica los elementos de la clave "permisos"
-        print(f"║ {userType['userType'].capitalize():<15}║{permisos:<45}║")
-    print("╚══════════════════════════════════════════════════════════════╝")
-    input(">>Enter para continuar\n")
-
-def verificador_disponibilidad(cantidad_comensales,mesas):#CHK
-    """variables"""
-    for elemento in mesas:
-        if elemento["maxPersonas"]>=cantidad_comensales and elemento["estado"]=="libre":
-            #"si hay disponibilidad de mesas"
-            config.id_mesa= elemento["idMesa"]
-            return True
-            #devuelve true y modifica el id de la mesa
-    return False
-def excepcionNumeroEnteros(mensaje):
-    """Esta funcion tiene como fin manejar errores cuando el usuario debe ingresar un dato del tipo entero, retorna un entero. recibe como parametro un mensaje con el que se pide el dato"""
-    variable=0
+def intInput(prompt):
     while True:
         try:
-            variable=int(input(mensaje))
+            userInput = input(prompt)
+            # Si la entrada no es un número entero no negativo
+            while not re.match(r'^[0-9]+$', userInput):
+                userInput = input("Entrada no válida. Por favor, ingrese un número.\n>>")
+            return int(userInput)
         except ValueError:
-            print(f'>> Opcion ingresada no valida\n>> Ingresar opcion valida')
-        except Exception as ms:
-            print(f'>> Ha ocurrido un error -> {ms}')
-        else:
-            break
-    return variable
+            print("Entrada no válida. Se esperaba un número entero")
+        except Exception as e:
+            registrarExcepcion(e)
+            print(e)
 
+def charInput(prompt):
+    while True:
+        try:
+            userInput = input(prompt)
+            # Verifica que la entrada tenga solo letras y espacios, y no comience con espacio
+            while not re.match(r'^[A-Za-z]+([ ]?[A-Za-z]+)*$', userInput):
+                userInput = input("Entrada no válida. Por favor, ingrese uno o más caracteres alfabéticos. No puede comenzar con espacio.\n>>")
+            return userInput
+        except Exception as e:
+            registrarExcepcion(e)
+            print(e)
 
+def codeInput(prompt):
+    while True:
+        try:
+            userInput = input(prompt)
+            # Verifica si el input son 3 caracteres alfabéticos
+            while not re.match(r'^[A-Za-z]{3}$$', userInput):
+                userInput = input("Código inválido. Ingrese un código de 3 caracteres.\n>>")
+            return userInput.upper()
+        except Exception as e:
+            registrarExcepcion(e)
+            print(e)
 
-#FUNCIONES DE IMPRESION
-def getMesas (id):#CHK
-    if id == 'all':
-        return config.mesas
-    else:
-        contenedorMesa=[]#para almacenar el diccionario mesa
-        for mesa in config.mesas:
-            if mesa['idMesa'] == id:
-                contenedorMesa.append(mesa)
-                return contenedorMesa
-    return None
-def impresionMesas(mesas):#chk
+def confirmInput(prompt):
+    while True:
+        try:
+            userInput = input(prompt)
+            # Verifica si el input es s o n
+            while not re.match(r'^[sn]{1}', userInput):
+                userInput = input("Ingreso inválido. Ingrese s para confirmar, n para cancelar.\n>>")
+            return userInput.lower()
+        except Exception as e:
+            registrarExcepcion(e)
+            print(e)
 
-    if len(mesas)%2==0:#CHK
+def verifCodigo(lista, codigo):
+    conjunto = conjuntoCodigo(lista)
+    return codigo in conjunto
+
+def cargarDatos(ruta):
+    with open(ruta, 'r') as archivo:
+        return json.load(archivo)
+
+def guardarDatos(ruta, datos):
+    with open(ruta, 'w') as archivo:
+        json.dump(datos, archivo, indent=4)
+
+def impresionMesas():
+    mesas = cnf.mesas
+    if len(mesas)%2==0:
         print(f"""
 ╔═════════════════════════════════════════════╗
 ║                                             ║
-║            🍽 RESTAURANTE🍽                   ║
+║              🍽 RESTAURANTE🍽                 ║
 ║                   Mesas                     ║
 ║                                             ║""")
         for i in range(0,len(mesas),2):
             print(f"""╠═════════════════════════════════════════════╣
 {"║":<2}{"Mesa →":<17}{(mesas[i]["idMesa"]):>4}{"║":<2}{"Mesa →":<17}{(mesas[i+1]["idMesa"]):>4}║
-╠═════════════════════════════════════════════╣
+╠----------------------║----------------------╣
 {"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}{"Estado →":<9}{(mesas[i+1]["estado"][0:12].capitalize()):>12}║
-{"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}{"Reserva →":<9}{(mesas[i+1]["reserva"][0:12].capitalize()):>12}║
-{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}{"Personas →":<17}{(mesas[i+1]["cantPersonas"]):>4}║
-{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}{"Limite →":<17}{(mesas[i+1]["maxPersonas"]):>4}║""")       
-        input(f"╚═════════════════════════════════════════════╝\n>>Enter para continuar")      
+{"║":<2}{"Cliente →":<9}{(mesas[i]["cliente"][0:12].capitalize()):>12}{"║":<2}{"Cliente →":<9}{(mesas[i+1]["cliente"][0:12].capitalize()):>12}║""")     
+        print("╚═════════════════════════════════════════════╝")  
     else:
         print(f"""
 ╔══════════════════════╗
@@ -149,45 +110,12 @@ def impresionMesas(mesas):#chk
 {"║":<5}{"Mesa → ".center(12)}{mesas[i]["idMesa"]:<6}║
 ╠══════════════════════╣
 {"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}
-{"║":<2}{"Reserva →":<9}{(mesas[i]["reserva"][0:12].capitalize()):>12}{"║":<2}
-{"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}
-{"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}""")
+{"║":<2}{"Cliente →":<9}{(mesas[i]["cliente"][0:12].capitalize()):>12}{"║":<2}""")
        
-        input(f"╚══════════════════════╝\n>>Enter para continuar")  
-def impresionPedidosIndividuales(diccionario):#chk
+        input(f"╚══════════════════════╝\n>>Enter para continuar")
 
-    print(f"""╔═══════════════════════════════════════════════════════╗
-║                                                       ║
-║                     🍽 RESTAURANTE🍽                    ║
-{"║":<2}Pedidos de → {diccionario["nombre"].capitalize():<31}Mesa -> {diccionario["mesa"]:<2}║                    
-║                                                       ║
-╠═══════════════════════════════════════════════════════╣
-║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
-╠═══════════════════════════════════════════════════════╣""")
-    for plato in diccionario['platos']:
-        print(f"║{(diccionario['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{plato[2]:<17}║")
-    print("""╚═══════════════════════════════════════════════════════╝""")
-    input("Presione Enter para continuar>>")
-def impresionRecetas(recetas):#chk
-    i=0
-    for elemento in recetas: #Imprime los nombres de las recetas
-        print(f"{elemento.get('nombre')}")
-    nombre=input("Ingrese nombre de plato: ").capitalize()
-    config.limp()
-    while i<len(recetas) and recetas[i].get("nombre")!=nombre:
-        i=i+1
-    if i>=len(recetas):
-        print("nombre no encontrado")
-    else: #Si encuentra el plato
-        for clave,valor in recetas[i].items():
-            if clave=="ingredientes":
-                largo=len(recetas[i]["ingredientes"])
-                for j in range(largo):
-                    print(f"Ingrediente \"{j}\"={recetas[i+1]['ingredientes'][j]}")
-            else:
-                print(f"{clave} : {valor}")   
-def mostrar_menu_platos(menu):#chk
-    config.limp()
+def impresionMenu():#chk
+    menu = cnf.menu
     print(f"""
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
@@ -198,363 +126,556 @@ def mostrar_menu_platos(menu):#chk
 ║{'Num':<4}║{'Plato':<28}║{'Precio':<10}║{'Categoría':<10}║
 ╠═══════════════════════════════════════════════════════╣""")
     for idx, plato in enumerate(menu, start=1):
-        print(f"║{idx:<4}║{plato[0]:<28}║{plato[1]:<10}║{plato[2]:<9} ║")
+        print(f"║{idx:<4}║{plato[1]:<28}║{plato[2]:<10}║{plato[3]:<9} ║")
     print("""╚═══════════════════════════════════════════════════════╝""")
     input("Presione Enter para continuar>>")
 
-def verPedidos(pedido):#chk
-    if len(pedido['platos']) > 0:#verifica que tenga pedidos
-        impresionPedidosIndividuales(pedido)#llamada a funcion para imprimir diccionarios
-        opcion = input("¿Desea cancelar algún pedido? (s/n): ").lower()
-        if opcion == 's':
-            numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
-            while numPedido<0 or numPedido>len(pedido):
-                numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
-            del pedido['platos'][numPedido]
-            print("Pedido cancelado.")
+def impresionPedidos(pedidos):
+    for idx, pedido in enumerate(pedidos, start=1):
+        estado = pedido["estado"]
+        print(f"""╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║                     🍽 RESTAURANTE🍽                    ║
+{"║":<2}{idx}: Pedido de → {pedido["nombre"].capitalize():<29}Mesa → {pedido["mesa"]:<3}║                    
+║                                                       ║
+╠═══════════════════════════════════════════════════════╣
+║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
+╠═══════════════════════════════════════════════════════╣""")
+        for plato in pedido['platos']:
+            print(f"║{(pedido['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{estado.capitalize():<17}║")
+        print("""╚═══════════════════════════════════════════════════════╝""")
+
+def resumenPedido(nombre, mesa, pedido):
+    total = totalCuenta(pedido)
+    print(f"""╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║                     🍽 RESTAURANTE🍽                    ║
+{"║":<2}Pedido de → {nombre.capitalize():<31}Mesa → {mesa:<3} ║
+║                                                       ║
+╠═══════════════════════════════════════════════════════╣
+║{'Num':<5}║{'Plato':<28}║{'Cant':<20}║
+╠═══════════════════════════════════════════════════════╣""")
+    
+    # Mostrar los platos del pedido
+    for idx, plato in enumerate(pedido['platos'], start=1):
+        print(f"║{idx:<5}║{plato[0]:<28}║{plato[1]:<20}║")
+    
+    # Imprimir el total en un recuadro
+    print(f"""╠═══════════════════════════════════════════════════════╣
+║                    Total: {total:<25}   ║
+╚═══════════════════════════════════════════════════════╝""")
+
+def impresionRecetas():
+    recetas = cnf.recetas
+    ordenadas = sorted(recetas, key=lambda r: r['nombre'])
+    print("Listado de recetas:")
+    for receta in ordenadas:
+        print(f"{receta['id']}: {receta['nombre']}")
+
+"""def impresionIngredientes(ingredientes):
+    ordenados = sorted(ingredientes, key=lambda r: r['nombre'])
+    print("Listado de recetas:")
+    for ingrediente in ordenados:
+        print(f"{ingrediente['id']}: {ingrediente['nombre']}")"""
+
+def impresionIngredientes(ingredientes, columnas=3):
+    ordenados = sorted(ingredientes, key=lambda r: r['nombre'])
+    filas = math.ceil(len(ordenados) / columnas)
+    columnasIngredientes = [ordenados[i*filas:(i+1)*filas] for i in range(columnas)]
+    print("Listado de Ingredientes:")
+    
+    for i in range(filas):
+        fila = ""
+        for col in range(columnas):
+            if i < len(columnasIngredientes[col]):  # Si hay suficientes ingredientes para esta fila
+                ingrediente = columnasIngredientes[col][i]
+                fila += f"{ingrediente['id']}: {ingrediente['nombre']:<30}  "
+        print(fila)
+
+def verificarStock(codReceta, recetas,ingredientes):
+    receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
+    for ingReceta in receta['ingredientes']:
+        for nombreIngrediente, cantIngrediente in ingReceta.items():
+            # Buscar el ingrediente en el stock
+            ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
+            # Verificar si hay suficiente cantidad en el stock
+            if ingredienteStock['cantidad'] < cantIngrediente:
+                return False
+    
+    return True
+
+
+def restarIngredientes(codReceta, recetas, ingredientes):
+    # Buscar la receta por código usando filter
+    receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
+
+    try:
+        # Verificar si los ingredientes están disponibles en la cantidad suficiente
+        if verificarStock(ingredientes, receta):
+            # Si los ingredientes son suficientes, restar las cantidades
+            restarAuxIngredientes(codReceta, recetas, ingredientes)
+            guardarDatos(cnf.rutas("ingredientes"), ingredientes)
+        else:
+            raise IngredienteInsuficiente("Cantidad de ingredientes insuficiente.\n")
+    except IngredienteInsuficiente as e:
+        registrarExcepcion(e)
+    
+#Resta ingredientes pero no modifica el json
+def restarAuxIngredientes(codReceta, recetas, ingredientes):
+    # Buscar la receta por código usando filter
+    receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
+
+    for ingReceta in receta['ingredientes']:
+        for nombreIngrediente, cantIngrediente in ingReceta.items():
+            # Restar la cantidad del stock
+            ingredienteStock = next(i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower())
+            ingredienteStock['cantidad'] -= cantIngrediente
+
+def sumarAuxIngredientes(codReceta, recetas, ingredientes):
+    # Buscar la receta por código usando filter
+    receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
+
+    for ingReceta in receta['ingredientes']:
+        for nombreIngrediente, cantIngrediente in ingReceta.items():
+            # Restar la cantidad del stock
+            ingredienteStock = next(i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower())
+            ingredienteStock['cantidad'] += cantIngrediente
+
+def restarStock(codReceta, recetas, ingredientes, cant):
+    for i in range(cant):
+        restarAuxIngredientes(codReceta, recetas, ingredientes)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+
+def devolverStock(codReceta, recetas, ingredientes, cant):
+    for i in range(cant):
+        sumarAuxIngredientes(codReceta, recetas, ingredientes)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    
+def conjuntoIngredientes(ingredientes):
+    return set(ingrediente['nombre'].lower() for ingrediente in ingredientes if ingrediente['cantidad']>0)
+
+def conjuntoCodigo(lista):
+    return set(diccionario['id'] for diccionario in lista)
+
+def conjuntoIngrReceta(codReceta, recetas):
+    receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
+    return set([list(ing.keys())[0].lower() for ing in receta['ingredientes']])
+
+def calcularStock(codReceta, recetas, ingredientes):
+    # Verificar si los ingredientes necesarios están disponibles en el stock
+    if not conjuntoIngrReceta(codReceta, recetas).issubset(conjuntoIngredientes(ingredientes)):
+        return 0
+    
+    # Crear una copia local de los ingredientes para evitar modificar el original
+    ingredientesLocal = deepcopy(ingredientes)
+    
+    # Resta los ingredientes necesarios para preparar una unidad
+    restarAuxIngredientes(codReceta, recetas, ingredientesLocal)
+    
+    # Llamada recursiva con la copia actualizada de ingredientes
+    return 1 + calcularStock(codReceta, recetas, ingredientesLocal)
+
+
+def pedirIngredientes(ingredientes, compras):
+    while True:
+        #Primero mostrar el stock actual
+        impresionIngredientes(ingredientes)
+        #Mostrar el pedido hasta ahora para poder verificar
+        print("\nEl pedido actual es el siguiente:\n")
+        print(f"{'ID':<10}{'Nombre':<20}{'Cantidad':<10}")
+        print("="*40)
+        for pedido in compras:
+            print(f"{pedido['id']:<10}{pedido['nombre']:<20}{pedido['cantidad']:<10}")
+        cod = codeInput("\n\nIngrese el código del ingrediente:\n>>")
+        #Verificar que el codigo exista
+        while not verifCodigo(ingredientes, cod):
+            cod = codeInput("Código no válido. Ingrese un código existente.\n>>")
+        cant = intInput("Ingrese la cantidad a pedir:\n>>")
+        #Buscar el ingrediente
+        ingrediente = next((ing for ing in ingredientes if ing["id"] == str(cod)), None)
+        #ver si esta ya en el pedido
+        enPedido = next((ing for ing in compras if ing["id"] == str(cod)), None)
+
+        if enPedido:
+            enPedido["cantidad"] += cant
+        else:
+            agregar = {"id": str(cod), "nombre": ingrediente["nombre"], "cantidad": cant}
+            compras.append(agregar)
+        
+        seguir = input("¿Desea agregar más ingredientes? (s/n):\n>>").strip().lower()
+        if seguir != "s":
+            break
+    #Actualizar archivo de pedido de ingredientes
+    guardarDatos(cnf.rutas["compras"], compras)
+
+def impresionCompras(compras):
+    print("\nEl pedido actual es el siguiente:\n")
+    print(f"{'ID':<10}{'Nombre':<20}{'Cantidad':<10}")
+    print("="*40)
+    for pedido in compras:
+        print(f"{pedido['id']:<10}{pedido['nombre']:<20}{pedido['cantidad']:<10}")
+
+def modificarCompras(compras):
+    if len(compras) > 0:
+        while True:
+            impresionCompras(compras)
+            cod = codeInput("\n\nIngrese el código del ingrediente:\n>>")
+            while not verifCodigo(compras, cod):
+                cod = codeInput("Código no válido. Ingrese un código existente.\n>>")
+            cant = intInput("Ingrese la cantidad total deseada:\n>>") 
+
+            enPedido = next((ing for ing in compras if ing["id"] == str(cod)), None)
+            if enPedido:
+                enPedido["cantidad"] = cant 
+            
+            seguir = input("¿Desea modificar más ingredientes del pedido? (s/n):\n>>").strip().lower()
+            if seguir != "s":
+                break
+        guardarDatos(cnf.rutas["compras"], compras)
     else:
-        print("Usted no tiene pedidos activos.")
-    input("\nEnter para continuar")
-    return pedido
-def menuOpcionesAdministracion():#chk
+        print("No hay pedidos de ingredientes pendientes.")
+        return
+
+def actualizarStock(menu, recetas, ingredientes):
+    for plato in menu:
+        codReceta = plato[0]
+        stock = calcularStock(codReceta, recetas, ingredientes)
+        plato[4] = stock
+        guardarDatos(cnf.rutas["menu"], menu)
+
+def actualizarIngredientes(ingredientes, compras):
+    agregadas = []
+    for compra in compras:
+        for ingrediente in ingredientes:
+            if ingrediente["id"] == compra["id"]:
+                ingrediente["cantidad"] += compra["cantidad"]
+                agregadas.append(compra)
+                break
+    
+    compras = [compra for compra in compras if compra not in agregadas]
+
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    guardarDatos(cnf.rutas["compras"], compras)
+
+def totalCuenta(pedido):
+    precios = {plato[1].lower(): plato[2] for plato in cnf.menu}
+    total = reduce(lambda subtotal, platoPedido: subtotal + precios[platoPedido[0].lower()] * platoPedido[1], pedido["platos"], 0)
+    return total
+
+def hacerPedido(nombre, mesa):#chk
+    menu = cnf.menu
+    recetas = cnf.recetas
+    ingredientes = cnf.ingredientes
+    pedidos = cnf.pedidos
+    pedido={"nombre":nombre,
+            "mesa":mesa,
+            "estado": "Recibido",
+            "platos":[]}
+    impresionMenu()
     while True:
         try:
-            opcion = int(input(config.ui[6]))
-            if opcion<1 or opcion>5:
+            plato = intInput("\nIngrese numero de plato (0 para terminar):\n>>")
+            if plato not in range(1, len(menu) + 1) and plato != 0:
                 raise ValueError
         except ValueError:
-            print(f'>> Opcion invalida, Ingrese una opcion valida')
-            input('>> ENTER para continuar')
-        except KeyboardInterrupt:
-            print(f'>> Interrupcion detectada!\n>> Finalizando..')
-            sys.exit(0)
-        except Exception as ms:
-            ms=str(ms)
-            print(f'>> Ha ocurrido un error -> {ms}')
-        else:
-            break
-    return opcion
-def impresionInventario(inventario):#chk
-    for clave,valor in inventario.items():
-        print(f"{clave}:{valor}")
-
-
-
-
-#FUNCIONES DE CLIENTE
-def client_menu():
-    while True:
-        try:
-            config.limp()
-            opcion = int(input(config.ui[5]))
-            if opcion<1 or opcion>4:
-                raise ValueError
-        except ValueError:
-            print(f'>>Opcion ingresada no valida\n>>Ingrese una valida')
-            input('>> Enter para continuar')
-        except Exception as ms:
-            print(f'>> Ha ocurrido un error ->{ms}')
-        else:
-            break
-    return opcion
-def hacerPedido(pedido):#chk
-    listaAuxiliar=[]
-    while True:
-        try:
-            plato = int(input("\nIngrese numero de plato (0 para terminar): "))
-            if plato not in (list(range(0,13))):
-                raise ValueError
-        except ValueError:
-            print(' >>Opcion ingresada no valida\n>> Ingrese una opcion valida')
+            print(' >>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
         else:
             break
     while plato != 0:
-        nombrePlato=config.menu[plato-1][0]
+        nombrePlato=menu[plato-1][1].lower()
+        codPlato = menu[plato-1][0]
         while True:
             try:
-                cant = int(input(f"Seleccione una cantidad (disponible {config.menu[plato-1][3]}): "))
-                if cant > config.menu[plato-1][3]:
+                cant = int(input(f"Seleccione una cantidad (disponible {menu[plato-1][4]}): "))
+                if cant > menu[plato-1][4]:
                     raise ValueError
             except ValueError:
-                print(f'>> Opcion ingresada no valida\n>> Ingrese opcion valida')
+                print(f'>> Opcion ingresada no válida\n>> Ingrese opción válida')
             except Exception as ms:
                 ms=str(ms)
-                print(f'>>ha ocurrido un error -> {ms}')
+                print(f'>>Ha ocurrido un error -> {ms}')
             else:
                 break
-        if cant <= config.menu[plato-1][3]: #Si hay suficiente stock
-            listaAuxiliar.clear()
-            if len(pedido['platos'])>0:
-                flag=True
-                for elemento in pedido['platos']:
-                    if elemento[0]==nombrePlato:
-                        flag=False
-                        elemento[1]+=cant
-                if flag:
-                    listaAuxiliar.append(nombrePlato)
-                    listaAuxiliar.append(cant)
-                    listaAuxiliar.append("En preparacion")
-                    pedido['platos'].append(listaAuxiliar.copy())
-            else:
-                listaAuxiliar.append(nombrePlato)
-                listaAuxiliar.append(cant)
-                listaAuxiliar.append("En preparacion")
-                pedido['platos'].append(listaAuxiliar.copy())
-        
-            config.menu[plato-1][3] -= cant #Resta la cantidad pedida al stock                   
+        if cant <= menu[plato-1][4]:  # Si hay suficiente stock
+            # Si ya hay platos en el pedido
+            platoExistente = False
+            for elemento in pedido["platos"]:
+                if elemento[0].lower() == nombrePlato.lower():
+                    # Si el plato ya está en el pedido, solo actualiza la cantidad
+                    elemento[1] += cant
+                    platoExistente = True
+                    break
+
+            if not platoExistente:
+                # Si el plato no está en el pedido, se agrega
+                pedido['platos'].append([nombrePlato, cant, codPlato])
+
+            #Resta la cantidad pedida al stock
+            restarStock(codPlato, recetas, ingredientes, cant)
+            #actualiza el stock total
+            actualizarStock(menu, recetas, ingredientes)
             print(f"Has agregado {cant} de {nombrePlato} a tu pedido.")
         while True:
             try:
-                plato = int(input("\nIngrese numero de plato (0 para terminar): "))
-                if plato not in (list(range(0,13))):
+                plato = int(input("\nIngrese número de plato (0 para terminar):\n>>"))
+                if plato not in range(1, len(cnf.menu) + 1) and plato != 0:
                     raise ValueError
             except ValueError:
-                print(' >>Opcion ingresada no valida\n>> Ingrese una opcion valida')
+                print('>>Opción ingresada no válida\n>> Ingrese una opción válida')
             else:
-                break   
-    
-    
-             
-    print("Gracias por su pedido!")
-    input("\nEnter para continuar")
-def cliente():#chk
-    listaIds=[]
-    while True:
-        try:
-            nombre = input("Ingrese su nombre:\n>>").capitalize()
-            if nombre=='' or nombre.isspace():
-                raise ValueError
-            if not(nombre.isalpha()):
-                raise ValueError
-        except ValueError:
-            print(f'>> Opcion ingresada no valida\n>> Ingrese una valida')    
-        else:
-            break
-    while True:
-        try:
-            numeroMesa=input('>> Ingrese numero de mesa')
-            int(numeroMesa)
-            listaIds=[mesa['idMesa'] for mesa in config.mesas]
-            if numeroMesa not in listaIds:
-                raise ValueError
-            for mesa in config.mesas:
-                if mesa['idMesa']==numeroMesa and mesa['estado']!='libre':
-                    raise ValueError
-        except ValueError:
-            print(f'>> Opcion no valida, Ingrese una valida')
-            input('ENTER para continuar')    
-        except:
-            print('>> Ha ocurrido un error')
-            input('ENTER para continuar')
-        else:
-            break 
-    cantPersonas=excepcionNumeroEnteros('>>Ingrese la cantidad de comensales en la mesa\n>>')
-    while config.mesas[int(numeroMesa)-1]['maxPersonas']<cantPersonas:
-        print(f">>La mesa tiene capacidad para {config.mesas[int(numeroMesa)-1]['maxPersonas']} personas.\n>>Ingrese una cantidad valida")
-        input('>>ENTER para continuar')
-        cantPersonas=excepcionNumeroEnteros('>>Ingrese la cantidad de comensales en la mesa\n>>')
-    pedido={"nombre":nombre,
-            "mesa":numeroMesa,
-            "platos":[]}
-    opcion = client_menu()
-    config.limp()
-    while opcion !=4:    
-        if opcion == 1:
-            mostrar_menu_platos(config.menu)
-            config.limp()
-        elif opcion == 2:
-            mostrar_menu_platos(config.menu)     
-            hacerPedido(pedido)            
-        elif opcion == 3:
-            pedido=verPedidos(pedido)
-        opcion=client_menu()
-    config.limp()
-    if len(pedido['platos'])>0:
-        config.pedidos.append(copy.deepcopy(pedido))
-        guardadoPedidos(config.pedidos)
-        config.mesas[int(numeroMesa)-1]['estado']='ocupado'
-        config.mesas[int(numeroMesa)-1]['reserva']=nombre
-        config.mesas[int(numeroMesa)-1]['cantPersonas']=cantPersonas
-    print("Gracias!")
-def reservar(nombre):#chk    
-    impresionMesas(config.mesas)
-    reserva=str(excepcionNumeroEnteros(f">>Que mesa quiere reservar?\n>>"))
-    comensales=excepcionNumeroEnteros(f">>Para cuantas personas es la reserva?\n>>")
-    mesaEncontrada = False
-    reservado = False
-    for mesa in config.mesas:
-        #Verifico que la mesa sea valida y que haya elegido una libre
-        if mesa["idMesa"] == reserva and mesa["estado"] == "libre":
-            mesaEncontrada = True
-            if comensales <= mesa["maxPersonas"]:
-                #Si todo es correcto, actualizo la info de la mesa
-                reservado = True
-                mesa["estado"] = "reservado"
-                mesa["reserva"] = nombre
-                mesa["cantPersonas"] = comensales
-                print(f"Mesa {reserva} reservada para {comensales} personas.")
-            else:
-                #Si quiere reservar para mas personas que la capacidad de la mesa
-                print(f">>La mesa {reserva} tiene capacidad para {mesa['maxPersonas']} personas.")
-            break
-    if mesaEncontrada == False:
-        #Se selecciono una mesa que no existe o que no esta libre
-        print(">>La mesa solicitada no se encuentra disponible.")
-    elif reservado == True:
-        #Se realizo correctamente la reserva
-        print(f"Gracias por su reserva, {nombre.capitalize()}")
+                break
+    resumenPedido(nombre, mesa, pedido)
+    confirma = confirmInput("\nDesea confirmar su pedido? s/n\n>>")
+    if confirma == 's':
+        pedidos.append(pedido)
+        guardarDatos(cnf.rutas['pedidos'], pedidos)
+        print(f"Gracias {nombre}! Tu pedido fue confirmado.")
     else:
-        #Se intento reservar para mas personas que la capacidad de la mesa
-        print("Reserva no realizada.")
-    input("\nEnter para continuar")
-def verReservas(nombre):#chk
-    reservasCliente = [mesa for mesa in config.mesas if mesa["reserva"] == nombre]#enlazamos si es que nuestro cliente tiene nombre, obtenemos una lista de diccionarios
-    if len(reservasCliente) > 0:# si existe el diccionario que coincida con el nombre avanzamos
-        print(f"Reservas de {nombre.capitalize()}:")
-        impresionMesas(reservasCliente)
-        opcion=excepcionNumeroEnteros(">> ¿Desea cancelar alguna reserva?\n>> 1 -> Si\n>> 2 -> No ")
-        while (opcion <1 or opcion>2):
-            print(">> Opcion invalida")
-            opcion=excepcionNumeroEnteros(">> ¿Desea cancelar alguna reserva?\n>> 1 -> Si\n>> 2 -> No ")
-        if opcion == 1:
-            aux=[mesa["idMesa"] for mesa in reservasCliente]
-            numMesa=str(excepcionNumeroEnteros(f"Ingrese el número de mesa de la reserva que desea cancelar: ")) 
-            while numMesa not in aux:
-                numMesa=str(excepcionNumeroEnteros(f"Ingrese el número de mesa de la reserva que desea cancelar: "))    
-            for mesa in reservasCliente:
-                if mesa["idMesa"]==numMesa:
-                    mesa_cancelada=mesa
-            mesa_cancelada["estado"] = "libre"
-            mesa_cancelada["reserva"] = "sin reserva"
-            mesa_cancelada["cantPersonas"] = 0
-            print(f"Reserva de la Mesa {mesa_cancelada['idMesa']} cancelada.")
-        else:
-            pass
+        if len(pedido["platos"]) > 0:
+            for plato in pedido["platos"]:
+                codPlato = plato[2]
+                cant = plato[1]
+                devolverStock(codPlato, recetas, ingredientes, cant)
+                actualizarStock(menu, recetas, ingredientes)
+        print("Pedido cancelado.")
+
+def verPedido(nombre, mesa):
+    pedidos = cnf.pedidos
+    pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == str(mesa)]
+    impresionPedidos(pedidosCliente)
+    if len(pedidosCliente) > 0:
+        confirma = confirmInput("\nDesea cancelar algun pedido? s/n\n>>")
+        if confirma == 's' and len(pedidosCliente) >1:
+            cancelado = intInput(f"Qué número de pedido desea cancelar? entre 1 y {len(pedidosCliente)}\n>>")
+            while cancelado not in range(1, len(pedidosCliente)):
+                cancelado = intInput(f"Debe seleccionar un número entre 1 y {len(pedidosCliente)}\n>>")
+            pedidos.remove(pedidosCliente[cancelado-1])
+            guardarDatos(cnf.rutas["pedidos"], pedidos)
+            print("Pedido eliminado exitosamente.\n")
+        elif confirma == 's':
+            pedidos.remove(pedidosCliente[0])
+            guardarDatos(cnf.rutas['pedidos'], pedidos)
+            print("Pedido eliminado exitosamente.\n")
     else:
-        print("No tiene reservas activas.")
-    input("\nEnter para continuar")
-  
-  
-  
-  
-#FUNCIONES DE COCINERO
-def menuAdminPedidos():#chk
-    while True:
-        try:
-            opcion =int(input(config.ui[4]))
-            if opcion<1 or opcion>7:
-                raise ValueError
-        except ValueError:
-            print('>> Opcion ingresada no valida\n>> Ingrese una valida')
-            input('>> Enter para continuar')
-        except KeyboardInterrupt:
-            print('\n>> Interrupción detectada..\n>> Terminando tareas..\n>> Finalizando..')
-            sys.exit(0)
-        except Exception as ms:
-            ms=str(ms)
-            print(f'>> Ha ocurrido un error -> {ms}')
-            input('>> Enter para continuar')
-        else:
-            break
-    return opcion
-def administrarPedidos(pedidos):#chk
-    opcion=0
-    contador=0
-    for elemento in pedidos:
-        contador+=1
-        print(f"{'>> Pedido numero → ' + str(contador):^55}")
-        impresionPedidosIndividuales(elemento)
-    while True:
-        try:
-            numPedido=int(input(">>Ingrese numero de pedido a modificar\n>> "))
-            listaAuxiliarPedidos=list(range(1,len(pedidos)+1))
-            if numPedido not in listaAuxiliarPedidos:
-                raise ValueError    
-        except ValueError:
-            print('>> opcion ingresada no valida\n>> Ingrese una opcion valida')
-        except KeyboardInterrupt:
-            print(f'>> Interrupcion detectada\n>> Terminando tareas..\n>> Finalizando..')
-            sys.exit(0)
-        except Exception as ms:
-            print('>> Ha ocurrido un error -> {ms}')
-        else:
-            break
-    impresionPedidosIndividuales(pedidos[numPedido-1])
-    while True:
-        try:
-            plato=int(input("ingrese numero de plato a modificar"))
-            listaAuxiliar=list(range(1,len(pedidos[numPedido-1]["platos"])+1))
-            if plato not in listaAuxiliar:
-                #el valor ingresado como numero de plato no existe
-                raise ValueError
-        except ValueError:
-            print('>> opcion ingresada no valida\n>> Ingrese numero de plato invalido')
-        except KeyboardInterrupt:
-            print(f'>> Interrupcion detectada\n>> Terminando tareas..\n>> Finalizando..')
-            sys.exit(0)
-        except Exception as ms:
-            print('>> Ha ocurrido un error -> {ms}')
-        else:
-            break
-    opcion=menuOpcionesAdministracion()
-    #EXCEPCION EN CADA ACCESO
-    if opcion==1:
-        pedidos[numPedido-1]["platos"][plato-1][2]="Sin hacer"
-    elif opcion==2:
-        pedidos[numPedido-1]["platos"][plato-1][2]="En preparacion"
-    elif opcion==3:
-        pedidos[numPedido-1]["platos"][plato-1][2]="Listo"
-    elif opcion==4:
-        pedidos[numPedido-1]["platos"][plato-1][2]="Entregado"
-    elif opcion==5:
-        pedidos[numPedido-1]["platos"][plato-1][2]="Rechazado"
-    guardadoPedidos(pedidos)
-    return pedidos
+        print("No se encontraron pedidos activos.")
 
+def avanzarPedidoCocina():
+    pedidos = cnf.pedidos
+    comandas = [pedido for pedido in pedidos if pedido["estado"] in cnf.permisosEstadosCocina]
+
+    if len(comandas) == 0:
+        print("No hay comandas activas en este momento.")
+        return
     
+    impresionPedidos(comandas)
+    avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar.\n>>")
+    if avanzar == 0:
+        return
+    while avanzar not in range(1, len(comandas)+1):
+        avanzar = intInput(f"Debe seleccionar un número entre 1 y {len(comandas)}\n>>")
+    seleccionado = comandas[avanzar-1]
+    actual = seleccionado["estado"]
+    for avance in cnf.avanceEstados:
+        if actual in avance:
+            seleccionado["estado"] = avance[actual]
+            print(f"El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
+            guardarDatos(cnf.rutas["pedidos"], pedidos)
+            break
 
+def avanzarPedidoSalon():
+    pedidos = cnf.pedidos
+    comandas = [pedido for pedido in pedidos if pedido["estado"] in cnf.permisosEstadosSalon]
 
+    if len(comandas) == 0:
+        print("No hay comandas activas en este momento.")
+        return
     
-def solicitarIngredientes(inventario):#chk
-    impresionInventario(inventario)
-    nombre=input("ingrese nombre del producto a agregar").capitalize()
-    cantidad=int(input("ingrese cantidad a pedir"))
-    """modificar ingredientes"""
-    return inventario
-def repriorizarPedidos(pedidos):#chk
-    contador=0
-    for elemento in pedidos:
-        contador+=1
-        print(f"{'>> Pedido numero → ' + str(contador):^55}")
-        impresionPedidosIndividuales(elemento)
-    # Solicito el numero del pedido que se desea mover y ajusto el indice
-    numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
-    # Verifico que el numero de pedido sea valido
-    while numPedido < 0 or numPedido >= len(pedidos):
-        print("Número de pedido inválido.")
-        numPedido = int(input("Ingrese el número de pedido que desea mover: ")) - 1
-    # Solicito la nueva posicion a la que se desea mover y ajusto el indice
-    nuevaPos = int(input("Ingrese la nueva posición (1 para la primera): ")) - 1
-    pedidoMovido = pedidos[numPedido]
+    impresionPedidos(comandas)
+    avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar\n>>")
+    if avanzar == 0:
+        return
+    while avanzar not in range(1, len(comandas)+1):
+        avanzar = intInput(f"Debe seleccionar un número entre 1 y {len(comandas)}\n>>")
+    seleccionado = comandas[avanzar-1]
+    actual = seleccionado["estado"]
+    for avance in cnf.avanceEstados:
+        if actual in avance:
+            seleccionado["estado"] = avance[actual]
+            print(f"El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
+            if seleccionado['estado'].lower() == "finalizado":
+                finalizados = cnf.finalizados
+                finalizados.append(seleccionado)
+                guardarDatos(cnf.rutas["finalizados"], finalizados)
+                pedidos.remove(seleccionado)
+            guardarDatos(cnf.rutas["pedidos"], pedidos)
+            break
+
+def consultarReceta():
+    recetas = cnf.recetas
+    impresionRecetas()
+    consulta = codeInput("Ingrese el código de la receta a consultar:\n>>")
+    receta = next((r for r in recetas if r["id"] == consulta), None)
+    
+    nombre = receta["nombre"]
+    tiempo = receta["tiempo"]
+    instrucciones = receta["instrucciones"]
+    ingredientes = receta["ingredientes"]
+
+    print(f"\n{'=' * 40}")
+    print(f"Receta: {nombre}")
+    print(f"Tiempo de preparación: {tiempo}")
+    print(f"\n{'Ingredientes':^40}")
+    print(f"{'-' * 40}")
+
+    for ingrediente in ingredientes:
+        for nombreIngrediente, cantidad in ingrediente.items():
+            print(f"{nombreIngrediente:<30} {cantidad:>5}")
+
+    print(f"\n{'Instrucciones':^40}")
+    print(f"{'-' * 40}")
+    print(instrucciones)
+    print(f"{'=' * 40}\n")
+
+def cerrarMesa():
+    impresionMesas()
+    seleccionada = intInput("Qué mesa desea cerrar? 0 para salir\n>>")
+    while seleccionada not in range(0, len(cnf.mesas)+1):
+        seleccionada = intInput(f"Debe seleccionar una mesa entre 1 y {len(cnf.mesas)}, o 0 para salir.\n>>")
+    if seleccionada == 0:
+        return
+    else:
+        mesa = next((m for m in cnf.mesas if m["idMesa"] == str(seleccionada)), None)
+        if mesa:
+            mesa["estado"] = "Libre"
+            mesa["cliente"] = "Sin reserva"
+            print(f"La mesa {mesa['idMesa']} ha sido cerrada exitosamente.")
+
+            guardarDatos(cnf.rutas["mesas"], cnf.mesas)
+
+def ingresoAdmin():
+    passwords = list(map(lambda item: list(item.keys())[0], cnf.admins))
+    ingreso = charInput("Ingrese su contraseña:\n>>")
+    if ingreso in passwords:
+        adminDict = next(item for item in cnf.admins if list(item.keys())[0] == ingreso)
+        user = list(adminDict.values())[0]
+        print(f"Bienvenido, {user.capitalize()}.")
+        administrarPedidos(cnf.pedidos)
+    else:
+        print("Contraseña incorrecta. Intente nuevamente.")
+
+def cambiarEstados(pedidos):
+    estadosDisponibles = cnf.estadosPedidos
+    impresionPedidos(pedidos)
+    seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+    if seleccion == 0:
+        return
+    while seleccion not in range(1, len(pedidos) + 1):
+        seleccion = intInput(f"Debe seleccionar un número entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+        if seleccion == 0:
+            return
+    pedidoSeleccionado = pedidos[seleccion - 1]
+                
+    estadoSeleccionado = intInput(f"{cnf.estadosPedidosUI}")
+    while estadoSeleccionado not in range(1, len(estadosDisponibles) + 1):
+        estadoSeleccionado = intInput(f"Debe seleccionar un número entre 1 y {len(estadosDisponibles)}:. 0 para salir.\n>>")
+    if seleccion == 0:
+        return
+        
+    nuevoEstado = estadosDisponibles[estadoSeleccionado - 1]
+    pedidoSeleccionado["estado"] = nuevoEstado
+    print(f"El estado del pedido de {pedidoSeleccionado['nombre']} ha cambiado a: {nuevoEstado.capitalize()}")
+
+def finalizarPedido(pedidos):
+    impresionPedidos(pedidos)
+    seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+    if seleccion == 0:
+        return
+    while seleccion not in range(1, len(pedidos) + 1):
+        seleccion = intInput(f"Debe seleccionar un número entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+        if seleccion == 0:
+            return
+    pedidoSeleccionado = pedidos[seleccion - 1]
+    cnf.finalizados.append(pedidoSeleccionado)
+    pedidos.remove(pedidoSeleccionado)
+    print(f"El pedido de {pedidoSeleccionado['nombre']} ha sido finalizado.")
+    guardarDatos(cnf.rutas["finalizados"], cnf.finalizados)
+
+def cancelarPedido(pedidos):
+        impresionPedidos(pedidos)
+        seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+        if seleccion == 0:
+            return
+        while seleccion not in range(1, len(pedidos) + 1):
+            seleccion = intInput(f"Debe seleccionar un número entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+            if seleccion == 0:
+                return
+        pedidoSeleccionado = pedidos[seleccion - 1]
+        pedidos.remove(pedidoSeleccionado)
+        print(f"El pedido de {pedidoSeleccionado['nombre']} ha sido cancelado.")
+
+def repriorizarPedidos(pedidos):
+    impresionPedidos(pedidos)
+    seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+    if seleccion == 0:
+        return
+    while seleccion not in range(1, len(pedidos) + 1):
+        seleccion = intInput(f"Debe seleccionar un número entre 1 y {len(pedidos)}. 0 para salir.\n>>")
+    if seleccion == 0:
+        return
+    seleccion -= 1
+    nuevaPos = intInput("Ingrese la nueva posición (1 para la primera):\n>>") - 1
+    pedidoSeleccionado = pedidos[seleccion]
     # Elimino el pedido de su posicion original
-    pedidos = pedidos[:numPedido] + pedidos[numPedido + 1:]
+    pedidos[:] = pedidos[:seleccion] + pedidos[seleccion + 1:]
     # Si la nueva posicion excede la longitud de la lista, lo agrego al final
     if nuevaPos >= len(pedidos):
-        pedidos.append(pedidoMovido)
+        pedidos.append(pedidoSeleccionado)
     # Si ingresa 0 o negativo, lo pone primero en la lista
     elif nuevaPos <= 0:
-        pedidos = [pedidoMovido] + pedidos[:]
+        pedidos[:0] = [pedidoSeleccionado]
     else:
         # Inserto el pedido en la nueva posicion usando rebanado
-        pedidos = pedidos[:nuevaPos] + [pedidoMovido] + pedidos[nuevaPos:]
-    print("Repriorización hecha.")  
-    try:
-        with open('src/datos/pedidos.json','r+') as archivo:
-            contenido=json.load(archivo)
-            contenido=copy.deepcopy(pedidos)
-            archivo.seek(0)
-            archivo.write(json.dumps(contenido))
-    except:
-        print('>>ERROR con escritura de datos')  
-    guardadoPedidos(pedidos) 
-    return pedidos
+        pedidos[nuevaPos:nuevaPos] = [pedidoSeleccionado]
+    print(f"El pedido de '{pedidoSeleccionado['nombre']}' ha sido movido a la posición {nuevaPos + 1}.")
+    guardarDatos(cnf.rutas["pedidos"], pedidos)
+
+def administrarPedidos(pedidos):
+    if len(pedidos) == 0:
+        print("No hay pedidos activos en este momento.")
+        return
+    
+    while True:
+        accion = intInput(f"{cnf.adminUI}")
+        while accion not in [1, 2, 3, 4, 5, 6, 7]:
+            accion = intInput("Debe seleccionar una acción válida (1 a 7):\n>>")
+        
+        if accion == 1:  # Cambiar estado
+            cambiarEstados(pedidos)
+        
+        elif accion == 2:  # Finalizar pedido
+            finalizarPedido(pedidos)
+        
+        elif accion == 3:  # Cancelar pedido
+            cancelarPedido(pedidos)
+        
+        elif accion == 4: #Repriorizar pedidos
+            repriorizarPedidos(pedidos)
+        
+        elif accion == 5: #Cambiar pedidos de ingredientes
+            modificarCompras(cnf.compras)
+        
+        elif accion == 6: #Ingresar compras
+            compras = cnf.compras
+            impresionCompras(compras)
+            ingreso = confirmInput("Desea ingresar estos ingredientes al stock? s/n\n>>")
+            if ingreso == 's':
+                actualizarIngredientes(cnf.ingredientes, compras)
+                print("Ingredientes actualizados.")
+            else:
+                return
+        
+        else: #Salir
+            return
+        
+        # Guardar cambios
+        guardarDatos(cnf.rutas["pedidos"], pedidos)

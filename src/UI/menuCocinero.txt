@@ -1,18 +1,18 @@
 ╔════════════════════════════════════════╗
 ║                                        ║
 ║            🍽 RESTAURANTE🍽              ║
-║               Bienvenido               ║
+║                 Cocina                 ║
 ║                                        ║
 ╠════════════════════════════════════════╣
 ║ Ingrese opcion:                        ║
 ╠════════════════════════════════════════╣
-║ 1 → Salon                              ║
-║ 2 → Ver pedidos                        ║
-║ 3 → Administrar pedidos                ║
-║ 4 → Consultar recetas                  ║
+║ 1 → Ver pedidos                        ║
+║ 2 → Avanzar pedidos                    ║
+║ 3 → Consultar recetas                  ║
+║ 4 → Consultar ingredientes             ║
 ║ 5 → Solicitar aumento de ingredientes  ║
-║ 6 → Repriorizar Pedidos                ║
-║ 7 → Salir                              ║
+║ 6 → Consultar lista de compras         ║
+║                                        ║
 ╚════════════════════════════════════════╝   
 >>Ingrese opción:
 >> 

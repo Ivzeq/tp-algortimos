@@ -1,364 +1,56 @@
-import sys
 import json
-import os
 
-while True:
-    try:
-        pedidos_path = 'tp-algortimos/src/datos/pedidos.json'
-        pedidos = []
-        #print(os.path.exists(pedidos_path))#verificacion
-        if os.path.exists(pedidos_path):
-            with open(pedidos_path, 'r') as ar:
-                contenido = ar.read()
-                if contenido:
-                    pedidos = json.loads(contenido)
-        else:
-            with open(pedidos_path, 'w') as ar:
-                ar.write(json.dumps(pedidos))
-    except FileNotFoundError:
-        print('>>El archvio no existe o la direccion esta mal')
-        input('>>ENTER para continuar')
-        sys.exit(0)
-    except Exception as er:
-        print(f'>>Error->{er}')
-        input('>>ENTER para continuar')
-        sys.exit(0)
-    else:
-        break
+def cargarDatos(ruta):
+    with open(ruta, encoding = 'utf-8') as archivo:
+        return json.load(archivo)
 
-menu = [
-    #Matriz con columnas: Plato, Precio, Categoría, Stock
+def cargarUI(ruta):
+    with open(ruta, 'r', encoding='utf-8') as archivo:
+        return archivo.read()
 
-    # Platos de carne"
-    ["Bife de Chorizo", 15000, "carne", 10],
-    ["Asado de Tira", 12800, "carne", 8],
-    ["Milanesa de Ternera", 12000, "carne", 15],
-    
-    # Platos de pollo
-    ["Pollo al Horno", 11000, "pollo", 12],
-    ["Suprema a la Napolitana", 13000, "pollo", 9],
-    ["Pollo a la Parrilla", 12500, "pollo", 7],
-    
-    # Platos de pescado
-    ["Salmón a la Manteca", 20000, "pescado", 5],
-    ["Merluza al Horno", 16000, "pescado", 10],
-    ["Paella de Mariscos", 22000, "pescado", 6],
-    
-    # Ensaladas
-    ["Ensalada Caesar", 9000, "ensalada", 20],
-    ["Ensalada Mixta", 7500, "ensalada", 18],
-    ["Ensalada Caprese", 8000, "ensalada", 15]
+def guardarDatos(ruta, datos):
+    with open(ruta, 'w', encoding= 'utf-8') as archivo:
+        json.dump(datos, archivo, indent=4)
+
+estadosPedidos = ("recibido", "en preparación", "listo","entregado", "pagado", "finalizado")
+
+avanceEstados = [
+    {"recibido": "en preparación"},
+    {"en preparación": "listo"},
+    {"listo": "entregado"},
+    {"entregado": "pagado"},
+    {"pagado": "finalizado"}
 ]
 
-"""inventario para almacenar ingredientes y sus cantidades"""
-inventario = {
-    "Bife de Chorizo": 10,  # Cantidad en unidades
-    "Sal": 5,               # Cantidad en kg
-    "Pimienta": 2,         # Cantidad en kg
-    "Ternera": 8,          # Cantidad en unidades
-    "Pan rallado": 3,      # Cantidad en kg
-    "Huevo": 20,           # Cantidad en unidades
-    "Pollo": 15,           # Cantidad en unidades
-    "Aceite": 5,           # Cantidad en litros
-    "Especias": 1,         # Cantidad en kg
-    "Pechuga de Pollo": 10,# Cantidad en unidades
-    "Jamón": 5,            # Cantidad en kg
-    "Queso": 5,            # Cantidad en kg
-    "Limón": 20,           # Cantidad en unidades
-    "Salmón": 5,           # Cantidad en unidades
-    "Manteca": 2,          # Cantidad en kg
-    "Merluza": 5,          # Cantidad en unidades
-    "Arroz": 10,           # Cantidad en kg
-    "Mariscos": 8,         # Cantidad en kg
-    "Caldo de pescado": 5, # Cantidad en litros
-    "Pimiento": 10,        # Cantidad en unidades
-    "Guisantes": 3,        # Cantidad en kg
-    "Azafrán": 0.1,        # Cantidad en kg
-    "Lechuga": 10,         # Cantidad en unidades
-    "Tomate": 10,          # Cantidad en unidades
-    "Cebolla": 5,          # Cantidad en unidades
-    "Vinagre": 2,          # Cantidad en litros
-    "Mozzarella": 5,       # Cantidad en kg
-    "Albahaca": 0.5        # Cantidad en kg
+permisosEstadosCocina = ("recibido", "en preparación", "listo")
+permisosEstadosSalon = ("entregado", "pagado")
+admins = ({"admin": "ale"}, {"osyubdf": "michael"}, {"hsocne": "ivan"})
+
+rutas = {
+    "ingredientes": "tp-algoritmos-ale\\src\\datos\\ingredientes.json",
+    "menu": "tp-algoritmos-ale\\src\\datos\\menu.json",
+    "mesas": "tp-algoritmos-ale\\src\\datos\\mesas.json",
+    "pedidos": "tp-algoritmos-ale\\src\\datos\\pedidos.json",
+    "recetas": "tp-algoritmos-ale\\src\\datos\\recetas.json",
+    "compras": "tp-algoritmos-ale\\src\\datos\\compras.json",
+    "finalizados": "tp-algoritmos-ale\\src\\datos\\finalizados.json",
+    "log": "tp-algoritmos-ale\\src\\datos\\restaurant.log",
+    "estados": "tp-algoritmos-ale\\src\\UI\\estadosPedidos.txt",
+    "admin": "tp-algoritmos-ale\\src\\UI\\menuAdministrador.txt",
+    "cocina": "tp-algoritmos-ale\\src\\UI\\menuCocinero.txt",
+    "cliente": "tp-algoritmos-ale\\src\\UI\\menuCliente.txt",
+    "salon": "tp-algoritmos-ale\\src\\UI\\menuSalon.txt"
 }
-recetas = [
-    {
-        "nombre": "Bife de chorizo",
-        "ingredientes": [
-            {"Bife de Chorizo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
-        ],
-        "tiempo_preparacion": "30 minutos",
-        "instrucciones": "Sazonar el bife y asar a la parrilla."
-    },
-    {
-        "nombre": "Asado de tira",
-        "ingredientes": [
-            {"Asado de Tira": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
-        ],
-        "tiempo_preparacion": "45 minutos",
-        "instrucciones": "Sazonar y asar a la parrilla."
-    },
-    {
-        "nombre": "Milanesa de ternera",
-        "ingredientes": [
-            {"Ternera": 1},
-            {"Pan rallado": "al gusto"},
-            {"Huevo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
-        ],
-        "tiempo_preparacion": "20 minutos",
-        "instrucciones": "Empanar la ternera y freír hasta dorar."
-    },
-    {
-        "nombre": "Pollo al horno",
-        "ingredientes": [
-            {"Pollo": 1},
-            {"Aceite": "al gusto"},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"},
-            {"Especias": "al gusto"}
-        ],
-        "tiempo_preparacion": "1 hora",
-        "instrucciones": "Sazonar y hornear hasta que esté cocido."
-    },
-    {
-        "nombre": "Suprema a la napolitana",
-        "ingredientes": [
-            {"Pechuga de Pollo": 1},
-            {"Jamón": 1},
-            {"Queso": 1},
-            {"Pan rallado": "al gusto"},
-            {"Huevo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
-        ],
-        "tiempo_preparacion": "30 minutos",
-        "instrucciones": "Empanar y hornear con jamón y queso."
-    },
-    {
-        "nombre": "Pollo a la parrilla",
-        "ingredientes": [
-            {"Pollo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"},
-            {"Limón": "al gusto"}
-        ],
-        "tiempo_preparacion": "25 minutos",
-        "instrucciones": "Sazonar y asar a la parrilla."
-    },
-    {
-        "nombre": "Salmón a la manteca",
-        "ingredientes": [
-            {"Salmón": 1},
-            {"Manteca": "al gusto"},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
-        ],
-        "tiempo_preparacion": "20 minutos",
-        "instrucciones": "Cocinar en sartén con manteca."
-    },
-    {
-        "nombre": "Merluza al horno",
-        "ingredientes": [
-            {"Merluza": 1},
-            {"Aceite": "al gusto"},
-            {"Limón": "al gusto"},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
-        ],
-        "tiempo_preparacion": "30 minutos",
-        "instrucciones": "Sazonar y hornear hasta que esté cocido."
-    },
-    {
-        "nombre": "Paella de mariscos",
-        "ingredientes": [
-            {"Arroz": "2"},
-            {"Mariscos": "al gusto"},
-            {"Caldo de pescado": "4 tazas"},
-            {"Pimiento": "1"},
-            {"Guisantes": "al gusto"},
-            {"Azafrán": "al gusto"},
-            {"Sal": "al gusto"}
-        ],
-        "tiempo_preparacion": "40 minutos",
-        "instrucciones": "Cocinar todos los ingredientes en una paellera."
-    },
-    {
-        "nombre": "Ensalada caesar",
-        "ingredientes": [
-            {"Lechuga": "1"},
-            {"Pollo": "200 g"},
-            {"Aderezo Caesar": "al gusto"},
-            {"Crutones": "al gusto"}
-        ],
-        "tiempo_preparacion": "15 minutos",
-        "instrucciones": "Mezclar todos los ingredientes y servir."
-    },
-    {
-        "nombre": "Ensalada mixta",
-        "ingredientes": [
-            {"Lechuga": "1"},
-            {"Tomate": "1"},
-            {"Cebolla": "1"},
-            {"Aceite": "al gusto"},
-            {"Vinagre": "al gusto"},
-            {"Sal": "al gusto"}
-        ],
-        "tiempo_preparacion": "10 minutos",
-        "instrucciones": "Mezclar todos los ingredientes y servir."
-    },
-    {
-        "nombre": "Ensalada caprese",
-        "ingredientes": [
-            {"Tomate": "1"},
-            {"Mozzarella": "1"},
-            {"Albahaca": "al gusto"},
-            {"Aceite de oliva": "al gusto"},
-            {"Sal": "al gusto"}
-        ],
-        "tiempo_preparacion": "10 minutos",
-        "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
-    }
-]
-possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','reservar','recepcion','finalizado')
 
-userTypes = [
-    {
-       "userType": 'admin',
-       "permisos": ['verPerfiles', 'verMesas',"pedidos",'finalizado']
-    },
-    {
-       "userType": 'cliente',
-       "permisos": ['operar','reservar', 'finalizado']
-    },
-    {
-       "userType": 'cocinero',
-       "permisos": ['pedidos','verMesas', 'finalizado']
-    },
-    {
-       "userType": 'mesero',
-       "permisos": ['verMesas', 'recepcion','finalizado']
-    }
-]
-
-users = [
-    {
-       "user": 'RoleError',
-       "password": 'error',
-       "role": None
-    },
-    {
-       "user": 'admin2',
-       "password": 'admin2',
-       "role": 'admin'
-    }
-]
-mesas = [
-    #Identificador de mesa, estado, nombre de quien reservo, cantidad actual o reservada de personas, cantidad maxima de personas en la mesa
-    {
-        "idMesa": '1',
-        "estado": 'libre',
-        "reserva": 'sin reserva',
-        "cantPersonas": 0,
-        "maxPersonas" : 2
-    },
-    {
-        "idMesa": '2',
-        "estado": 'libre',
-        "reserva": 'sin reserva',
-        "cantPersonas": 0,
-        "maxPersonas" : 2
-    },
-    {
-        "idMesa": '3',
-        "estado": 'libre',
-        "reserva": 'sin reserva',
-        "cantPersonas": 0,
-        "maxPersonas" : 4
-    },
-    {
-        "idMesa": '4',
-        "estado": 'libre',
-        "reserva": 'sin reserva',
-        "cantPersonas": 0,
-        "maxPersonas" : 4
-    },
-    {
-        "idMesa": '5',
-        "estado": 'libre',
-        "reserva": 'sin reserva',
-        "cantPersonas": 0,
-        "maxPersonas" : 6
-    },
-    {
-        "idMesa": '6',
-        "estado": 'libre',
-        "reserva": 'sin reserva',
-        "cantPersonas": 0,
-        "maxPersonas" : 6
-    }
-]
-ui=[]
-appState = 'login'
-
-loggedUser = ''
-loggedPassword = ''
-loggedUserType = ''
-loggedUserPermissions = None
-id_mesa={}
-
-opcion=0
-condicion_general=1
-condicion=1
-direcciones=['tp-algortimos/src/UI/menuPerfiles.txt','tp-algortimos/src/UI/menuCliente.txt','tp-algortimos/src/UI/menuAdministrador.txt','tp-algortimos/src/UI/menuMesero.txt','tp-algortimos/src/UI/menuCocinero.txt','tp-algortimos/src/UI/opcionesCliente.txt','tp-algortimos/src/UI/estadosPedidos.txt','tp-algortimos/src/UI/opcionesReservas.txt']
-for dir in direcciones:        
-    with open(dir,'r',encoding='utf-8') as archivo:
-        auxiliar=archivo.read()
-    ui.append(auxiliar)
-def limp(): 
-    print("""
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 """)
+ingredientes = cargarDatos(rutas["ingredientes"])
+menu = cargarDatos(rutas["menu"])
+mesas = cargarDatos(rutas["mesas"])
+pedidos = cargarDatos(rutas["pedidos"])
+recetas = cargarDatos(rutas["recetas"])
+compras = cargarDatos(rutas["compras"])
+finalizados = cargarDatos(rutas["finalizados"])
+estadosPedidosUI = cargarUI(rutas["estados"])
+adminUI = cargarUI(rutas["admin"])
+cocinaUI = cargarUI(rutas["cocina"])
+clienteUI = cargarUI(rutas["cliente"])
+salonUI = cargarUI(rutas["salon"])

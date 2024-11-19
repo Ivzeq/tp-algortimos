@@ -1,0 +1,86 @@
+[
+    [
+        "BIF",
+        "Bife de Chorizo",
+        15000,
+        "carne",
+        18
+    ],
+    [
+        "AST",
+        "Asado de Tira",
+        12800,
+        "carne",
+        22
+    ],
+    [
+        "MLT",
+        "Milanesa de Ternera",
+        12000,
+        "carne",
+        12
+    ],
+    [
+        "PLH",
+        "Pollo al Horno",
+        11000,
+        "pollo",
+        15
+    ],
+    [
+        "SNA",
+        "Suprema a la Napolitana",
+        13000,
+        "pollo",
+        16
+    ],
+    [
+        "PLP",
+        "Pollo a la Parrilla",
+        12500,
+        "pollo",
+        10
+    ],
+    [
+        "SMT",
+        "Salm\u00f3n a la Manteca",
+        20000,
+        "pescado",
+        15
+    ],
+    [
+        "MLH",
+        "Merluza al Horno",
+        16000,
+        "pescado",
+        17
+    ],
+    [
+        "PAM",
+        "Paella de Mariscos",
+        22000,
+        "pescado",
+        11
+    ],
+    [
+        "ECA",
+        "Ensalada Caesar",
+        9000,
+        "ensalada",
+        12
+    ],
+    [
+        "EMX",
+        "Ensalada Mixta",
+        7500,
+        "ensalada",
+        48
+    ],
+    [
+        "ECP",
+        "Ensalada Caprese",
+        8000,
+        "ensalada",
+        24
+    ]
+]

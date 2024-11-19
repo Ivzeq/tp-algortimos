@@ -1,0 +1,32 @@
+[
+    {
+        "idMesa": "1",
+        "estado": "ocupada",
+        "cliente": "Michael"
+    },
+    {
+        "idMesa": "2",
+        "estado": "ocupada",
+        "cliente": "Fede"
+    },
+    {
+        "idMesa": "3",
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": "4",
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": "5",
+        "estado": "libre",
+        "cliente": "sin reserva"
+    },
+    {
+        "idMesa": "6",
+        "estado": "libre",
+        "cliente": "sin reserva"
+    }
+]

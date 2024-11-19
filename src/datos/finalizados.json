@@ -1,0 +1,24 @@
+[
+    {
+        "nombre": "A",
+        "mesa": "5",
+        "estado": "finalizado",
+        "platos": [
+            [
+                "Pollo al horno",
+                2
+            ]
+        ]
+    },
+    {
+        "nombre": "Juan",
+        "mesa": "3",
+        "estado": "recibido",
+        "platos": [
+            [
+                "Ensalada Caesar",
+                1
+            ]
+        ]
+    }
+]

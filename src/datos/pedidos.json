@@ -1,1 +1,36 @@
-[{"nombre": "Michael", "mesa": "1", "platos": [["Bife de Chorizo", 1, "En preparacion"]]}, {"nombre": "Fede", "mesa": "2", "platos": [["Bife de Chorizo", 1, "En preparacion"]]}, {"nombre": "Juan", "mesa": "1", "platos": [["Bife de Chorizo", 1, "En preparacion"]]}, {"nombre": "Mihcael", "mesa": "1", "platos": [["Bife de Chorizo", 1, "En preparacion"]]}]
+[
+    {
+        "nombre": "Ale",
+        "mesa": 2,
+        "estado": "listo",
+        "platos": [
+            [
+                "asado de tira",
+                1,
+                "AST"
+            ],
+            [
+                "ensalada caprese",
+                2,
+                "ECP"
+            ]
+        ]
+    },
+    {
+        "nombre": "Michael",
+        "mesa": "1",
+        "estado": "en preparaci\u00f3n",
+        "platos": [
+            [
+                "milanesa de ternera",
+                3,
+                "MLT"
+            ],
+            [
+                "ensalada Caesar",
+                2,
+                "ECA"
+            ]
+        ]
+    }
+]
