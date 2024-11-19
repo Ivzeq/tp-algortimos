@@ -27,10 +27,4 @@ def test_getMesas():
     assert 1==len(getMesas('1'))
 #def test_cerrarOrden():
 #    cerrarOrden()
-#PARA CUANDO UNA PRUEBA NECESItA UN INPUT DEBERIMAOS USAR MOCK PERO
-#VAMOS A UTILIZAR UNA ETIQUETA Y LUEGO AL MOMENTO DE EJECUTAR LAS PRUBAS
-#PONEMOS COMO CONDICION QUE EJECUTA SEGUN LA ETIQUETA
-#CON MARCA pytest -s -m s_input SIN MARCA pytest -v -m "not s_input"
-#MARCA=@pytest.mark.s_input
-
 #test_cerrarOrden()
