@@ -176,22 +176,40 @@ def impresionPedidosIndividuales(diccionario):#chk
     print("""╚═══════════════════════════════════════════════════════╝""")
 def impresionRecetas(recetas):#chk
     i=0
+    contador = 1
+    recetaSeleccionada = {}
+
     for elemento in recetas: #Imprime los nombres de las recetas
-        print(f"{elemento.get('nombre')}")
-    nombre=input("Ingrese nombre de plato: ").capitalize()
-    config.limp()
-    while i<len(recetas) and recetas[i].get("nombre")!=nombre:
-        i=i+1
-    if i>=len(recetas):
-        print("nombre no encontrado")
-    else: #Si encuentra el plato
-        for clave,valor in recetas[i].items():
-            if clave=="ingredientes":
-                largo=len(recetas[i]["ingredientes"])
-                for j in range(largo):
-                    print(f"Ingrediente \"{j}\"={recetas[i+1]['ingredientes'][j]}")
+        print(f"{contador} - {elemento.get('nombre')}")
+        contador += 1
+
+    while True:
+        try:
+            eleccion = int(input("Ingrese el número de la receta: "))
+            config.limp()
+            if 1 <= eleccion <= len(recetas):
+                recetaSeleccionada = recetas[eleccion - 1]  # Ajustamos el índice (1 basado)
+                
+                # Imprimir los detalles de la receta seleccionada
+                for clave, valor in recetaSeleccionada.items():
+                    if clave == "ingredientes":
+                        for i, ingrediente in enumerate(valor):
+                            print(f"Ingrediente {i+1}: {ingrediente}")
+                    elif clave == "nombre":
+                        print(f"Receta: {valor}")
+                    elif clave == "tiempo_preparacion":
+                        print(f"Tiempo de preparación: {valor}")
+                    elif clave == "instrucciones":
+                        print(f"Instrucciones: {valor}")
+                    else:
+                        print(f"{clave} : {valor}")
+                break
             else:
-                print(f"{clave} : {valor}")   
+                print(">> Número de receta no válido.")
+        except ValueError:
+            print(">> Por favor, ingrese un número válido.")
+    return recetaSeleccionada
+            
 def mostrar_menu_platos(menu):#chk
     config.limp()
     print(f"""
@@ -216,7 +234,6 @@ def verPedidos(pedido):#chk
                 numPedido = int(input("Ingrese el número de plato que desea cancelar: ")) - 1
             del pedido['platos'][numPedido]
             print(">> Plato cancelado!")
-            input('>> Enter para continuar')
     else:
         print("Usted no tiene pedidos activos.")
     return pedido
@@ -590,12 +607,43 @@ def administrarPedidos(pedidos):#chk
     guardadoPedidos(pedidos)
     return pedidos
     
-def solicitarIngredientes(inventario):#chk
-    impresionInventario(inventario)
-    nombre=input("ingrese nombre del producto a agregar").capitalize()
-    cantidad=int(input("ingrese cantidad a pedir"))
-    """modificar ingredientes"""
-    return inventario
+def consultarPlatosMaximos(receta, inventario, multiplicador):
+
+    for ingrediente in receta["ingredientes"]:
+        for nombre, cantidad in ingrediente.items():
+            if nombre not in inventario or inventario[nombre]["cantidad"] < cantidad * multiplicador:
+                return multiplicador - 1, nombre
+
+    return consultarPlatosMaximos(receta, inventario, multiplicador + 1)
+
+def consumirIngredientes(receta,inventario):
+    try:
+        platosMaxInventario, primerIngredienteSinStock = consultarPlatosMaximos(receta, inventario, 1)
+        
+        if platosMaxInventario > 0:
+            print('\n')
+            print(f'La cantidad de platos de {receta['nombre']} que se puede preparar con el inventario actual es {platosMaxInventario}')
+            print(f'El primer ingrediente en quedarse sin stock sera el {primerIngredienteSinStock}')
+
+            print('\n')
+            platosAPreparar = int(input("¿Cuántos platos deseas preparar?: "))
+            
+            if platosAPreparar > platosMaxInventario:
+                print(f"Cantidad invalida. El maximo que se puede preparar de este plato es {platosMaxInventario}.")
+                return
+
+            for ingrediente in receta["ingredientes"]:
+                for nombre, cantidad in ingrediente.items():
+                    if nombre in inventario:
+                        inventario[nombre]["cantidad"] -= cantidad * platosAPreparar
+        else:
+            print('\n')
+            print(f'Lo sentimos. Actualmente no hay suficiente {primerIngredienteSinStock} para preparar {receta['nombre']}')
+
+    except ValueError:
+        print("Por favor, ingresa un número válido.")
+        consumirIngredientes(receta,inventario)
+
 def repriorizarPedidos(pedidos):#chk
     contador=0
     for elemento in pedidos:

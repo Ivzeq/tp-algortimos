@@ -10,7 +10,7 @@
 ║ 2 → Ver pedidos                        ║
 ║ 3 → Administrar pedidos                ║
 ║ 4 → Consultar recetas                  ║
-║ 5 → Solicitar aumento de ingredientes  ║
+║ 5 → Consumir ingredientes              ║
 ║ 6 → Repriorizar Pedidos                ║
 ║ 7 → Salir                              ║
 ╚════════════════════════════════════════╝   

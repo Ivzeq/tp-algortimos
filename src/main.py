@@ -193,7 +193,10 @@ while(config.appState != config.possibleStatesTupla[-1]):
                 input("Enter para continuar")
                 config.limp()
             elif config.opcion==5:
-                config.inventario=fn.solicitarIngredientes(config.inventario)
+                recetaSeleccionada = fn.impresionRecetas(config.recetas)
+                
+                fn.consumirIngredientes(recetaSeleccionada,config.inventario)
+
                 input("Enter para continuar")
                 config.limp()
             elif config.opcion==6:

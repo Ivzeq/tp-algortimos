@@ -60,42 +60,43 @@ menu = [
 
 """inventario para almacenar ingredientes y sus cantidades"""
 inventario = {
-    "Bife de Chorizo": 10,  # Cantidad en unidades
-    "Sal": 5,               # Cantidad en kg
-    "Pimienta": 2,         # Cantidad en kg
-    "Ternera": 8,          # Cantidad en unidades
-    "Pan rallado": 3,      # Cantidad en kg
-    "Huevo": 20,           # Cantidad en unidades
-    "Pollo": 15,           # Cantidad en unidades
-    "Aceite": 5,           # Cantidad en litros
-    "Especias": 1,         # Cantidad en kg
-    "Pechuga de Pollo": 10,# Cantidad en unidades
-    "Jamón": 5,            # Cantidad en kg
-    "Queso": 5,            # Cantidad en kg
-    "Limón": 20,           # Cantidad en unidades
-    "Salmón": 5,           # Cantidad en unidades
-    "Manteca": 2,          # Cantidad en kg
-    "Merluza": 5,          # Cantidad en unidades
-    "Arroz": 10,           # Cantidad en kg
-    "Mariscos": 8,         # Cantidad en kg
-    "Caldo de pescado": 5, # Cantidad en litros
-    "Pimiento": 10,        # Cantidad en unidades
-    "Guisantes": 3,        # Cantidad en kg
-    "Azafrán": 0.1,        # Cantidad en kg
-    "Lechuga": 10,         # Cantidad en unidades
-    "Tomate": 10,          # Cantidad en unidades
-    "Cebolla": 5,          # Cantidad en unidades
-    "Vinagre": 2,          # Cantidad en litros
-    "Mozzarella": 5,       # Cantidad en kg
-    "Albahaca": 0.5        # Cantidad en kg
+    "Bife de Chorizo": {"cantidad": 10, "unidad": "pieza"},
+    "Sal": {"cantidad": 5000, "unidad": "gramo"},
+    "Pimienta": {"cantidad": 2000, "unidad": "gramo"},
+    "Ternera": {"cantidad": 8, "unidad": "pieza"},
+    "Pan rallado": {"cantidad": 3000, "unidad": "gramo"},
+    "Huevo": {"cantidad": 20, "unidad": "pieza"},
+    "Pollo": {"cantidad": 15, "unidad": "pieza"},
+    "Aceite": {"cantidad": 5000, "unidad": "mililitro"},
+    "Especias": {"cantidad": 1000, "unidad": "gramo"},
+    "Pechuga de Pollo": {"cantidad": 10, "unidad": "pieza"},
+    "Jamón": {"cantidad": 5000, "unidad": "gramo"},
+    "Queso": {"cantidad": 5000, "unidad": "gramo"},
+    "Limón": {"cantidad": 20, "unidad": "pieza"},
+    "Salmón": {"cantidad": 5, "unidad": "pieza"},
+    "Manteca": {"cantidad": 2000, "unidad": "gramo"},
+    "Merluza": {"cantidad": 5, "unidad": "pieza"},
+    "Arroz": {"cantidad": 10000, "unidad": "gramo"},
+    "Mariscos": {"cantidad": 8000, "unidad": "gramo"},
+    "Caldo de pescado": {"cantidad": 5000, "unidad": "mililitro"},
+    "Pimiento": {"cantidad": 10, "unidad": "pieza"},
+    "Guisantes": {"cantidad": 3000, "unidad": "gramo"},
+    "Azafrán": {"cantidad": 100, "unidad": "gramo"},
+    "Lechuga": {"cantidad": 10, "unidad": "pieza"},
+    "Tomate": {"cantidad": 10, "unidad": "pieza"},
+    "Cebolla": {"cantidad": 5, "unidad": "pieza"},
+    "Vinagre": {"cantidad": 2000, "unidad": "mililitro"},
+    "Mozzarella": {"cantidad": 5000, "unidad": "gramo"},
+    "Albahaca": {"cantidad": 500, "unidad": "gramo"}
 }
+
 recetas = [
     {
         "nombre": "Bife de chorizo",
         "ingredientes": [
             {"Bife de Chorizo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "30 minutos",
         "instrucciones": "Sazonar el bife y asar a la parrilla."
@@ -104,8 +105,8 @@ recetas = [
         "nombre": "Asado de tira",
         "ingredientes": [
             {"Asado de Tira": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "45 minutos",
         "instrucciones": "Sazonar y asar a la parrilla."
@@ -114,10 +115,10 @@ recetas = [
         "nombre": "Milanesa de ternera",
         "ingredientes": [
             {"Ternera": 1},
-            {"Pan rallado": "al gusto"},
+            {"Pan rallado": 50},  # al gusto en gramos
             {"Huevo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "20 minutos",
         "instrucciones": "Empanar la ternera y freír hasta dorar."
@@ -126,10 +127,10 @@ recetas = [
         "nombre": "Pollo al horno",
         "ingredientes": [
             {"Pollo": 1},
-            {"Aceite": "al gusto"},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"},
-            {"Especias": "al gusto"}
+            {"Aceite": 50},  # al gusto en mililitros
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50},  # al gusto en gramos
+            {"Especias": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "1 hora",
         "instrucciones": "Sazonar y hornear hasta que esté cocido."
@@ -140,10 +141,10 @@ recetas = [
             {"Pechuga de Pollo": 1},
             {"Jamón": 1},
             {"Queso": 1},
-            {"Pan rallado": "al gusto"},
+            {"Pan rallado": 50},  # al gusto en gramos
             {"Huevo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "30 minutos",
         "instrucciones": "Empanar y hornear con jamón y queso."
@@ -152,9 +153,9 @@ recetas = [
         "nombre": "Pollo a la parrilla",
         "ingredientes": [
             {"Pollo": 1},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"},
-            {"Limón": "al gusto"}
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50},  # al gusto en gramos
+            {"Limón": 1}  # al gusto en piezas
         ],
         "tiempo_preparacion": "25 minutos",
         "instrucciones": "Sazonar y asar a la parrilla."
@@ -163,9 +164,9 @@ recetas = [
         "nombre": "Salmón a la manteca",
         "ingredientes": [
             {"Salmón": 1},
-            {"Manteca": "al gusto"},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
+            {"Manteca": 50},  # al gusto en gramos
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "20 minutos",
         "instrucciones": "Cocinar en sartén con manteca."
@@ -174,10 +175,10 @@ recetas = [
         "nombre": "Merluza al horno",
         "ingredientes": [
             {"Merluza": 1},
-            {"Aceite": "al gusto"},
-            {"Limón": "al gusto"},
-            {"Sal": "al gusto"},
-            {"Pimienta": "al gusto"}
+            {"Aceite": 50},  # al gusto en mililitros
+            {"Limón": 1},  # al gusto en piezas
+            {"Sal": 25},  # al gusto en gramos
+            {"Pimienta": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "30 minutos",
         "instrucciones": "Sazonar y hornear hasta que esté cocido."
@@ -185,13 +186,13 @@ recetas = [
     {
         "nombre": "Paella de mariscos",
         "ingredientes": [
-            {"Arroz": "2"},
-            {"Mariscos": "al gusto"},
-            {"Caldo de pescado": "4 tazas"},
-            {"Pimiento": "1"},
-            {"Guisantes": "al gusto"},
-            {"Azafrán": "al gusto"},
-            {"Sal": "al gusto"}
+            {"Arroz": 400},  # 2 tazas equivalen a 400 gramos
+            {"Mariscos": 50},  # al gusto en gramos
+            {"Caldo de pescado": 500},  # 4 tazas equivalen a 1000 mililitros
+            {"Pimiento": 1},
+            {"Guisantes": 50},  # al gusto en gramos
+            {"Azafrán": 50},  # al gusto en gramos
+            {"Sal": 25}  # al gusto en gramos
         ],
         "tiempo_preparacion": "40 minutos",
         "instrucciones": "Cocinar todos los ingredientes en una paellera."
@@ -199,10 +200,10 @@ recetas = [
     {
         "nombre": "Ensalada caesar",
         "ingredientes": [
-            {"Lechuga": "1"},
-            {"Pollo": "200 g"},
-            {"Aderezo Caesar": "al gusto"},
-            {"Crutones": "al gusto"}
+            {"Lechuga": 1},
+            {"Pollo": 200},  # 200 gramos
+            {"Aderezo Caesar": 50},  # al gusto en gramos
+            {"Crutones": 50}  # al gusto en gramos
         ],
         "tiempo_preparacion": "15 minutos",
         "instrucciones": "Mezclar todos los ingredientes y servir."
@@ -210,12 +211,12 @@ recetas = [
     {
         "nombre": "Ensalada mixta",
         "ingredientes": [
-            {"Lechuga": "1"},
-            {"Tomate": "1"},
-            {"Cebolla": "1"},
-            {"Aceite": "al gusto"},
-            {"Vinagre": "al gusto"},
-            {"Sal": "al gusto"}
+            {"Lechuga": 1},
+            {"Tomate": 1},
+            {"Cebolla": 1},
+            {"Aceite": 50},  # al gusto en mililitros
+            {"Vinagre": 50},  # al gusto en mililitros
+            {"Sal": 25}  # al gusto en gramos
         ],
         "tiempo_preparacion": "10 minutos",
         "instrucciones": "Mezclar todos los ingredientes y servir."
@@ -223,16 +224,17 @@ recetas = [
     {
         "nombre": "Ensalada caprese",
         "ingredientes": [
-            {"Tomate": "1"},
-            {"Mozzarella": "1"},
-            {"Albahaca": "al gusto"},
-            {"Aceite de oliva": "al gusto"},
-            {"Sal": "al gusto"}
+            {"Tomate": 1},
+            {"Mozzarella": 1},
+            {"Albahaca": 50},  # al gusto en gramos
+            {"Aceite de oliva": 50},  # al gusto en mililitros
+            {"Sal": 25}  # al gusto en gramos
         ],
         "tiempo_preparacion": "10 minutos",
         "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca."
     }
 ]
+
 possibleStatesTupla = ('login', 'verPerfiles', 'verMesas','pedidos','operar','reservar','recepcion','cerrarOrden','finalizado')
 
 userTypes = [
