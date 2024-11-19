@@ -160,7 +160,7 @@ def impresionMesas(mesas):#chk
 {"║":<2}{"Personas →":<17}{(mesas[i]["cantPersonas"]):>4}{"║":<2}
 {"║":<2}{"Limite →":<17}{(mesas[i]["maxPersonas"]):>4}{"║":<2}""")
         print(f"╚══════════════════════╝")  
-    input("Presione Enter para continuar>>")
+    
 def impresionPedidosIndividuales(diccionario):#chk
 
     print(f"""╔═══════════════════════════════════════════════════════╗
@@ -444,7 +444,7 @@ def cliente():#chk
             hacerPedido(pedido)            
         elif opcion == 3:
             pedido=verPedidos(pedido)
-            input("Presione Enter para continuar>>")
+
         opcion=client_menu()
     config.limp()
     if len(pedido['platos'])>0:
@@ -508,11 +508,13 @@ def verReservas(nombre):#chk
             mesa_cancelada["reserva"] = "sin reserva"
             mesa_cancelada["cantPersonas"] = 0
             print(f"Reserva de la Mesa {mesa_cancelada['idMesa']} cancelada.")
+            guardadoMesas(config.mesas)
+            input('>> Enter para continuar')
         else:
             pass
     else:
-        print("No tiene reservas activas.")
-    input("\nEnter para continuar")
+        print(">> No tiene reservas activas a su nombre")
+        input('>> Enter para continuar')
 #FUNCIONES DE COCINERO
 def menuAdminPedidos():#chk
     while True:

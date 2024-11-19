@@ -139,6 +139,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
             elif config.opcion==2:
                 config.limp()
                 fn.verReservas(nombre)
+                config.limp()
             elif config.opcion==3:
                 appState='login'
                 break
