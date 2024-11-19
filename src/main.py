@@ -50,7 +50,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
     if config.appState == 'verPerfiles':
         while True:
             config.limp()
-            idPerfil = input('>> Ingrese all para ver todos los perfiles o el nombre exacto del userType: ')
+            idPerfil = 'all'
             try:
                 perfil = fn.getPerfiles(idPerfil)
                 if perfil == None:
@@ -102,7 +102,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
     if config.appState == 'verMesas':       
         while True:
             try:
-                idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ').lower()
+                idMesa = input('>>Ingrese el numero de la mesa o "all" para ver todas las mesas\n<< ').lower()
                 mesa= fn.getMesas(idMesa)
                 if mesa==None:
                     raise ValueError
@@ -115,6 +115,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
             else:
                 break
         fn.impresionMesas(mesa)
+        input('>> Enter para continuar')
     if config.appState == 'operar':
         fn.cliente() 
     if config.appState == 'reservar':
@@ -152,7 +153,7 @@ while(config.appState != config.possibleStatesTupla[-1]):
             if config.opcion==1:
                 while True:
                     try:
-                        idMesa = input('>>Ingrese all para ver todas las mesas o el id de la mesa: ').lower()
+                        idMesa = input('>>Ingrese el numero de la mesa o "all" para ver todas las mesas\n<< ').lower()
                         mesa= fn.getMesas(idMesa)
                         if mesa==None:
                             raise ValueError
@@ -168,17 +169,25 @@ while(config.appState != config.possibleStatesTupla[-1]):
                 input('>> Enter para continuar')               
             elif config.opcion==2:
                 contador=0
-                for elemento in config.pedidos:
-                    contador+=1
-                    print(f"{'>> Pedido numero → ' + str(contador):^55}")
-                    fn.impresionPedidosIndividuales(elemento)
-                input('>> Enter para continuar ')
+                if len(config.pedidos)>0:
+                    for elemento in config.pedidos:
+                        contador+=1
+                        print(f"{'>> Pedido numero → ' + str(contador):^55}")
+                        fn.impresionPedidosIndividuales(elemento)
+                    input('>> Enter para continuar ')
+                else:
+                    print('>> No hay pedidos activos')
+                    input('>> Enter para continuar ')
                 config.limp()
             elif config.opcion==3:
-                while config.condicion==1:
-                    config.pedidos=fn.administrarPedidos(config.pedidos)#PREGUNTAR SI HACE FALTA LA ASIGNACION
-                    config.condicion=int(input("Seguir modificando pedidos 1/Si 2/No"))
-                    config.limp()
+                if len(config.pedidos)>0:
+                    while config.condicion==1:
+                        config.pedidos=fn.administrarPedidos(config.pedidos)
+                        config.condicion=int(input("Seguir modificando pedidos 1/Si 2/No"))
+                        config.limp()
+                else:
+                    print('>> No hay pedidos activos')
+                    input('>> Enter para continuar ')
             elif config.opcion==4:
                 fn.impresionRecetas(config.recetas)
                 input("Enter para continuar")
@@ -188,14 +197,18 @@ while(config.appState != config.possibleStatesTupla[-1]):
                 input("Enter para continuar")
                 config.limp()
             elif config.opcion==6:
-                config.pedidos=fn.repriorizarPedidos(config.pedidos)
-                contador=0
-                for elemento in config.pedidos:
-                    contador+=1
-                    print(f"{'>> Pedido numero → ' + str(contador):^55}")
-                    fn.impresionPedidosIndividuales(elemento)  
-                input('>> Enter para continuar ')
-                config.limp()
+                if len(config.pedidos)>0:
+                    config.pedidos=fn.repriorizarPedidos(config.pedidos)
+                    contador=0
+                    for elemento in config.pedidos:
+                        contador+=1
+                        print(f"{'>> Pedido numero → ' + str(contador):^55}")
+                        fn.impresionPedidosIndividuales(elemento)  
+                    input('>> Enter para continuar ')
+                    config.limp()
+                else:
+                    print('>> No hay pedidos activos')
+                    input('>> Enter para continuar ')
             elif config.opcion==7:
                 config.condicion_general=0
                 if (config.loggedUserType == 'cocinero' and config.appState == 'pedidos'):#solo para que el cocinero pueda salir al menu de perfiles
