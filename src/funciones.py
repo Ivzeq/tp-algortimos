@@ -266,13 +266,10 @@ def calcularStock(codReceta, recetas, ingredientes):
     if not conjuntoIngrReceta(codReceta, recetas).issubset(conjuntoIngredientes(ingredientes)):
         return 0
     
-    # Crear una copia local de los ingredientes para evitar modificar el original
     ingredientesLocal = deepcopy(ingredientes)
     
-    # Resta los ingredientes necesarios para preparar una unidad
     restarAuxIngredientes(codReceta, recetas, ingredientesLocal)
     
-    # Llamada recursiva con la copia actualizada de ingredientes
     return 1 + calcularStock(codReceta, recetas, ingredientesLocal)
 
 
@@ -643,6 +640,15 @@ def repriorizarPedidos(pedidos):
     print(f"El pedido de '{pedidoSeleccionado['nombre']}' ha sido movido a la posición {nuevaPos + 1}.")
     guardarDatos(cnf.rutas["pedidos"], pedidos)
 
+def ingresarCompras(compras, ingredientes):
+    impresionCompras(compras)
+    ingreso = confirmInput("Desea ingresar estos ingredientes al stock? s/n\n>>")
+    if ingreso == 's':
+        actualizarIngredientes(ingredientes, compras)
+        print("Ingredientes actualizados.")
+    else:
+        return
+
 def administrarPedidos(pedidos):
     if len(pedidos) == 0:
         print("No hay pedidos activos en este momento.")
@@ -669,14 +675,7 @@ def administrarPedidos(pedidos):
             modificarCompras(cnf.compras)
         
         elif accion == 6: #Ingresar compras
-            compras = cnf.compras
-            impresionCompras(compras)
-            ingreso = confirmInput("Desea ingresar estos ingredientes al stock? s/n\n>>")
-            if ingreso == 's':
-                actualizarIngredientes(cnf.ingredientes, compras)
-                print("Ingredientes actualizados.")
-            else:
-                return
+            ingresarCompras(cnf.compras, cnf.ingredientes)
         
         else: #Salir
             return
