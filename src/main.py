@@ -5,10 +5,13 @@ import funciones as fn
 config.limp()
 while(config.appState != config.possibleStatesTupla[-1]):
     # Inicializacion 
-    while True:
-        if (config.loggedUserType == '' and config.appState == 'login'):
-            tipoIngresado =input(config.ui[5])
-            #DEBERIAMOS AGREGAR VALIDACION CON E.REGULARES COLO POR SI ESCRIBE CON CARACTERES
+    while (config.loggedUserType == '' and config.appState == 'login'):
+        try:
+            tipoIngresado = input(config.ui[5])
+
+            if fn.verificarNumero(tipoIngresado) == False:
+                raise ValueError('El valor ingresado no es un numero,')
+
             if tipoIngresado=="1":
                 tipoIngresado="cliente"
             elif tipoIngresado=="2":
@@ -16,18 +19,20 @@ while(config.appState != config.possibleStatesTupla[-1]):
             elif tipoIngresado=="3":
                 tipoIngresado="cocinero"
             elif tipoIngresado=="4":
-                tipoIngresado="mesero"                
-            config.limp()
-        try:
+                tipoIngresado="mesero"          
+
             if fn.verificarTipo(tipoIngresado)==False:
-                raise ValueError
+                raise ValueError('El usuario no existe,')
+            
+            config.limp()
+            config.loggedUserType = tipoIngresado
         except ValueError as ms:
-            print(f'>> El usuario ingresado no existe, ingrese uno valido: {ms}')
+            config.limp()
+            print(f'>> {ms} ingrese uno valido: ')
         except Exception as error_mssg:
+            config.limp()
             print(f'Error : {error_mssg}')
-        else:
-            break
-    config.loggedUserType = tipoIngresado
+
     config.loggedUserPermissions = fn.getPermisos(config.loggedUserType)
     config.limp()
     config.appState=fn.impresionPermisos(tipoIngresado,config.appState)

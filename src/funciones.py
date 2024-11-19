@@ -2,6 +2,7 @@ import copy
 import sys
 import config
 import json
+import re
 
 #FUNCIONES EN RELACION A INICIO
 def guardadoPedidos(pedidos):
@@ -555,3 +556,6 @@ def repriorizarPedidos(pedidos):#chk
         print('>>ERROR con escritura de datos')  
     guardadoPedidos(pedidos) 
     return pedidos
+
+def verificarNumero (numero):
+    return bool(re.match(r'^-?\d+(\.\d+)?$', numero))
