@@ -2,6 +2,42 @@ from funciones import *
 from config import *
 import json
 
+pedidos =[
+    {
+        "nombre": "Michael",
+        "mesa": 1,
+        "estado": "en preparación",
+        "platos": [
+            [
+                "milanesa de ternera",
+                3,
+                "MLT"
+            ],
+            [
+                "ensalada Caesar",
+                2,
+                "ECA"
+            ]
+        ]
+    },
+    {
+        "nombre": "Ale",
+        "mesa": 2,
+        "estado": "entregado",
+        "platos": [
+            [
+                "asado de tira",
+                1,
+                "AST"
+            ],
+            [
+                "ensalada caprese",
+                2,
+                "ECP"
+            ]
+        ]
+    }
+]
 recetas = [
     {"id": 1, "ingredientes": [{"harina": 2}, {"azúcar": 1}, {"huevos": 2}]},
     {"id": 2, "ingredientes": [{"tomate": 5}, {"ajo": 2}]},
@@ -38,7 +74,7 @@ def test_conjuntoIngrReceta_formatoIncorrecto():
     esperado = set()
     assert resultado == esperado, f"Esperado {esperado}, obtenido {resultado}"
 
-def test_guardadoPedidos():
+def test_cargaPedidos():
     cargarDatos(rutas["pedidos"])
     with open(rutas["pedidos"],'r') as archivo:
         contenido=archivo.read()
