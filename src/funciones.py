@@ -10,7 +10,7 @@ class IngredienteInsuficiente(Exception):
 
 def registrarExcepcion(e):
     try:
-        archivo = open('tp-algortimos\\src\\datos\\restaurant.log', 'a')
+        archivo = open('tp-algoritmos\\src\\datos\\restaurant.log', 'a')
         try:
             error = f"Tipo: {type(e)} - Mensaje: {str(e)}\n"
             print(f"Ocurrió un error: {error}")

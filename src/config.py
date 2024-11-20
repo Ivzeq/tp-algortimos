@@ -27,20 +27,20 @@ permisosEstadosSalon = ("entregado", "pagado")
 admins = ({"admin": "ale"}, {"osyubdf": "michael"}, {"hsocne": "ivan"})
 
 rutas = {
-    "ingredientes": "tp-algortimos\\src\\datos\\ingredientes.json",
-    "menu": "tp-algortimos\\src\\datos\\menu.json",
-    "mesas": "tp-algortimos\\src\\datos\\mesas.json",
-    "pedidos": "tp-algortimos\\src\\datos\\pedidos.json",
-    "recetas": "tp-algortimos\\src\\datos\\recetas.json",
-    "compras": "tp-algortimos\src\datos\compras.json",
-    "finalizados": "tp-algortimos\\src\\datos\\finalizados.json",
-    "log": "tp-algortimos\\src\\datos\\restaurant.log",
-    "estados": "tp-algortimos\\src\\UI\\estadosPedidos.txt",
-    "admin": "tp-algortimos\\src\\UI\\menuAdministrador.txt",
-    "cocina": "tp-algortimos\\src\\UI\\menuCocinero.txt",
-    "cliente": "tp-algortimos\\src\\UI\\menuCliente.txt",
-    "salon": "tp-algortimos\\src\\UI\\menuSalon.txt",
-    "inicio": "tp-algortimos\\src\\UI\\menuInicio.txt"
+    "ingredientes": "tp-algoritmos\\src\\datos\\ingredientes.json",
+    "menu": "tp-algoritmos\\src\\datos\\menu.json",
+    "mesas": "tp-algoritmos\\src\\datos\\mesas.json",
+    "pedidos": "tp-algoritmos\\src\\datos\\pedidos.json",
+    "recetas": "tp-algoritmos\\src\\datos\\recetas.json",
+    "compras": "tp-algoritmos\src\datos\compras.json",
+    "finalizados": "tp-algoritmos\\src\\datos\\finalizados.json",
+    "log": "tp-algoritmos\\src\\datos\\restaurant.log",
+    "estados": "tp-algoritmos\\src\\UI\\estadosPedidos.txt",
+    "admin": "tp-algoritmos\\src\\UI\\menuAdministrador.txt",
+    "cocina": "tp-algoritmos\\src\\UI\\menuCocinero.txt",
+    "cliente": "tp-algoritmos\\src\\UI\\menuCliente.txt",
+    "salon": "tp-algoritmos\\src\\UI\\menuSalon.txt",
+    "inicio": "tp-algoritmos\\src\\UI\\menuInicio.txt"
 }
 
 ingredientes = cargarDatos(rutas["ingredientes"])

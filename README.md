@@ -1,4 +1,4 @@
-# tp-algortimos
+# tp-algoritmos
 Repositorios para el TP de AED
 
 ## Temas implementados
