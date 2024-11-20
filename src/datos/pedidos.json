@@ -1,8 +1,25 @@
 [
     {
+        "nombre": "Ale",
+        "mesa": 5,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "milanesa de ternera",
+                4,
+                "MLT"
+            ],
+            [
+                "pollo al horno",
+                2,
+                "PLH"
+            ]
+        ]
+    },
+    {
         "nombre": "Michael",
         "mesa": 1,
-        "estado": "en preparaci\u00f3n",
+        "estado": "listo",
         "platos": [
             [
                 "milanesa de ternera",
@@ -13,23 +30,6 @@
                 "ensalada Caesar",
                 2,
                 "ECA"
-            ]
-        ]
-    },
-    {
-        "nombre": "Ale",
-        "mesa": 2,
-        "estado": "entregado",
-        "platos": [
-            [
-                "asado de tira",
-                1,
-                "AST"
-            ],
-            [
-                "ensalada caprese",
-                2,
-                "ECP"
             ]
         ]
     }

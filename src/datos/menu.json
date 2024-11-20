@@ -4,7 +4,7 @@
         "Bife de Chorizo",
         15000,
         "carne",
-        19
+        0
     ],
     [
         "AST",
@@ -18,14 +18,14 @@
         "Milanesa de Ternera",
         12000,
         "carne",
-        15
+        11
     ],
     [
         "PLH",
         "Pollo al Horno",
         11000,
         "pollo",
-        18
+        16
     ],
     [
         "SNA",
@@ -39,7 +39,7 @@
         "Pollo a la Parrilla",
         12500,
         "pollo",
-        10
+        9
     ],
     [
         "SMT",

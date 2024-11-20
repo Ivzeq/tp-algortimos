@@ -10,7 +10,7 @@ class IngredienteInsuficiente(Exception):
 
 def registrarExcepcion(e):
     try:
-        archivo = open('tp-algoritmos-ale\\src\\datos\\restaurant.log', 'a')
+        archivo = open('tp-algortimos\\src\\datos\\restaurant.log', 'a')
         try:
             error = f"Tipo: {type(e)} - Mensaje: {str(e)}\n"
             print(f"Ocurrió un error: {error}")
@@ -515,6 +515,9 @@ def consultarReceta():
     recetas = cnf.recetas
     impresionRecetas()
     consulta = codeInput("Ingrese el código de la receta a consultar:\n>>")
+    #Verificar que el codigo exista
+    while not verifCodigo(recetas, consulta):
+        consulta = codeInput("Código no válido. Ingrese un código existente.\n>>")
     receta = next((r for r in recetas if r["id"] == consulta), None)
     
     nombre = receta["nombre"]

@@ -2,47 +2,47 @@
     {
         "id": "BFC",
         "nombre": "Bife de Chorizo",
-        "cantidad": 19
+        "cantidad": -1
     },
     {
         "id": "SLT",
         "nombre": "Sal",
-        "cantidad": 62
+        "cantidad": 55
     },
     {
         "id": "PMT",
         "nombre": "Pimienta",
-        "cantidad": 61
+        "cantidad": 54
     },
     {
         "id": "TNR",
         "nombre": "Ternera",
-        "cantidad": 15
+        "cantidad": 11
     },
     {
         "id": "PNR",
         "nombre": "Pan rallado",
-        "cantidad": 36
+        "cantidad": 32
     },
     {
         "id": "HVO",
         "nombre": "Huevo",
-        "cantidad": 34
+        "cantidad": 30
     },
     {
         "id": "PLL",
         "nombre": "Pollo",
-        "cantidad": 18
+        "cantidad": 16
     },
     {
         "id": "ACE",
         "nombre": "Aceite",
-        "cantidad": 44
+        "cantidad": 42
     },
     {
         "id": "ESP",
         "nombre": "Especias",
-        "cantidad": 75
+        "cantidad": 73
     },
     {
         "id": "PPG",
@@ -62,7 +62,7 @@
     {
         "id": "LIM",
         "nombre": "Lim\u00f3n",
-        "cantidad": 19
+        "cantidad": 17
     },
     {
         "id": "SLM",
@@ -82,7 +82,7 @@
     {
         "id": "ARZ",
         "nombre": "Arroz",
-        "cantidad": 60
+        "cantidad": 61
     },
     {
         "id": "MRC",
@@ -107,12 +107,12 @@
     {
         "id": "AZF",
         "nombre": "Azafr\u00e1n",
-        "cantidad": 23
+        "cantidad": 25
     },
     {
         "id": "LCH",
         "nombre": "Lechuga",
-        "cantidad": 51
+        "cantidad": 53
     },
     {
         "id": "TMT",
@@ -142,7 +142,7 @@
     {
         "id": "CRT",
         "nombre": "Crutones",
-        "cantidad": 40
+        "cantidad": 42
     },
     {
         "id": "OLV",
