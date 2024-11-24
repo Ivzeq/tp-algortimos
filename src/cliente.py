@@ -9,7 +9,6 @@ def cliente():
         numMesa = fn.intInput(f"Debe ingresar una mesa entre 1 y {len(cnf.mesas)}.\n>>")
 
     for mesa in cnf.mesas:
-            print(numMesa, mesa)
             if mesa["idMesa"] == numMesa:
                 # Actualizar el estado y el cliente de la mesa
                 mesa["estado"] = "Ocupada"
@@ -25,6 +24,7 @@ def cliente():
 
         if opcion == 1:
             fn.impresionMenu()
+            input('>> Enter para continuar\n<< ')
                 
         elif opcion == 2:
             fn.hacerPedido(nombre, numMesa)

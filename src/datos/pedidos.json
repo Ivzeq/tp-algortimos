@@ -56,5 +56,46 @@
                 "BIF"
             ]
         ]
+    },
+    {
+        "nombre": "mihcael",
+        "mesa": 2,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "asado de tira",
+                1,
+                "AST"
+            ]
+        ]
+    },
+    {
+        "nombre": "mihjcael",
+        "mesa": 3,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "asado de tira",
+                4,
+                "AST"
+            ],
+            [
+                "milanesa de ternera",
+                1,
+                "MLT"
+            ]
+        ]
+    },
+    {
+        "nombre": "fede",
+        "mesa": 1,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "asado de tira",
+                1,
+                "AST"
+            ]
+        ]
     }
 ]

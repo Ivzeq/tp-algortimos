@@ -141,7 +141,7 @@ def impresionMenu():#chk
     for idx, plato in enumerate(menu, start=1):
         print(f"║{idx:<4}║{plato[1]:<28}║{plato[2]:<10}║{plato[3]:<9} ║")
     print("""╚═══════════════════════════════════════════════════════╝""")
-    input("Presione Enter para continuar>>")
+    #input("Presione Enter para continuar>>")
 
 def impresionPedidos(pedidos):
     for idx, pedido in enumerate(pedidos, start=1):
@@ -383,11 +383,11 @@ def hacerPedido(nombre, mesa):#chk
     impresionMenu()
     while True:
         try:
-            plato = intInput("\nIngrese numero de plato (0 para terminar):\n>>")
+            plato = intInput(">> Ingrese numero de plato o 0 para terminar:\n<< ")
             if plato not in range(1, len(menu) + 1) and plato != 0:
                 raise ValueError
         except ValueError as e:
-            msg=(f'Error durante la entrada de un entero\n\tContexto: Ingrese numero de plato (0 para terminar):\n')
+            msg=(f'Error durante la entrada de un entero\n\tfuncion()= hacerPedido/Ingrese numero de plato (0 para terminar):')
             registrarExcepcion(e,msg)
             print(' >>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
         else:
@@ -397,9 +397,31 @@ def hacerPedido(nombre, mesa):#chk
         codPlato = menu[plato-1][0]
         while True:
             try:
-                cant = int(input(f"Seleccione una cantidad (disponible {menu[plato-1][4]}): "))
-                if cant > menu[plato-1][4]:
-                    raise ValueError
+                if menu[plato-1][4]!=0:
+                    cant = int(input(f">> Ingrese una cantidad (disponible {menu[plato-1][4]})\n<< "))
+                    if cant > menu[plato-1][4]:
+                        raise ValueError
+                    else:
+                        if cant <= menu[plato-1][4]:  # Si hay suficiente stock
+                            # Si ya hay platos en el pedido
+                            platoExistente = False
+                            for elemento in pedido["platos"]:
+                                if elemento[0].lower() == nombrePlato.lower():
+                                    # Si el plato ya está en el pedido, solo actualiza la cantidad
+                                    elemento[1] += cant
+                                    platoExistente = True
+                                    break
+                            if not platoExistente:
+                                # Si el plato no está en el pedido, se agrega
+                                pedido['platos'].append([nombrePlato, cant, codPlato])
+                            #Resta la cantidad pedida al stock
+                            restarStock(codPlato, recetas, ingredientes, cant)
+                            #actualiza el stock total
+                            actualizarStock(menu, recetas, ingredientes)
+                            print(f">> Has agregado {cant} de {nombrePlato} a tu pedido.")
+                else:
+                    print('>> No hay stock disponible del plato.')
+                    break
             except ValueError as e:
                 msg=(f'Error durante la entrada de un entero\n\tContexto: Seleccione una cantidad (disponible {menu[plato-1][4]}):\n')
                 registrarExcepcion(e,msg)
@@ -407,32 +429,12 @@ def hacerPedido(nombre, mesa):#chk
             except Exception as ms:
                 msg=(f'Error durante la entrada de un entero\n\tContexto: Seleccione una cantidad (disponible {menu[plato-1][4]}):\n')
                 registrarExcepcion(ms,msg)
-
-
+                break
             else:
                 break
-        if cant <= menu[plato-1][4]:  # Si hay suficiente stock
-            # Si ya hay platos en el pedido
-            platoExistente = False
-            for elemento in pedido["platos"]:
-                if elemento[0].lower() == nombrePlato.lower():
-                    # Si el plato ya está en el pedido, solo actualiza la cantidad
-                    elemento[1] += cant
-                    platoExistente = True
-                    break
-
-            if not platoExistente:
-                # Si el plato no está en el pedido, se agrega
-                pedido['platos'].append([nombrePlato, cant, codPlato])
-
-            #Resta la cantidad pedida al stock
-            restarStock(codPlato, recetas, ingredientes, cant)
-            #actualiza el stock total
-            actualizarStock(menu, recetas, ingredientes)
-            print(f"Has agregado {cant} de {nombrePlato} a tu pedido.")
         while True:
             try:
-                plato = int(input("\nIngrese número de plato (0 para terminar):\n>>"))
+                plato = int(input(">> Ingrese numero de plato o 0 para terminar:\n<< "))
                 if plato not in range(1, len(cnf.menu) + 1) and plato != 0:
                     raise ValueError
             except ValueError as e:
@@ -442,11 +444,11 @@ def hacerPedido(nombre, mesa):#chk
             else:
                 break
     resumenPedido(nombre, mesa, pedido)
-    confirma = confirmInput("\nDesea confirmar su pedido? s/n\n>>")
+    confirma = confirmInput(">> Confirmar pedido s=si n=no\n<< ")
     if confirma == 's':
         pedidos.append(pedido)
         guardarDatos(cnf.rutas['pedidos'], pedidos)
-        print(f"Gracias {nombre}! Tu pedido fue confirmado.")
+        print(f">> Gracias {nombre}! Tu pedido fue confirmado.")
     else:
         if len(pedido["platos"]) > 0:
             for plato in pedido["platos"]:
@@ -454,7 +456,7 @@ def hacerPedido(nombre, mesa):#chk
                 cant = plato[1]
                 devolverStock(codPlato, recetas, ingredientes, cant)
                 actualizarStock(menu, recetas, ingredientes)
-        print("Pedido cancelado.")
+        print(">> Pedido cancelado.")
 
 def verPedido(nombre, mesa):
     pedidos = cnf.pedidos

@@ -82,5 +82,7 @@ def test_cargaPedidos():
 
 def test_cerrarMesa():
     cerrarMesa()
-    
-test_cerrarMesa()
+def test_hacerPedido():
+    hacerPedido('fede',1)   
+#test_cerrarMesa()
+test_hacerPedido()
