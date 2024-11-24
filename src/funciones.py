@@ -78,12 +78,21 @@ def verifCodigo(lista, codigo):
     return codigo in conjunto
 
 def cargarDatos(ruta):
-    with open(ruta, 'r') as archivo:
-        return json.load(archivo)
+    try:    
+        with open(ruta, encoding = 'utf-8') as archivo:
+            return json.load(archivo)
+    except Exception as e:
+        #si ocurre un error deberiamos acceder mediante librerias so para verificar si existe y sino, debemos crear un archivo
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarDatos(ruta)')
+        registrarExcepcion(e,msg)
 
 def guardarDatos(ruta, datos):
-    with open(ruta, 'w') as archivo:
-        json.dump(datos, archivo, indent=4)
+    try:    
+        with open(ruta, 'w', encoding= 'utf-8') as archivo:
+            json.dump(datos, archivo, indent=4)
+    except Exception as e:
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos(ruta,datos)')
+        registrarExcepcion(e,msg)
 
 def impresionMesas():
     mesas = cnf.mesas
@@ -227,7 +236,6 @@ def restarIngredientes(codReceta, recetas, ingredientes):
 def restarAuxIngredientes(codReceta, recetas, ingredientes):
     # Buscar la receta por código usando filter
     receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
-
     for ingReceta in receta['ingredientes']:
         for nombreIngrediente, cantIngrediente in ingReceta.items():
             # Restar la cantidad del stock

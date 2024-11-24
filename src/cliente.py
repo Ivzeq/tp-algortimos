@@ -2,7 +2,7 @@ import config as cnf
 import funciones as fn
 
 def cliente():
-    nombre = fn.charInput("\n\n\n\nBienvenido al restaurant. Por favor indique su nombre:\n>>")
+    nombre = fn.charInput("\n\n\n\nBienvenido al restaurante. Por favor indique su nombre:\n>>")
     numMesa = fn.intInput("Ingrese el número de mesa:\n>>")
 
     while numMesa not in range (1, len(cnf.mesas)+1):

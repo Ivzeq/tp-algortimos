@@ -22,5 +22,4 @@ def main():
         elif opcion == 3:
             salon.salon()
             input("\nPresione Enter para continuar>>")
-
 main()
