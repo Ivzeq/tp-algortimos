@@ -1,0 +1,153 @@
+[
+    {
+        "id": "BIF",
+        "nombre": "Bife de chorizo",
+        "ingredientes": [
+            {"Bife de Chorizo": 1},
+            {"Sal": 1},
+            {"Pimienta": 1}
+        ],
+        "tiempo": "30 minutos",
+        "instrucciones": "Sazonar el bife y asar a la parrilla."
+    },
+    {
+        "id": "AST",
+        "nombre": "Asado de tira",
+        "ingredientes": [
+            {"Asado de Tira": 1},
+            {"Sal": 2},
+            {"Pimienta": 1}
+        ],
+        "tiempo": "45 minutos",
+        "instrucciones": "Sazonar y asar a la parrilla."
+    },
+    {
+        "id": "MLT",
+        "nombre": "Milanesa de ternera",
+        "ingredientes": [
+            {"Ternera": 1},
+            {"Pan rallado": 1},
+            {"Huevo": 1},
+            {"Sal": 1},
+            {"Pimienta": 1}
+        ],
+        "tiempo": "20 minutos",
+        "instrucciones": "Empanar la ternera y freír hasta dorar."
+    },
+    {
+        "id": "PLH",
+        "nombre": "Pollo al horno",
+        "ingredientes": [
+            {"Pollo": 1},
+            {"Aceite": 1},
+            {"Sal": 1},
+            {"Pimienta": 1},
+            {"Especias": 1},
+            {"Limón": 1}
+        ],
+        "tiempo": "1 hora",
+        "instrucciones": "Sazonar y hornear hasta que esté cocido. Servir con limón en gajos"
+    },
+    {
+        "id": "SNA",
+        "nombre": "Suprema a la napolitana",
+        "ingredientes": [
+            {"Pechuga de Pollo": 1},
+            {"Jamón": 1},
+            {"Queso": 1},
+            {"Pan rallado": 1},
+            {"Huevo": 1},
+            {"Sal": 1},
+            {"Pimienta": 1}
+        ],
+        "tiempo": "30 minutos",
+        "instrucciones": "Empanar y hornear con jamón y queso."
+    },
+    {
+        "id": "PLP",
+        "nombre": "Pollo a la parrilla",
+        "ingredientes": [
+            {"Pollo": 1},
+            {"Sal": 1},
+            {"Pimienta": 1},
+            {"Limón": 2}
+        ],
+        "tiempo": "25 minutos",
+        "instrucciones": "Sazonar y asar a la parrilla."
+    },
+    {
+        "id": "SMT",
+        "nombre": "Salmón a la manteca",
+        "ingredientes": [
+            {"Salmón": 1},
+            {"Manteca": 2},
+            {"Sal": 1},
+            {"Pimienta": 1}
+        ],
+        "tiempo": "20 minutos",
+        "instrucciones": "Cocinar en sartén con manteca."
+    },
+    {
+        "id": "MLH",
+        "nombre": "Merluza al horno",
+        "ingredientes": [
+            {"Merluza": 1},
+            {"Aceite": 1},
+            {"Limón": 1},
+            {"Sal": 1},
+            {"Pimienta": 1}
+        ],
+        "tiempo": "30 minutos",
+        "instrucciones": "Sazonar y hornear hasta que esté cocido. Servir con limón en gajos"
+    },
+    {
+        "id": "PAM",
+        "nombre": "Paella de mariscos",
+        "ingredientes": [
+            {"Arroz": 2},
+            {"Mariscos": 1},
+            {"Caldo de pescado": 3},
+            {"Pimiento": 1},
+            {"Guisantes": 1},
+            {"Azafrán": 1},
+            {"Sal": 1}
+        ],
+        "tiempo": "40 minutos",
+        "instrucciones": "Cocinar todos los ingredientes en una paella."
+    },
+    {
+        "id": "ECA",
+        "nombre": "Ensalada caesar",
+        "ingredientes": [
+            {"Lechuga": 1},
+            {"Pechuga de Pollo": 1},
+            {"Aderezo Caesar": 2},
+            {"Crutones": 2}
+        ],
+        "tiempo": "15 minutos",
+        "instrucciones": "Mezclar todos los ingredientes y servir."
+    },
+    {
+        "id": "EMX",
+        "nombre": "Ensalada mixta",
+        "ingredientes": [
+            {"Lechuga": 1},
+            {"Tomate": 1},
+            {"Cebolla": 1}
+        ],
+        "tiempo": "10 minutos",
+        "instrucciones": "Mezclar todos los ingredientes y servir."
+    },
+    {
+        "id": "ECP",
+        "nombre": "Ensalada caprese",
+        "ingredientes": [
+            {"Tomate": 2},
+            {"Mozzarella": 1},
+            {"Albahaca": 1},
+            {"Aceite de oliva": 1}
+        ],
+        "tiempo": "10 minutos",
+        "instrucciones": "Alternar capas de tomate y mozzarella, agregar albahaca, rociar con aceite de oliva."
+    }
+]

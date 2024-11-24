@@ -1,0 +1,35 @@
+[{
+        "nombre": "Ale",
+        "mesa": 5,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "milanesa de ternera",
+                4,
+                "MLT"
+            ],
+            [
+                "pollo al horno",
+                2,
+                "PLH"
+            ]
+        ]
+    },
+    {
+        "nombre": "Michael",
+        "mesa": 1,
+        "estado": "listo",
+        "platos": [
+            [
+                "milanesa de ternera",
+                3,
+                "MLT"
+            ],
+            [
+                "ensalada Caesar",
+                2,
+                "ECA"
+            ]
+        ]
+    }
+]

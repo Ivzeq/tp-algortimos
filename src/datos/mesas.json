@@ -1,1 +1,31 @@
-[{"idMesa": "1", "estado": "libre", "reserva": "sin reserva", "cantPersonas": 0, "maxPersonas": 2}, {"idMesa": "2", "estado": "libre", "reserva": "sin reserva", "cantPersonas": 0, "maxPersonas": 2}, {"idMesa": "3", "estado": "libre", "reserva": "sin reserva", "cantPersonas": 0, "maxPersonas": 4}, {"idMesa": "4", "estado": "libre", "reserva": "sin reserva", "cantPersonas": 0, "maxPersonas": 4}, {"idMesa": "5", "estado": "libre", "reserva": "sin reserva", "cantPersonas": 0, "maxPersonas": 6}, {"idMesa": "6", "estado": "libre", "reserva": "sin reserva", "cantPersonas": 0, "maxPersonas": 6}]
+[{
+        "idMesa": 1,
+        "estado": "ocupada",
+        "cliente": "Michael"
+    },
+    {
+        "idMesa": 2,
+        "estado": "Ocupada",
+        "cliente": "Ale"
+    },
+    {
+        "idMesa": 3,
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": 4,
+        "estado": "Ocupada",
+        "cliente": "Ivan"
+    },
+    {
+        "idMesa": 5,
+        "estado": "Ocupada",
+        "cliente": "Ale"
+    },
+    {
+        "idMesa": 6,
+        "estado": "libre",
+        "cliente": "sin reserva"
+    }
+]

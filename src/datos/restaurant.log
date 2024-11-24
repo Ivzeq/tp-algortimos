@@ -1,0 +1,3 @@
+Tipo: <class 'TypeError'> - Mensaje: expected string or bytes-like object, got 'int'
+Tipo: <class 'TypeError'> - Mensaje: expected string or bytes-like object, got 'int'
+Tipo: <class 'ValueError'> - Mensaje: 

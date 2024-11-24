@@ -6,10 +6,14 @@
 ╠════════════════════════════════════════╣
 ║ Ingrese opcion:                        ║
 ╠════════════════════════════════════════╣
-║ 1 → Usuarios                           ║
-║ 2 → Mesas                              ║
-║ 3 → Pedidos                            ║
-║ 4 → Salir                              ║
+║ 1 → Modificar estados                  ║
+║ 2 → Finalizar pedido                   ║
+║ 3 → Cancelar pedido                    ║
+║ 4 → Repriorizar pedidos                ║
+║ 5 → Modificar compras                  ║
+║ 6 → Ingresar compras al stock          ║
+║ 7 → Salir                              ║
+║                                        ║
 ╚════════════════════════════════════════╝
 >>Ingrese opción:
 >> 

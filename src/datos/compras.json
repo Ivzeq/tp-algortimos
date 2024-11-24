@@ -1,0 +1,22 @@
+[
+    {
+        "id": "LCH",
+        "nombre": "Lechuga",
+        "cantidad": 2
+    },
+    {
+        "id": "AZF",
+        "nombre": "Azafr\u00e1n",
+        "cantidad": 2
+    },
+    {
+        "id": "CRT",
+        "nombre": "Crutones",
+        "cantidad": 2
+    },
+    {
+        "id": "ARZ",
+        "nombre": "Arroz",
+        "cantidad": 2
+    }
+]
