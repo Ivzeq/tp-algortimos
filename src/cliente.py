@@ -28,12 +28,9 @@ def cliente():
                 
         elif opcion == 2:
             fn.hacerPedido(nombre, numMesa)
-            input("\nPresione Enter para continuar>>")
-                
+            input(">> Enter para continuar\n<< ")     
         elif opcion == 3:
             fn.verPedido(nombre, numMesa)
-            input("\nPresione Enter para continuar>>")
-
         else:
             return
 

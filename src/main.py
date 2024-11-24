@@ -21,7 +21,7 @@ def main():
         elif opcion == 2:
             fn.limp()
             cocina.cocina()
-            input("\n>> Presione Enter para continuar>>")
+            input(">> Presione Enter para continuar>>")
         
         elif opcion == 3:
             fn.limp()

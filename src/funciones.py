@@ -399,7 +399,7 @@ def hacerPedido(nombre, mesa):#chk
             try:
                 if menu[plato-1][4]!=0:
                     cant = int(input(f">> Ingrese una cantidad (disponible {menu[plato-1][4]})\n<< "))
-                    if cant > menu[plato-1][4]:
+                    if cant > menu[plato-1][4] or cant<1:
                         raise ValueError
                     else:
                         if cant <= menu[plato-1][4]:  # Si hay suficiente stock
@@ -443,40 +443,44 @@ def hacerPedido(nombre, mesa):#chk
                 print('>>Opción ingresada no válida\n>> Ingrese una opción válida')
             else:
                 break
-    resumenPedido(nombre, mesa, pedido)
-    confirma = confirmInput(">> Confirmar pedido s=si n=no\n<< ")
-    if confirma == 's':
-        pedidos.append(pedido)
-        guardarDatos(cnf.rutas['pedidos'], pedidos)
-        print(f">> Gracias {nombre}! Tu pedido fue confirmado.")
-    else:
-        if len(pedido["platos"]) > 0:
-            for plato in pedido["platos"]:
-                codPlato = plato[2]
-                cant = plato[1]
-                devolverStock(codPlato, recetas, ingredientes, cant)
-                actualizarStock(menu, recetas, ingredientes)
-        print(">> Pedido cancelado.")
+    if len(pedido["platos"])>0:
+        resumenPedido(nombre, mesa, pedido)
+        confirma = confirmInput(">> Confirmar pedido s=si n=no\n<< ")
+        if confirma == 's':
+            pedidos.append(pedido)
+            guardarDatos(cnf.rutas['pedidos'], pedidos)
+            print(f">> Gracias {nombre}! Tu pedido fue confirmado.")
+        else:
+            if len(pedido["platos"]) > 0:
+                for plato in pedido["platos"]:
+                    codPlato = plato[2]
+                    cant = plato[1]
+                    devolverStock(codPlato, recetas, ingredientes, cant)
+                    actualizarStock(menu, recetas, ingredientes)
+            print(">> Pedido cancelado.")
 
+        
 def verPedido(nombre, mesa):
     pedidos = cnf.pedidos
     pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
     impresionPedidos(pedidosCliente)
     if len(pedidosCliente) > 0:
-        confirma = confirmInput("\nDesea cancelar algun pedido? s/n\n>>")
+        confirma = confirmInput(">> Desea cancelar algun pedido? s/n\n<< ")
         if confirma == 's' and len(pedidosCliente) >1:
-            cancelado = intInput(f"Qué número de pedido desea cancelar? entre 1 y {len(pedidosCliente)}\n>>")
+            cancelado = intInput(f">> Qué número de pedido desea cancelar? entre 1 y {len(pedidosCliente)}\n<< ")
             while cancelado not in range(1, len(pedidosCliente)+1):
-                cancelado = intInput(f"Debe seleccionar un número entre 1 y {len(pedidosCliente)}\n>>")
+                cancelado = intInput(f">> Debe seleccionar un número entre 1 y {len(pedidosCliente)}\n<< ")
             pedidos.remove(pedidosCliente[cancelado-1])
             guardarDatos(cnf.rutas["pedidos"], pedidos)
-            print("Pedido eliminado exitosamente.\n")
+            print(">> Pedido eliminado exitosamente.")
         elif confirma == 's':
             pedidos.remove(pedidosCliente[0])
             guardarDatos(cnf.rutas['pedidos'], pedidos)
-            print("Pedido eliminado exitosamente.\n")
+            print(">> Pedido eliminado exitosamente.")
+            input(">> Enter para continuar\n<< ")   
     else:
-        print("No se encontraron pedidos activos.")
+        print(">> No se encontraron pedidos activos")
+        input(">> Enter para continuar\n<< ")   
 
 def avanzarPedidoCocina():
     pedidos = cnf.pedidos

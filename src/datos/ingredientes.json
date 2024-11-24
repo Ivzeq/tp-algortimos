@@ -7,42 +7,42 @@
     {
         "id": "SLT",
         "nombre": "Sal",
-        "cantidad": 42
+        "cantidad": 25
     },
     {
         "id": "PMT",
         "nombre": "Pimienta",
-        "cantidad": 47
+        "cantidad": 30
     },
     {
         "id": "TNR",
         "nombre": "Ternera",
-        "cantidad": 10
+        "cantidad": 9
     },
     {
         "id": "PNR",
         "nombre": "Pan rallado",
-        "cantidad": 31
+        "cantidad": 30
     },
     {
         "id": "HVO",
         "nombre": "Huevo",
-        "cantidad": 29
+        "cantidad": 28
     },
     {
         "id": "PLL",
         "nombre": "Pollo",
-        "cantidad": 16
+        "cantidad": 0
     },
     {
         "id": "ACE",
         "nombre": "Aceite",
-        "cantidad": 42
+        "cantidad": 26
     },
     {
         "id": "ESP",
         "nombre": "Especias",
-        "cantidad": 73
+        "cantidad": 57
     },
     {
         "id": "PPG",
@@ -62,7 +62,7 @@
     {
         "id": "LIM",
         "nombre": "Lim\u00f3n",
-        "cantidad": 17
+        "cantidad": 1
     },
     {
         "id": "SLM",

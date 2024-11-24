@@ -18,14 +18,14 @@
         "Milanesa de Ternera",
         12000,
         "carne",
-        10
+        9
     ],
     [
         "PLH",
         "Pollo al Horno",
         11000,
         "pollo",
-        16
+        0
     ],
     [
         "SNA",
@@ -39,7 +39,7 @@
         "Pollo a la Parrilla",
         12500,
         "pollo",
-        9
+        0
     ],
     [
         "SMT",
@@ -53,7 +53,7 @@
         "Merluza al Horno",
         16000,
         "pescado",
-        17
+        1
     ],
     [
         "PAM",
