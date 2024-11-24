@@ -10,3 +10,6 @@ Tipo: <class 'type'> - Mensaje: <class 'ValueError'>
 Tipo: <class 'type'> - Mensaje: <class 'ValueError'>
 	Error al modificar mesa
 	Funcion() = cerrarMesa()/mesa=NONE
+Tipo: <class 'ValueError'> - Mensaje: 
+	Error durante la entrada de un entero
+	Contexto: Seleccione una cantidad (disponible 0):

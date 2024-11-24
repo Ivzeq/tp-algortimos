@@ -1,8 +1,8 @@
 [
     {
         "idMesa": 1,
-        "estado": "Libre",
-        "cliente": "Sin reserva"
+        "estado": "Ocupada",
+        "cliente": "Fede"
     },
     {
         "idMesa": 2,
@@ -16,13 +16,13 @@
     },
     {
         "idMesa": 4,
-        "estado": "Ocupada",
-        "cliente": "Ivan"
+        "estado": "Libre",
+        "cliente": "Sin reserva"
     },
     {
         "idMesa": 5,
-        "estado": "Ocupada",
-        "cliente": "Ale"
+        "estado": "Libre",
+        "cliente": "Sin reserva"
     },
     {
         "idMesa": 6,

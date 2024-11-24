@@ -44,5 +44,17 @@
                 "BIF"
             ]
         ]
+    },
+    {
+        "nombre": "fede",
+        "mesa": 1,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "bife de chorizo",
+                0,
+                "BIF"
+            ]
+        ]
     }
 ]

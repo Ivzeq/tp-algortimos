@@ -26,5 +26,5 @@ def main():
         elif opcion == 3:
             fn.limp()
             salon.salon()
-            input("\n>> Presione Enter para continuar>>")
+            
 main()
