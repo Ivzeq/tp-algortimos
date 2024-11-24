@@ -1,0 +1,12 @@
+
+Tipo: <class 'type'> - Mensaje: <class 'ValueError'>
+	Error al modificar mesa
+	Contexto: cerrarMesa() mesa=NONE
+Tipo: <class 'type'> - Mensaje: <class 'ValueError'>
+	Error al modificar mesa
+	Contexto:
+	Funct() = cerrarMesa()
+	mesa=NONE
+Tipo: <class 'type'> - Mensaje: <class 'ValueError'>
+	Error al modificar mesa
+	Funcion() = cerrarMesa()/mesa=NONE

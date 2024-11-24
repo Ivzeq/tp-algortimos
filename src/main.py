@@ -6,20 +6,25 @@ import salon
 
 def main():
     while True:
+        fn.limp()
         opcion = fn.intInput(cnf.inicioUI)
         while opcion not in [1, 2, 3]:
-            print("Opción inválida. Ingrese 1, 2 o 3.\n")
+            fn.limp()
+            print(">> Opción inválida. Ingrese 1, 2 o 3.")
             opcion = fn.intInput(cnf.inicioUI)
 
         if opcion == 1:
+            fn.limp()
             cliente.cliente()
-            input("\nPresione Enter para continuar>>")
+            input("\n>> Presione Enter para continuar>>")
                 
         elif opcion == 2:
+            fn.limp()
             cocina.cocina()
-            input("\nPresione Enter para continuar>>")
+            input("\n>> Presione Enter para continuar>>")
         
         elif opcion == 3:
+            fn.limp()
             salon.salon()
-            input("\nPresione Enter para continuar>>")
+            input("\n>> Presione Enter para continuar>>")
 main()

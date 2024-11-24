@@ -7,7 +7,8 @@ from functools import reduce
 
 class IngredienteInsuficiente(Exception):
     pass
-
+def limp():
+    print("\n"*100)
 def registrarExcepcion(e,msg):
     try:
         archivo = open('tp-algoritmos\\src\\datos\\restaurant.log', 'a')
@@ -557,20 +558,22 @@ def consultarReceta():
 
 def cerrarMesa():
     impresionMesas()
-    seleccionada = intInput("Qué mesa desea cerrar? 0 para salir\n>>")
+    seleccionada = intInput(">>Ingrese numero de mesa a cerrar o 0 para salir\n<<")
     while seleccionada not in range(0, len(cnf.mesas)+1):
-        seleccionada = intInput(f"Debe seleccionar una mesa entre 1 y {len(cnf.mesas)}, o 0 para salir.\n>>")
+        seleccionada = intInput(f">>Debe seleccionar una mesa entre 1 y {len(cnf.mesas)}, o 0 para salir.\n<<")
     if seleccionada == 0:
         return
     else:
-        mesa = next((m for m in cnf.mesas if m["idMesa"] == str(seleccionada)), None)
+        mesa = next((m for m in cnf.mesas if m["idMesa"] == int(seleccionada)), None)
         if mesa:
             mesa["estado"] = "Libre"
             mesa["cliente"] = "Sin reserva"
             print(f"La mesa {mesa['idMesa']} ha sido cerrada exitosamente.")
-
             guardarDatos(cnf.rutas["mesas"], cnf.mesas)
-
+        else:
+            msg='Error al modificar mesa\n\tFuncion() = cerrarMesa()/mesa=NONE'
+            print('>> Error al modificar mesa')
+            registrarExcepcion(ValueError,msg)
 def ingresoAdmin():
     passwords = list(map(lambda item: list(item.keys())[0], cnf.admins))
     ingreso = charInput("Ingrese su contraseña:\n>>")

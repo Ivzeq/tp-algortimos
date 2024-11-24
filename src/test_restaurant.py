@@ -80,3 +80,7 @@ def test_cargaPedidos():
         contenido=archivo.read()
         assert pedidos==json.loads(contenido)
 
+def test_cerrarMesa():
+    cerrarMesa()
+    
+test_cerrarMesa()
