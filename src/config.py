@@ -39,6 +39,14 @@ permisosEstadosCocina = ("recibido", "en preparación", "listo")
 permisosEstadosSalon = ("entregado", "pagado")
 admins = ({"admin": "ale"}, {"osyubdf": "michael"}, {"hsocne": "ivan"})
 
+
+
+
+
+
+
+
+
 rutas = {
     "ingredientes": "tp-algoritmos\\src\\datos\\ingredientes.json",
     "menu": "tp-algoritmos\\src\\datos\\menu.json",
@@ -60,6 +68,9 @@ ingredientes = cargarDatos(rutas["ingredientes"])
 menu = cargarDatos(rutas["menu"])
 mesas = cargarDatos(rutas["mesas"])
 pedidos = cargarDatos(rutas["pedidos"])
+if pedidos=='' or pedidos is None:
+    pedidos=[]
+    fn.guardarDatos(rutas["pedidos"],pedidos)
 recetas = cargarDatos(rutas["recetas"])
 compras = cargarDatos(rutas["compras"])
 finalizados = cargarDatos(rutas["finalizados"])
