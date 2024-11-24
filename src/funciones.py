@@ -8,11 +8,11 @@ from functools import reduce
 class IngredienteInsuficiente(Exception):
     pass
 
-def registrarExcepcion(e):
+def registrarExcepcion(e,msg):
     try:
         archivo = open('tp-algoritmos\\src\\datos\\restaurant.log', 'a')
         try:
-            error = f"Tipo: {type(e)} - Mensaje: {str(e)}\n"
+            error = f"\nTipo: {type(e)} - Mensaje: {str(e)}\n\t{msg}"
             print(f"Ocurrió un error: {error}")
             archivo.write(error)
         finally:
@@ -31,8 +31,9 @@ def intInput(prompt):
         except ValueError:
             print("Entrada no válida. Se esperaba un número entero")
         except Exception as e:
-            registrarExcepcion(e)
-            print(e)
+            msg=(f'Error durante la entrada de un entero\n\tContexto: {prompt}\n')
+            registrarExcepcion(e,msg)
+
 
 def charInput(prompt):
     while True:
@@ -43,10 +44,11 @@ def charInput(prompt):
                 userInput = input("Entrada no válida. Por favor, ingrese uno o más caracteres alfabéticos. No puede comenzar con espacio.\n>>")
             return userInput
         except Exception as e:
-            registrarExcepcion(e)
-            print(e)
+            msg=(f'Error durante la entrada de un caracter\n\tContexto: {prompt}\n')
+            registrarExcepcion(e,msg)
 
-def codeInput(prompt):
+
+def codeInput(prompt):#A ELIMINAR
     while True:
         try:
             userInput = input(prompt)
@@ -56,7 +58,7 @@ def codeInput(prompt):
             return userInput.upper()
         except Exception as e:
             registrarExcepcion(e)
-            print(e)
+
 
 def confirmInput(prompt):
     while True:
@@ -67,7 +69,8 @@ def confirmInput(prompt):
                 userInput = input("Ingreso inválido. Ingrese s para confirmar, n para cancelar.\n>>")
             return userInput.lower()
         except Exception as e:
-            registrarExcepcion(e)
+            msg=(f'Error durante la entrada de un caracter\n\tContexto: {prompt}\n')
+            registrarExcepcion(e,msg)
             print(e)
 
 def verifCodigo(lista, codigo):
@@ -218,8 +221,8 @@ def restarIngredientes(codReceta, recetas, ingredientes):
         else:
             raise IngredienteInsuficiente("Cantidad de ingredientes insuficiente.\n")
     except IngredienteInsuficiente as e:
-        registrarExcepcion(e)
-    
+        msg=(f'Error ingredientes insuficientes\n')
+        registrarExcepcion(e,msg)
 #Resta ingredientes pero no modifica el json
 def restarAuxIngredientes(codReceta, recetas, ingredientes):
     # Buscar la receta por código usando filter
@@ -375,7 +378,8 @@ def hacerPedido(nombre, mesa):#chk
             if plato not in range(1, len(menu) + 1) and plato != 0:
                 raise ValueError
         except ValueError as e:
-            registrarExcepcion(e)
+            msg=(f'Error durante la entrada de un entero\n\tContexto: Ingrese numero de plato (0 para terminar):\n')
+            registrarExcepcion(e,msg)
             print(' >>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
         else:
             break
@@ -388,12 +392,14 @@ def hacerPedido(nombre, mesa):#chk
                 if cant > menu[plato-1][4]:
                     raise ValueError
             except ValueError as e:
-                registrarExcepcion(e)
+                msg=(f'Error durante la entrada de un entero\n\tContexto: Seleccione una cantidad (disponible {menu[plato-1][4]}):\n')
+                registrarExcepcion(e,msg)
                 print(f'>> Opcion ingresada no válida\n>> Ingrese opción válida')
             except Exception as ms:
-                registrarExcepcion(ms)
-                ms=str(ms)
-                print(f'>>Ha ocurrido un error -> {ms}')
+                msg=(f'Error durante la entrada de un entero\n\tContexto: Seleccione una cantidad (disponible {menu[plato-1][4]}):\n')
+                registrarExcepcion(ms,msg)
+
+
             else:
                 break
         if cant <= menu[plato-1][4]:  # Si hay suficiente stock
@@ -421,7 +427,8 @@ def hacerPedido(nombre, mesa):#chk
                 if plato not in range(1, len(cnf.menu) + 1) and plato != 0:
                     raise ValueError
             except ValueError as e:
-                registrarExcepcion(e)
+                msg=(f'Error durante la entrada de un entero\n\tContexto: Ingrese número de plato (0 para terminar):\n')
+                registrarExcepcion(e,msg)
                 print('>>Opción ingresada no válida\n>> Ingrese una opción válida')
             else:
                 break

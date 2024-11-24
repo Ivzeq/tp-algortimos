@@ -1,12 +1,13 @@
-[{
+[
+    {
         "idMesa": 1,
-        "estado": "ocupada",
-        "cliente": "Michael"
+        "estado": "Ocupada",
+        "cliente": "Junas"
     },
     {
         "idMesa": 2,
         "estado": "Ocupada",
-        "cliente": "Ale"
+        "cliente": "Michael"
     },
     {
         "idMesa": 3,

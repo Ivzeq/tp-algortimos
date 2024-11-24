@@ -1,4 +1,5 @@
-[{
+[
+    {
         "nombre": "Ale",
         "mesa": 5,
         "estado": "Recibido",
@@ -29,6 +30,18 @@
                 "ensalada Caesar",
                 2,
                 "ECA"
+            ]
+        ]
+    },
+    {
+        "nombre": "junas",
+        "mesa": 1,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "bife de chorizo",
+                0,
+                "BIF"
             ]
         ]
     }
