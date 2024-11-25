@@ -1,6 +1,6 @@
 import json
 import funciones as fn
-
+import os
 
 def cargarDatos(ruta):
     try:    
@@ -39,29 +39,26 @@ permisosEstadosCocina = ("recibido", "en preparación", "listo")
 permisosEstadosSalon = ("entregado", "pagado")
 admins = ({"admin": "ale"}, {"osyubdf": "michael"}, {"hsocne": "ivan"})
 
-
-
-
-
-
-
-
+direccion_UI=os.path.join(os.path.dirname(os.path.abspath(__file__)),'UI')
+direccion_datos=os.path.join(os.path.dirname(os.path.abspath(__file__)),'datos')
 
 rutas = {
-    "ingredientes": "tp-algoritmos\\src\\datos\\ingredientes.json",
-    "menu": "tp-algoritmos\\src\\datos\\menu.json",
-    "mesas": "tp-algoritmos\\src\\datos\\mesas.json",
-    "pedidos": "tp-algoritmos\\src\\datos\\pedidos.json",
-    "recetas": "tp-algoritmos\\src\\datos\\recetas.json",
-    "compras": "tp-algoritmos\src\datos\compras.json",
-    "finalizados": "tp-algoritmos\\src\\datos\\finalizados.json",
-    "log": "tp-algoritmos\\src\\datos\\restaurant.log",
-    "estados": "tp-algoritmos\\src\\UI\\estadosPedidos.txt",
-    "admin": "tp-algoritmos\\src\\UI\\menuAdministrador.txt",
-    "cocina": "tp-algoritmos\\src\\UI\\menuCocinero.txt",
-    "cliente": "tp-algoritmos\\src\\UI\\menuCliente.txt",
-    "salon": "tp-algoritmos\\src\\UI\\menuSalon.txt",
-    "inicio": "tp-algoritmos\\src\\UI\\menuInicio.txt"
+    "ingredientes": os.path.join(direccion_datos,'ingredientes.json'),
+    "menu": os.path.join(direccion_datos,"menu.json"),
+    "mesas": os.path.join(direccion_datos,'mesas.json'),
+    "pedidos": os.path.join(direccion_datos,'pedidos.json'),
+    "recetas": os.path.join(direccion_datos,'recetas.json'),
+    "compras": os.path.join(direccion_datos,'compras.json'),
+    "finalizados": os.path.join(direccion_datos,'finalizados.json'),
+    "log": os.path.join(direccion_datos,'restaurant.log'),
+    "estados": os.path.join(direccion_UI,'estadosPedidos.txt'),
+    "admin": os.path.join(direccion_UI,'menuAdministrador.txt'),
+    "cocina": os.path.join(direccion_UI,'menuCocinero.txt'),
+    "cliente": os.path.join(direccion_UI,'menuCliente.txt'),
+    "salon": os.path.join(direccion_UI,'menuSalon.txt'),
+    "inicio": os.path.join(direccion_UI,'menuInicio.txt')
+
+
 }
 
 ingredientes = cargarDatos(rutas["ingredientes"])
