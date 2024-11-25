@@ -7,12 +7,12 @@
     {
         "id": "SLT",
         "nombre": "Sal",
-        "cantidad": 24
+        "cantidad": 22
     },
     {
         "id": "PMT",
         "nombre": "Pimienta",
-        "cantidad": 29
+        "cantidad": 28
     },
     {
         "id": "TNR",
@@ -67,12 +67,12 @@
     {
         "id": "SLM",
         "nombre": "Salm\u00f3n",
-        "cantidad": 15
+        "cantidad": 14
     },
     {
         "id": "MTC",
         "nombre": "Manteca",
-        "cantidad": 32
+        "cantidad": 30
     },
     {
         "id": "MLZ",
@@ -82,32 +82,32 @@
     {
         "id": "ARZ",
         "nombre": "Arroz",
-        "cantidad": 61
+        "cantidad": 59
     },
     {
         "id": "MRC",
         "nombre": "Mariscos",
-        "cantidad": 11
+        "cantidad": 10
     },
     {
         "id": "CLP",
         "nombre": "Caldo de pescado",
-        "cantidad": 35
+        "cantidad": 32
     },
     {
         "id": "PMN",
         "nombre": "Pimiento",
-        "cantidad": 16
+        "cantidad": 15
     },
     {
         "id": "GTS",
         "nombre": "Guisantes",
-        "cantidad": 23
+        "cantidad": 22
     },
     {
         "id": "AZF",
         "nombre": "Azafr\u00e1n",
-        "cantidad": 25
+        "cantidad": 24
     },
     {
         "id": "LCH",

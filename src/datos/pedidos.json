@@ -1,13 +1,13 @@
 [
     {
-        "nombre": "joel",
+        "nombre": "judas",
         "mesa": 1,
-        "estado": "Recibido",
+        "estado": "en preparacion",
         "platos": [
             [
-                "ensalada caesar",
+                "paella de mariscos",
                 1,
-                "ECA"
+                "PAM"
             ]
         ]
     }

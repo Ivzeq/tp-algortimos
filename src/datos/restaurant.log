@@ -60,3 +60,9 @@ Tipo: <class 'json.decoder.JSONDecodeError'> - Mensaje: Expecting value: line 1 
 Tipo: <class 'json.decoder.JSONDecodeError'> - Mensaje: Expecting value: line 1 column 1 (char 0)
 	Error al abrir archivo con ruta precargada
 	Contexto:CargarDatos(ruta)
+Tipo: <class 'json.decoder.JSONDecodeError'> - Mensaje: Expecting value: line 1 column 1 (char 0)
+	Error al abrir archivo con ruta precargada
+	Contexto:CargarDatos(ruta)
+Tipo: <class 'json.decoder.JSONDecodeError'> - Mensaje: Expecting value: line 1 column 1 (char 0)
+	Error al abrir archivo con ruta precargada
+	Contexto:CargarDatos(ruta)

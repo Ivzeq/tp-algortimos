@@ -378,7 +378,7 @@ def hacerPedido(nombre, mesa):#chk
     pedidos = cnf.pedidos
     pedido={"nombre":nombre,
             "mesa":mesa,
-            "estado": "Recibido",
+            "estado": "recibido",
             "platos":[]}
     impresionMenu()
     while True:
@@ -484,24 +484,22 @@ def verPedido(nombre, mesa):
 
 def avanzarPedidoCocina():
     pedidos = cnf.pedidos
-    comandas = [pedido for pedido in pedidos if pedido["estado"] in cnf.permisosEstadosCocina]
-
+    comandas = [pedido for pedido in pedidos if (pedido["estado"]) in cnf.permisosEstadosCocina]#PENDIENTE A REVISAR, INGRESARON ESTADOS CON MAYUSCULAS Y NO COINCIDEN
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
         return
-    
     impresionPedidos(comandas)
-    avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar.\n>>")
-    if avanzar == 0:
+    avanzar = intInput(f">> Qué pedido desea avanzar? entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
+    if avanzar <1 :
         return
     while avanzar not in range(1, len(comandas)+1):
-        avanzar = intInput(f"Debe seleccionar un número entre 1 y {len(comandas)}\n>>")
+        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)}\n<< ")
     seleccionado = comandas[avanzar-1]
     actual = seleccionado["estado"]
     for avance in cnf.avanceEstados:
         if actual in avance:
             seleccionado["estado"] = avance[actual]
-            print(f"El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
+            print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             break
 
