@@ -14,7 +14,7 @@ def registrarExcepcion(e,msg):
         archivo = open('tp-algoritmos\\src\\datos\\restaurant.log', 'a')
         try:
             error = f"\nTipo: {type(e)} - Mensaje: {str(e)}\n\t{msg}"
-            print(f"Ocurrió un error: {error}")
+            print(f"Ocurrio un error: {e}")
             archivo.write(error)
         finally:
             archivo.close()
@@ -389,7 +389,7 @@ def hacerPedido(nombre, mesa):#chk
         except ValueError as e:
             msg=(f'Error durante la entrada de un entero\n\tfuncion()= hacerPedido/Ingrese numero de plato (0 para terminar):')
             registrarExcepcion(e,msg)
-            print(' >>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
+            print('>>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
         else:
             break
     while plato != 0:
@@ -521,6 +521,9 @@ def avanzarPedidoSalon():
             seleccionado["estado"] = avance[actual]
             print(f"El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             if seleccionado['estado'].lower() == "finalizado":
+                cnf.mesas[int(seleccionado["mesa"])-1]['estado']= "Libre"
+                cnf.mesas[int(seleccionado["mesa"])-1]['cliente']= "Sin reserva"
+                guardarDatos(cnf.rutas["mesas"], cnf.mesas)
                 finalizados = cnf.finalizados
                 finalizados.append(seleccionado)
                 guardarDatos(cnf.rutas["finalizados"], finalizados)

@@ -2,7 +2,7 @@
     {
         "idMesa": 1,
         "estado": "Ocupada",
-        "cliente": "Judas"
+        "cliente": "Dsa"
     },
     {
         "idMesa": 2,
@@ -26,7 +26,7 @@
     },
     {
         "idMesa": 6,
-        "estado": "libre",
-        "cliente": "sin reserva"
+        "estado": "Libre",
+        "cliente": "Sin reserva"
     }
 ]

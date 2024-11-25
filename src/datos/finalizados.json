@@ -1,28 +1,18 @@
 [
     {
-        "nombre": "A",
-        "mesa": "5",
+        "nombre": "mihcael",
+        "mesa": 2,
         "estado": "finalizado",
         "platos": [
             [
-                "Pollo al horno",
-                2
+                "paella de mariscos",
+                1,
+                "PAM"
             ]
         ]
     },
     {
-        "nombre": "Juan",
-        "mesa": "3",
-        "estado": "recibido",
-        "platos": [
-            [
-                "Ensalada Caesar",
-                1
-            ]
-        ]
-    },
-    {
-        "nombre": "judas",
+        "nombre": "juan",
         "mesa": 1,
         "estado": "finalizado",
         "platos": [
