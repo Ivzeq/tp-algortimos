@@ -502,15 +502,12 @@ def avanzarPedidoCocina():
             print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             break
-
 def avanzarPedidoSalon():
     pedidos = cnf.pedidos
     comandas = [pedido for pedido in pedidos if pedido["estado"] in cnf.permisosEstadosSalon]
-
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
         return
-    
     impresionPedidos(comandas)
     avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar\n>>")
     if avanzar == 0:

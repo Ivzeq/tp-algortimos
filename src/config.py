@@ -25,8 +25,8 @@ def guardarDatos(ruta, datos):
     except Exception as e:
         msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos(ruta,datos)')
         fn.registrarExcepcion(e,msg)
+        
 estadosPedidos = ("recibido", "en preparacion", "listo","entregado", "pagado", "finalizado")
-
 avanceEstados = [
     {"recibido": "en preparacion"},
     {"en preparacion": "listo"},

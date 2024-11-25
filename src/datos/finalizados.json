@@ -20,5 +20,17 @@
                 1
             ]
         ]
+    },
+    {
+        "nombre": "judas",
+        "mesa": 1,
+        "estado": "finalizado",
+        "platos": [
+            [
+                "paella de mariscos",
+                1,
+                "PAM"
+            ]
+        ]
     }
 ]

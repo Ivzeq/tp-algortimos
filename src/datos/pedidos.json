@@ -1,14 +1,1 @@
-[
-    {
-        "nombre": "judas",
-        "mesa": 1,
-        "estado": "en preparacion",
-        "platos": [
-            [
-                "paella de mariscos",
-                1,
-                "PAM"
-            ]
-        ]
-    }
-]
+[]
