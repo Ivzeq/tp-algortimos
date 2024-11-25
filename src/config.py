@@ -64,6 +64,40 @@ rutas = {
 ingredientes = cargarDatos(rutas["ingredientes"])
 menu = cargarDatos(rutas["menu"])
 mesas = cargarDatos(rutas["mesas"])
+if mesas=='' or mesas is None:
+    mesas=[
+    {
+        "idMesa": 1,
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": 2,
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": 3,
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": 4,
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": 5,
+        "estado": "Libre",
+        "cliente": "Sin reserva"
+    },
+    {
+        "idMesa": 6,
+        "estado": "libre",
+        "cliente": "sin reserva"
+    }
+]
+    fn.guardarDatos(rutas["mesas"],mesas)
 pedidos = cargarDatos(rutas["pedidos"])
 if pedidos=='' or pedidos is None:
     pedidos=[]

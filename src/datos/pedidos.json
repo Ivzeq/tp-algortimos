@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "nombre": "joel",
+        "mesa": 1,
+        "estado": "Recibido",
+        "platos": [
+            [
+                "ensalada caesar",
+                1,
+                "ECA"
+            ]
+        ]
+    }
+]
