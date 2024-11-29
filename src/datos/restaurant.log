@@ -75,3 +75,10 @@ Tipo: <class 'ValueError'> - Mensaje:
 Tipo: <class 'ValueError'> - Mensaje: 
 	Error durante la entrada de un entero
 	funcion()= hacerPedido/Ingrese numero de plato (0 para terminar):
+Tipo: <class 'ValueError'> - Mensaje: invalid literal for int() with base 10: ''
+	Error durante la entrada de un entero
+	Contexto: Ingrese número de plato (0 para terminar):
+
+Tipo: <class 'ValueError'> - Mensaje: invalid literal for int() with base 10: 'a'
+	Error durante la entrada de un entero
+	Contexto: Ingrese número de plato (0 para terminar):

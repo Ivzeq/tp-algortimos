@@ -4,16 +4,16 @@ import config as cnf
 import math
 from copy import deepcopy
 from functools import reduce
+from datetime import datetime
 
 class IngredienteInsuficiente(Exception):
     pass
-def limp():
-    print("\n"*100)
+
 def registrarExcepcion(e,msg):
     try:
         archivo = open('tp-algoritmos\\src\\datos\\restaurant.log', 'a')
         try:
-            error = f"\nTipo: {type(e)} - Mensaje: {str(e)}\n\t{msg}"
+            error = f"\nFecha: {datetime.now()}\nTipo: {type(e)}\nMensaje: {str(e)}\n\t{msg}"
             print(f"Ocurrio un error: {e}")
             archivo.write(error)
         finally:
@@ -49,7 +49,7 @@ def charInput(prompt):
             registrarExcepcion(e,msg)
 
 
-def codeInput(prompt):#A ELIMINAR
+def codeInput(prompt):#A CAMBIAR POR CODIGO NUMERICO
     while True:
         try:
             userInput = input(prompt)

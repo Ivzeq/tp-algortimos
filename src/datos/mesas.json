@@ -6,8 +6,8 @@
     },
     {
         "idMesa": 2,
-        "estado": "Libre",
-        "cliente": "Sin reserva"
+        "estado": "Ocupada",
+        "cliente": "Ale"
     },
     {
         "idMesa": 3,

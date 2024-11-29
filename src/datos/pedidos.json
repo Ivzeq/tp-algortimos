@@ -1,1 +1,19 @@
-[]
+[
+    {
+        "nombre": "Ale",
+        "mesa": 2,
+        "estado": "recibido",
+        "platos": [
+            [
+                "asado de tira",
+                2,
+                "AST"
+            ],
+            [
+                "salm\u00f3n a la manteca",
+                3,
+                "SMT"
+            ]
+        ]
+    }
+]

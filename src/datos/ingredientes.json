@@ -7,12 +7,12 @@
     {
         "id": "SLT",
         "nombre": "Sal",
-        "cantidad": 19
+        "cantidad": 12
     },
     {
         "id": "PMT",
         "nombre": "Pimienta",
-        "cantidad": 28
+        "cantidad": 23
     },
     {
         "id": "TNR",
@@ -67,12 +67,12 @@
     {
         "id": "SLM",
         "nombre": "Salm\u00f3n",
-        "cantidad": 14
+        "cantidad": 11
     },
     {
         "id": "MTC",
         "nombre": "Manteca",
-        "cantidad": 30
+        "cantidad": 24
     },
     {
         "id": "MLZ",
@@ -152,6 +152,6 @@
     {
         "id": "ASA",
         "nombre": "Asado de tira",
-        "cantidad": 11
+        "cantidad": 9
     }
 ]
