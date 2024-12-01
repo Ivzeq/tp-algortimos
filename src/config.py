@@ -8,7 +8,7 @@ def cargarDatos(ruta):
             return json.load(archivo)
     except Exception as e:
         #si ocurre un error deberiamos acceder mediante librerias so para verificar si existe y sino, debemos crear un archivo
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarDatos(ruta)')
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarDatos({ruta})')
         fn.registrarExcepcion(e,msg)
         
 def cargarUI(ruta):    
@@ -16,14 +16,14 @@ def cargarUI(ruta):
         with open(ruta, 'r', encoding='utf-8') as archivo:
             return archivo.read()
     except Exception as e:
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarUI(ruta)')
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarUI({ruta})')
         fn.registrarExcepcion(e,msg)
 def guardarDatos(ruta, datos):
     try:    
         with open(ruta, 'w', encoding= 'utf-8') as archivo:
             json.dump(datos, archivo, indent=4)
     except Exception as e:
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos(ruta,datos)')
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos({ruta},{datos})')
         fn.registrarExcepcion(e,msg)
         
 estadosPedidos = ("recibido", "en preparacion", "listo","entregado", "pagado", "finalizado")
@@ -44,6 +44,7 @@ direccion_datos=os.path.join(os.path.dirname(os.path.abspath(__file__)),'datos')
 
 rutas = {
     "ingredientes": os.path.join(direccion_datos,'ingredientes.json'),
+    "ingredientes_backup": os.path.join(direccion_datos,'ingredientes_backup.json'),
     "menu": os.path.join(direccion_datos,"menu.json"),
     "mesas": os.path.join(direccion_datos,'mesas.json'),
     "pedidos": os.path.join(direccion_datos,'pedidos.json'),
@@ -62,6 +63,7 @@ rutas = {
 }
 
 ingredientes = cargarDatos(rutas["ingredientes"])
+ingredientes_backup = cargarDatos(rutas["ingredientes_backup"])
 menu = cargarDatos(rutas["menu"])
 mesas = cargarDatos(rutas["mesas"])
 if mesas=='' or mesas is None:

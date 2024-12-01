@@ -2,12 +2,42 @@ import re
 import json
 import config as cnf
 import math
-from copy import deepcopy
 from functools import reduce
 from datetime import datetime
 
 class IngredienteInsuficiente(Exception):
-    pass
+    #Excepción para cuando no hay suficiente stock de un ingrediente para un plato
+    def __init__(self, nombreIngrediente, cantidadRequerida, cantidadDisponible):
+        self.nombreIngrediente = nombreIngrediente
+        self.cantidadRequerida = cantidadRequerida
+        self.cantidadDisponible = cantidadDisponible
+        super().__init__(f"Ingrediente insuficiente: {nombreIngrediente} (Requerido: {cantidadRequerida}, Disponible: {cantidadDisponible})")
+
+class ArchivoInexistente(Exception):
+    #Escepción para cuando la ruta no es correcta
+    def __init__(self, ruta):
+        self.ruta = ruta
+        super().__init__(f"El archivo {ruta} no existe o no puede ser encontrado.")
+
+class FormatoInvalido(Exception):
+    #Excepción para datos que no cumplen con el formato esperado.
+    def __init__(self, ruta, mensaje="Formato no válido"):
+        self.ruta = ruta
+        super().__init__(f"{mensaje} en el archivo: {ruta}")
+
+class ConfirmacionCancelada(Exception):
+    #Excepción para manejar cancelaciones explícitas por parte del usuario.
+    def __init__(self, mensaje="El usuario canceló la operación."):
+        super().__init__(mensaje)
+
+class MesaOcupada(Exception):
+    #Excepción para manejar el caso de mesas ocupadas. Evita que clientes accedan a mesas que no estén libres
+    def __init__(self, idMesa, clienteActual):
+        self.idMesa = idMesa
+        self.clienteActual = clienteActual
+        super().__init__(f"La mesa {idMesa} ya está ocupada.")
+
+
 
 def registrarExcepcion(e,msg):
     try:
@@ -276,36 +306,97 @@ def sumarAuxIngredientes(codReceta, recetas, ingredientes):
             ingredienteStock = next(i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower())
             ingredienteStock['cantidad'] += cantIngrediente
 
-def restarStock(codReceta, recetas, ingredientes, cant):
+def restarStock(codReceta, recetas, ingredientes, cant, guardar=True):
     for i in range(cant):
         restarAuxIngredientes(codReceta, recetas, ingredientes)
-    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    if guardar:
+        guardarDatos(cnf.rutas["ingredientes"], ingredientes)
 
-def devolverStock(codReceta, recetas, ingredientes, cant):
+def devolverStock(codReceta, recetas, ingredientes, cant, guardar=True):
     for i in range(cant):
         sumarAuxIngredientes(codReceta, recetas, ingredientes)
-    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    if guardar:
+        guardarDatos(cnf.rutas["ingredientes"], ingredientes)
     
-def conjuntoIngredientes(ingredientes):
-    return set(ingrediente['nombre'].lower() for ingrediente in ingredientes if ingrediente['cantidad']>0)
-
 def conjuntoCodigo(lista):
     return set(diccionario['id'] for diccionario in lista)
 
-def conjuntoIngrReceta(codReceta, recetas):
-    receta = list(filter(lambda r: r['id'] == codReceta, recetas))[0]
-    return set([list(ing.keys())[0].lower() for ing in receta['ingredientes']])
 
-def calcularStock(codReceta, recetas, ingredientes):
-    # Verificar si los ingredientes necesarios están disponibles en el stock
-    if not conjuntoIngrReceta(codReceta, recetas).issubset(conjuntoIngredientes(ingredientes)):
+def calcularStock(codReceta, recetas, ingredientes, limite=None, profundidad=0):
+    
+    restaurar = False
+    
+    try:
+        if limite is not None and profundidad >= limite:
+            return 0
+
+        receta = next((r for r in recetas if r['id'] == codReceta), None)
+        if not receta:
+            return 0
+
+        # Verificar disponibilidad de ingredientes
+        for ingReceta in receta['ingredientes']:
+            for nombreIngrediente, cantidadNecesaria in ingReceta.items():
+                ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
+                if not ingredienteStock or ingredienteStock['cantidad'] < cantidadNecesaria:
+                    return 0
+
+        # Reducir cantidades
+        restarStock(codReceta, recetas, ingredientes, 1, guardar=False)
+
+        # Llamada recursiva
+        return 1 + calcularStock(codReceta, recetas, ingredientes, limite, profundidad + 1)
+
+    except StopIteration as e:
+        registrarExcepcion(e, f"Error en calcularStock: Ingrediente no encontrado en la receta {codReceta}.")
+        print(f"Error: No se encontró un ingrediente necesario en la receta {codReceta}.")
+        restaurar = True
         return 0
-    
-    ingredientesLocal = deepcopy(ingredientes)
-    
-    restarAuxIngredientes(codReceta, recetas, ingredientesLocal)
-    
-    return 1 + calcularStock(codReceta, recetas, ingredientesLocal)
+    except KeyError as e:
+        registrarExcepcion(e, f"Error en calcularStock: Clave faltante {e} en la estructura de datos.")
+        print(f"Error: Falta la clave {e} en las estructuras de datos.")
+        restaurar = True
+        return 0
+    except TypeError as e:
+        registrarExcepcion(e, f"Error en calcularStock: Tipo de dato incorrecto en recetas o ingredientes.")
+        print("Error: Tipo de dato incorrecto en recetas o ingredientes.")
+        restaurar = True
+        return 0
+    except ValueError as e:
+        registrarExcepcion(e, f"Error en calcularStock: Valor no válido encontrado al procesar recetas o ingredientes.")
+        print("Error: Valor no válido encontrado al procesar recetas o ingredientes.")
+        restaurar = True
+        return 0
+    except IngredienteInsuficiente as e:
+        registrarExcepcion(e, f"Error en calcularStock: Ingredientes insuficientes para la receta {codReceta}.")
+        print(f"Error: Ingredientes insuficientes para la receta {codReceta}.")
+        restaurar = True
+        return 0
+    except Exception as e:
+        registrarExcepcion(e, "Error inesperado en calcularStock.")
+        print("Error inesperado en calcularStock.")
+        restaurar = True
+        return 0
+    finally:
+        # Restaurar cantidades para evitar inconsistencias
+        try:
+            if restaurar:
+                print("Restaurando ingredientes desde el backup.")
+                ingredientes.clear()
+                ingredientes.extend(cnf.ingredientes_backup)  # Restaura desde el backup
+            else:
+                cnf.ingredientes_backup.clear()
+                cnf.ingredientes_backup.extend(ingredientes)
+                guardarDatos(cnf.rutas["ingredientes_backup"], ingredientes)
+            
+            if 'receta' in locals() and receta:
+                devolverStock(codReceta, recetas, ingredientes, 1, guardar=False)
+            
+            
+        except Exception as e:
+            registrarExcepcion(e, "Error crítico durante la restauración o actualización del backup.")
+            print("Error crítico: No se pudo restaurar el stock ni actualizar el backup.")
+
 
 
 def pedirIngredientes(ingredientes, compras):
@@ -535,14 +626,14 @@ def procesarPlato(menu, recetas, ingredientes, pedido, platoSeleccionado):
             print(">> Cantidad no válida. Intente nuevamente.")
 
 def eliminarPedido(pedido, recetas, ingredientes, menu):
-    """Cancela un pedido, devolviendo los ingredientes al stock."""
+    #Cancela un pedido, devolviendo los ingredientes al stock.
     for plato in pedido["platos"]:
         codPlato, cantidad = plato[2], plato[1]
         devolverStock(codPlato, recetas, ingredientes, cantidad)
     actualizarStock(menu, recetas, ingredientes)
 
 def terminarPedido(pedido, pedidos, recetas, ingredientes, menu, nombre, mesa):
-    """Finaliza y confirma el pedido, actualizando los datos si es necesario."""
+    #Finaliza y confirma el pedido, actualizando los datos si es necesario.
     print(resumenPedido(nombre, mesa, pedido))
     confirmacion = confirmInput(">> Confirmar pedido (s=si, n=no):\n<< ")
 
@@ -555,7 +646,7 @@ def terminarPedido(pedido, pedidos, recetas, ingredientes, menu, nombre, mesa):
         print(">> Pedido cancelado.")
 
 def hacerPedido(nombre, mesa):
-    """Función principal para gestionar un pedido."""
+    #Función principal para gestionar un pedido.
     menu, recetas, ingredientes, pedidos = cargarDatosBasicos()
     pedido = inicializarPedido(nombre, mesa)
 
@@ -600,7 +691,7 @@ def verPedido(nombre, mesa):
 
 def avanzarPedidoCocina():
     pedidos = cnf.pedidos
-    comandas = [pedido for pedido in pedidos if (pedido["estado"]) in cnf.permisosEstadosCocina]#PENDIENTE A REVISAR, INGRESARON ESTADOS CON MAYUSCULAS Y NO COINCIDEN
+    comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosCocina]
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
         return
@@ -622,7 +713,7 @@ def avanzarPedidoCocina():
 
 def avanzarPedidoSalon():
     pedidos = cnf.pedidos
-    comandas = [pedido for pedido in pedidos if pedido["estado"] in cnf.permisosEstadosSalon]
+    comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
         return
@@ -831,3 +922,230 @@ def administrarPedidos(pedidos):
         
         # Guardar cambios
         guardarDatos(cnf.rutas["pedidos"], pedidos)
+
+def reservarMesa(idMesa, cliente):
+    try:
+        # Buscar la mesa en la lista
+        mesa = next(m for m in cnf.mesas if m['idMesa'] == idMesa)
+
+        # Verificar el estado de la mesa
+        if mesa['estado'].lower() != 'libre':
+            raise MesaOcupada(idMesa, mesa['cliente'])
+
+        # Reservar la mesa
+        mesa['estado'] = 'Ocupada'
+        mesa['cliente'] = cliente
+        cnf.guardarDatos(cnf.rutas["mesas"], cnf.mesas)
+
+    except StopIteration as e:
+        registrarExcepcion(e, f"No se encontró la mesa con ID {idMesa} en la lista.")
+        print(f"Error: No se encontró la mesa con ID {idMesa}.")
+        raise  # Relanza la excepción para manejarla en niveles superiores.
+
+    except KeyError as e:
+        registrarExcepcion(e, f"La mesa con ID {idMesa} no tiene una clave requerida.")
+        print(f"Error: La mesa con ID {idMesa} no existe o falta información.")
+        raise
+
+    except MesaOcupada as e:
+        registrarExcepcion(e, f"Intento de reservar mesa ocupada: {idMesa}. Cliente actual: {e.clienteActual}.")
+        print(e)
+        raise
+
+    except Exception as e:
+        registrarExcepcion(e, f"Error inesperado al intentar reservar la mesa {idMesa}.")
+        print("Error inesperado al intentar reservar la mesa. Por favor, intente nuevamente.")
+        raise
+
+def gestionarReserva():
+    """
+    Maneja la lógica de reserva de mesas para un cliente.
+    Reintenta el flujo en caso de errores específicos.
+    """
+    while True:
+        try:
+            # Solicitar el nombre del cliente
+            nombre = charInput(">> Bienvenido al restaurante, Por favor ingrese su nombre:\n<< ")
+
+            # Solicitar el número de mesa y validar el rango
+            numMesa = intInput(">> Ingrese el número de mesa:\n<< ")
+            while numMesa not in range(1, len(cnf.mesas) + 1):
+                numMesa = intInput(f"Debe ingresar una mesa entre 1 y {len(cnf.mesas)}.\n>>")
+
+            # Intentar reservar la mesa
+            reservarMesa(numMesa, nombre.capitalize())
+
+            # Confirmar reserva exitosa
+            print(f">> La mesa {numMesa} ha sido reservada exitosamente para {nombre.capitalize()}.")
+            return nombre.capitalize(), numMesa  # Retorna el cliente y su mesa
+
+        except MesaOcupada as e:
+            registrarExcepcion(e, f"Intento de reservar una mesa ocupada: Mesa {e.idMesa}.")
+            print(e)
+            print("Por favor, seleccione otra mesa.")
+
+        except StopIteration as e:
+            registrarExcepcion(e, "Error: La mesa no existe en la lista.")
+            print("Error: No se encontró la mesa especificada. Por favor, intente nuevamente.")
+
+        except KeyError as e:
+            registrarExcepcion(e, "Error en la estructura de datos de la mesa.")
+            print("Error: Problema con los datos de la mesa. Por favor, contacte al administrador.")
+
+        except Exception as e:
+            registrarExcepcion(e, "Error inesperado al gestionar la reserva de cliente.")
+            print("Error inesperado. Por favor, intente nuevamente.")
+
+
+def mostrarMenuCliente(nombre, numMesa):
+    while True:
+        opcion = intInput(cnf.clienteUI)
+        while opcion not in [1, 2, 3, 4]:
+            print("Opción inválida. Ingrese 1, 2, 3 o 4.\n")
+            opcion = intInput(cnf.clienteUI)
+
+        if opcion == 1:
+            print(impresionMenu())
+            input('>> Enter para continuar\n<< ')
+
+        elif opcion == 2:
+            hacerPedido(nombre, numMesa)
+            input(">> Enter para continuar\n<< ")
+
+        elif opcion == 3:
+            verPedido(nombre, numMesa)
+
+        else:
+            print(f">> Gracias, {nombre}!")
+            input(">> Enter para continuar\n<< ")
+            return
+
+def mostrarMenuCliente():
+    #Muestra el menú interactivo para el cliente y devuelve una opción válida seleccionada.
+    while True:
+        try:
+            opcion = intInput(cnf.clienteUI)
+            if opcion in [1, 2, 3, 4]:  # Verifica que la opción esté en el rango permitido
+                return opcion
+            print("Opción inválida. Ingrese un número entre 1 y 4.\n")
+        except Exception as e:
+            registrarExcepcion(e, "Error al capturar la opción del menú del cliente.")
+            print("Error inesperado. Por favor, intente nuevamente.")
+
+def ejecutarOpcionCliente(opcion, nombre, numMesa):
+    #Ejecuta la opción seleccionada en el menú del cliente.
+    try:
+        if opcion == 1:
+            print(impresionMenu())
+            input('>> Enter para continuar\n<< ')
+
+        elif opcion == 2:
+            hacerPedido(nombre, numMesa)
+            input(">> Enter para continuar\n<< ")
+
+        elif opcion == 3:
+            verPedido(nombre, numMesa)
+            input(">> Enter para continuar\n<< ")
+
+        elif opcion == 4:
+            print(f">> Gracias, {nombre}.")
+            return False  # Indica que el bucle principal debe terminar
+
+    except Exception as e:
+        registrarExcepcion(e, f"Error al ejecutar la opción {opcion} en el menú del cliente.")
+        print("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
+    return True  # Continuar en el menú principal
+
+def mostrarMenuCocina():
+    #Muestra el menú interactivo para la cocina y devuelve una opción válida seleccionada.
+    while True:
+        try:
+            opcion = intInput(cnf.cocinaUI)
+            if opcion in range(1, 8):  # Verifica que la opción esté en el rango permitido
+                return opcion
+            print("Opción inválida. Ingrese un número entre 1 y 7.\n")
+        except Exception as e:
+            registrarExcepcion(e, "Error al capturar la opción del menú de cocina.")
+            print("Error inesperado. Por favor, intente nuevamente.")
+
+def ejecutarOpcionCocina(opcion):
+    #Ejecuta la opción seleccionada en el menú de cocina.
+    try:
+        if opcion == 1:
+            for pedido in impresionPedidos(cnf.pedidos):
+                print(pedido)
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 2:
+            avanzarPedidoCocina()
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 3:
+            consultarReceta()
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 4:
+            impresionIngredientes(cnf.ingredientes)
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 5:
+            pedirIngredientes(cnf.ingredientes, cnf.compras)
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 6:
+            impresionCompras(cnf.compras)
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 7:
+            print(">> Cerrando módulo de cocina.")
+            return False  # Indica que el bucle principal debe terminar
+
+    except Exception as e:
+        registrarExcepcion(e, f"Error al ejecutar la opción {opcion} en el menú de cocina.")
+        print("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
+    return True  # Continuar en el menú principal
+
+def mostrarMenuSalon():
+    #Muestra el menú interactivo para el salón y devuelve una opción válida seleccionada.
+    while True:
+        try:
+            opcion = intInput(cnf.salonUI)
+            if opcion in [1, 2, 3, 4, 5, 6]:  # Verifica que la opción esté en el rango permitido
+                return opcion
+            print(">> Opción inválida. Ingrese un número entre 1 y 6.\n")
+        except Exception as e:
+            registrarExcepcion(e, "Error al capturar la opción del menú del salón.")
+            print("Error inesperado. Por favor, intente nuevamente.")
+
+def ejecutarOpcionSalon(opcion):
+    #Ejecuta la opción seleccionada en el menú del salón.
+    try:
+        if opcion == 1:
+            print(impresionMesas())
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 2:
+            for pedido in impresionPedidos(cnf.pedidos):
+                print(pedido)
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 3:
+            avanzarPedidoSalon()
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 4:
+            cerrarMesa()
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 5:
+            ingresoAdmin()
+            input("\nPresione Enter para continuar>>")
+
+        elif opcion == 6:
+            print(">> Cerrando módulo de salón.")
+            return False  # Indica que el bucle principal debe terminar
+
+    except Exception as e:
+        registrarExcepcion(e, f"Error al ejecutar la opción {opcion} en el menú del salón.")
+        print("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
+    return True  # Continuar en el menú principal
