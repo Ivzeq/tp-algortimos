@@ -23,7 +23,7 @@ def cliente():
             opcion = fn.intInput(cnf.clienteUI)
 
         if opcion == 1:
-            fn.impresionMenu()
+            print(fn.impresionMenu())
             input('>> Enter para continuar\n<< ')
                 
         elif opcion == 2:

@@ -2,22 +2,22 @@
     {
         "id": "BFC",
         "nombre": "Bife de Chorizo",
-        "cantidad": -1
+        "cantidad": 0
     },
     {
         "id": "SLT",
         "nombre": "Sal",
-        "cantidad": 12
+        "cantidad": 90
     },
     {
         "id": "PMT",
         "nombre": "Pimienta",
-        "cantidad": 23
+        "cantidad": 76
     },
     {
         "id": "TNR",
         "nombre": "Ternera",
-        "cantidad": 9
+        "cantidad": 19
     },
     {
         "id": "PNR",
@@ -27,17 +27,17 @@
     {
         "id": "HVO",
         "nombre": "Huevo",
-        "cantidad": 28
+        "cantidad": 36
     },
     {
         "id": "PLL",
         "nombre": "Pollo",
-        "cantidad": 0
+        "cantidad": 18
     },
     {
         "id": "ACE",
         "nombre": "Aceite",
-        "cantidad": 25
+        "cantidad": 59
     },
     {
         "id": "ESP",
@@ -47,7 +47,7 @@
     {
         "id": "PPG",
         "nombre": "Pechuga de Pollo",
-        "cantidad": 15
+        "cantidad": 23
     },
     {
         "id": "JMN",
@@ -62,22 +62,22 @@
     {
         "id": "LIM",
         "nombre": "Lim\u00f3n",
-        "cantidad": 0
+        "cantidad": 71
     },
     {
         "id": "SLM",
         "nombre": "Salm\u00f3n",
-        "cantidad": 11
+        "cantidad": 21
     },
     {
         "id": "MTC",
         "nombre": "Manteca",
-        "cantidad": 24
+        "cantidad": 44
     },
     {
         "id": "MLZ",
         "nombre": "Merluza",
-        "cantidad": 16
+        "cantidad": 26
     },
     {
         "id": "ARZ",
@@ -87,27 +87,27 @@
     {
         "id": "MRC",
         "nombre": "Mariscos",
-        "cantidad": 7
+        "cantidad": 37
     },
     {
         "id": "CLP",
         "nombre": "Caldo de pescado",
-        "cantidad": 23
+        "cantidad": 43
     },
     {
         "id": "PMN",
         "nombre": "Pimiento",
-        "cantidad": 12
+        "cantidad": 32
     },
     {
         "id": "GTS",
         "nombre": "Guisantes",
-        "cantidad": 19
+        "cantidad": 29
     },
     {
         "id": "AZF",
         "nombre": "Azafr\u00e1n",
-        "cantidad": 21
+        "cantidad": 27
     },
     {
         "id": "LCH",
@@ -132,12 +132,12 @@
     {
         "id": "ALB",
         "nombre": "Albahaca",
-        "cantidad": 22
+        "cantidad": 28
     },
     {
         "id": "ADZ",
         "nombre": "Aderezo Caesar",
-        "cantidad": 22
+        "cantidad": 26
     },
     {
         "id": "CRT",
@@ -152,6 +152,6 @@
     {
         "id": "ASA",
         "nombre": "Asado de tira",
-        "cantidad": 9
+        "cantidad": 43
     }
 ]

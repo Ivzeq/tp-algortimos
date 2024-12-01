@@ -11,63 +11,63 @@
         "Asado de Tira",
         12800,
         "carne",
-        6
+        43
     ],
     [
         "MLT",
         "Milanesa de Ternera",
         12000,
         "carne",
-        9
+        19
     ],
     [
         "PLH",
         "Pollo al Horno",
         11000,
         "pollo",
-        0
+        18
     ],
     [
         "SNA",
         "Suprema a la Napolitana",
         13000,
         "pollo",
-        12
+        23
     ],
     [
         "PLP",
         "Pollo a la Parrilla",
         12500,
         "pollo",
-        0
+        18
     ],
     [
         "SMT",
         "Salm\u00f3n a la Manteca",
         20000,
         "pescado",
-        11
+        21
     ],
     [
         "MLH",
         "Merluza al Horno",
         16000,
         "pescado",
-        0
+        26
     ],
     [
         "PAM",
         "Paella de Mariscos",
         22000,
         "pescado",
-        7
+        15
     ],
     [
         "ECA",
         "Ensalada Caesar",
         9000,
         "ensalada",
-        11
+        13
     ],
     [
         "EMX",
@@ -81,6 +81,6 @@
         "Ensalada Caprese",
         8000,
         "ensalada",
-        22
+        23
     ]
 ]

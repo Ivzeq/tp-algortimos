@@ -9,7 +9,8 @@ def cocina():
             opcion = fn.intInput(cnf.cocinaUI)
 
         if opcion == 1:
-            fn.impresionPedidos(cnf.pedidos)
+            for pedido in fn.impresionPedidos(cnf.pedidos):
+                print(pedido)
             input("\nPresione Enter para continuar>>")
                 
         elif opcion == 2:

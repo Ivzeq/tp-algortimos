@@ -66,7 +66,7 @@ def confirmInput(prompt):
         try:
             userInput = input(prompt)
             # Verifica si el input es s o n
-            while not re.match(r'^[sn]{1}', userInput):
+            while not re.match(r'^[sn]{1}', userInput.lower()):
                 userInput = input("Ingreso inválido. Ingrese s para confirmar, n para cancelar.\n>>")
             return userInput.lower()
         except Exception as e:
@@ -84,7 +84,7 @@ def cargarDatos(ruta):
             return json.load(archivo)
     except Exception as e:
         #si ocurre un error deberiamos acceder mediante librerias so para verificar si existe y sino, debemos crear un archivo
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarDatos(ruta)')
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarDatos({ruta})')
         registrarExcepcion(e,msg)
 
 def guardarDatos(ruta, datos):
@@ -92,44 +92,46 @@ def guardarDatos(ruta, datos):
         with open(ruta, 'w', encoding= 'utf-8') as archivo:
             json.dump(datos, archivo, indent=4)
     except Exception as e:
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos(ruta,datos)')
+        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos({ruta},{datos})')
         registrarExcepcion(e,msg)
 
 def impresionMesas():
     mesas = cnf.mesas
     if len(mesas)%2==0:
-        print(f"""
+        output = f"""
 ╔═════════════════════════════════════════════╗
 ║                                             ║
 ║              🍽 RESTAURANTE🍽                 ║
 ║                   Mesas                     ║
-║                                             ║""")
+║                                             ║"""
         for i in range(0,len(mesas),2):
-            print(f"""╠═════════════════════════════════════════════╣
+            output += f"""\n╠═════════════════════════════════════════════╣
 {"║":<2}{"Mesa →":<17}{(mesas[i]["idMesa"]):>4}{"║":<2}{"Mesa →":<17}{(mesas[i+1]["idMesa"]):>4}║
 ╠----------------------║----------------------╣
 {"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}{"Estado →":<9}{(mesas[i+1]["estado"][0:12].capitalize()):>12}║
-{"║":<2}{"Cliente →":<9}{(mesas[i]["cliente"][0:12].capitalize()):>12}{"║":<2}{"Cliente →":<9}{(mesas[i+1]["cliente"][0:12].capitalize()):>12}║""")     
-        print("╚═════════════════════════════════════════════╝")  
+{"║":<2}{"Cliente →":<9}{(mesas[i]["cliente"][0:12].capitalize()):>12}{"║":<2}{"Cliente →":<9}{(mesas[i+1]["cliente"][0:12].capitalize()):>12}║""" 
+        output += "\n╚═════════════════════════════════════════════╝"
+        return output
     else:
-        print(f"""
+        output = f"""
 ╔══════════════════════╗
 ║                      ║
 ║   🍽 RESTAURANTE🍽     ║
 ║         Mesas        ║
-║                      ║""")
+║                      ║"""
         for i in range(0,len(mesas)):
-            print(f"""╠══════════════════════╣
+            output += f"""\n╠══════════════════════╣
 {"║":<5}{"Mesa → ".center(12)}{mesas[i]["idMesa"]:<6}║
 ╠══════════════════════╣
 {"║":<2}{"Estado →":<9}{(mesas[i]["estado"][0:12].capitalize()):>12}{"║":<2}
-{"║":<2}{"Cliente →":<9}{(mesas[i]["cliente"][0:12].capitalize()):>12}{"║":<2}""")
+{"║":<2}{"Cliente →":<9}{(mesas[i]["cliente"][0:12].capitalize()):>12}{"║":<2}"""
        
-        input(f"╚══════════════════════╝\n>>Enter para continuar")
+        output += f"\n╚══════════════════════╝"
+        return output
 
-def impresionMenu():#chk
+def impresionMenu():
     menu = cnf.menu
-    print(f"""
+    output = f"""
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
@@ -137,46 +139,67 @@ def impresionMenu():#chk
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<4}║{'Plato':<28}║{'Precio':<10}║{'Categoría':<10}║
-╠═══════════════════════════════════════════════════════╣""")
+╠═══════════════════════════════════════════════════════╣"""
     for idx, plato in enumerate(menu, start=1):
-        print(f"║{idx:<4}║{plato[1]:<28}║{plato[2]:<10}║{plato[3]:<9} ║")
-    print("""╚═══════════════════════════════════════════════════════╝""")
-    #input("Presione Enter para continuar>>")
+        output += f"\n║{idx:<4}║{plato[1]:<28}║{plato[2]:<10}║{plato[3]:<9} ║"
+    output += """\n╚═══════════════════════════════════════════════════════╝"""
+    return output
+
+def impresionMenuStock():
+    menu = cnf.menu
+    output = f"""
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║                     🍽 RESTAURANTE🍽                    ║
+║                      Menu de platos                   ║
+║                                                       ║
+╠═══════════════════════════════════════════════════════╣
+║{'Num':<4}║{'Plato':<28}║{'Precio':<10}║{'Categoría':<10}║
+╠═══════════════════════════════════════════════════════╣"""
+    for idx, plato in enumerate(menu, start=1):
+        if plato[4] > 0: #No muestra platos sin stock
+            output += f"\n║{idx:<4}║{plato[1]:<28}║{plato[2]:<10}║{plato[3]:<9} ║"
+    output += """\n╚═══════════════════════════════════════════════════════╝"""
+    return output
 
 def impresionPedidos(pedidos):
+    lista = []
     for idx, pedido in enumerate(pedidos, start=1):
         estado = pedido["estado"]
-        print(f"""╔═══════════════════════════════════════════════════════╗
+        output = f"""╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
 {"║":<2}{idx}: Pedido de → {pedido["nombre"].capitalize():<29}Mesa → {pedido["mesa"]:<3}║                    
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<3}║{'Plato':<28}║{'Cant':<4}║{'Estado':<17}║
-╠═══════════════════════════════════════════════════════╣""")
+╠═══════════════════════════════════════════════════════╣"""
         for plato in pedido['platos']:
-            print(f"║{(pedido['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{estado.capitalize():<17}║")
-        print("""╚═══════════════════════════════════════════════════════╝""")
+            output += f"\n║{(pedido['platos'].index(plato)+1):<3}║{plato[0]:<28}║{plato[1]:<4}║{estado.capitalize():<17}║"
+        output += """\n╚═══════════════════════════════════════════════════════╝"""
+        lista.append(output)
+    return lista
 
 def resumenPedido(nombre, mesa, pedido):
     total = totalCuenta(pedido)
-    print(f"""╔═══════════════════════════════════════════════════════╗
+    output = f"""╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║                     🍽 RESTAURANTE🍽                    ║
 {"║":<2}Pedido de → {nombre.capitalize():<31}Mesa → {mesa:<3} ║
 ║                                                       ║
 ╠═══════════════════════════════════════════════════════╣
 ║{'Num':<5}║{'Plato':<28}║{'Cant':<20}║
-╠═══════════════════════════════════════════════════════╣""")
+╠═══════════════════════════════════════════════════════╣"""
     
     # Mostrar los platos del pedido
     for idx, plato in enumerate(pedido['platos'], start=1):
-        print(f"║{idx:<5}║{plato[0]:<28}║{plato[1]:<20}║")
+        output += f"\n║{idx:<5}║{plato[0]:<28}║{plato[1]:<20}║"
     
     # Imprimir el total en un recuadro
-    print(f"""╠═══════════════════════════════════════════════════════╣
+    output += f"""\n╠═══════════════════════════════════════════════════════╣
 ║                    Total: {total:<25}   ║
-╚═══════════════════════════════════════════════════════╝""")
+╚═══════════════════════════════════════════════════════╝"""
+    return output
 
 def impresionRecetas():
     recetas = cnf.recetas
@@ -371,7 +394,7 @@ def totalCuenta(pedido):
     total = reduce(lambda subtotal, platoPedido: subtotal + precios[platoPedido[0].lower()] * platoPedido[1], pedido["platos"], 0)
     return total
 
-def hacerPedido(nombre, mesa):#chk
+"""def hacerPedido(nombre, mesa):#chk
     menu = cnf.menu
     recetas = cnf.recetas
     ingredientes = cnf.ingredientes
@@ -457,13 +480,106 @@ def hacerPedido(nombre, mesa):#chk
                     cant = plato[1]
                     devolverStock(codPlato, recetas, ingredientes, cant)
                     actualizarStock(menu, recetas, ingredientes)
-            print(">> Pedido cancelado.")
+            print(">> Pedido cancelado.")"""
+
+def cargarDatosBasicos():
+    return cnf.menu, cnf.recetas, cnf.ingredientes, cnf.pedidos
+
+def inicializarPedido(nombre, mesa):
+    return {
+        "nombre": nombre,
+        "mesa": mesa,
+        "estado": "recibido",
+        "platos": []
+    }
+
+def seleccionarPlato(menu):
+    while True:
+        try:
+            plato = intInput(">> Ingrese número de plato o 0 para terminar:\n<< ")
+            if plato in range(1, len(menu) + 1) or plato == 0:
+                return plato
+            else:
+                raise ValueError
+        except ValueError:
+            print(">> Opción no válida. Ingrese un número válido.")
+
+def agregarAlPedido(pedido, nombrePlato, cantidad, codPlato):
+    """Agrega un plato al pedido o actualiza la cantidad si ya existe."""
+    for elemento in pedido["platos"]:
+        if elemento[0].lower() == nombrePlato:
+            elemento[1] += cantidad
+            return
+    pedido["platos"].append([nombrePlato, cantidad, codPlato])
+
+def procesarPlato(menu, recetas, ingredientes, pedido, platoSeleccionado):
+    #Procesa la selección de un plato, incluyendo cantidad y actualización de stock.
+    platoInfo = menu[platoSeleccionado - 1]
+    nombrePlato, codPlato, stockDisponible = platoInfo[1].lower(), platoInfo[0], platoInfo[4]
+
+    if stockDisponible < 1:
+        print(f">> No hay stock disponible para {nombrePlato}.\n")
+        return
+
+    while True:
+        try:
+            cantidad = intInput(f">> Ingrese cantidad (disponible: {stockDisponible}):\n<< ")
+            if cantidad < 1 or cantidad > stockDisponible:
+                raise ValueError
+            agregarAlPedido(pedido, nombrePlato, cantidad, codPlato)
+            restarStock(codPlato, recetas, ingredientes, cantidad)
+            actualizarStock(menu, recetas, ingredientes)
+            print(f">> Has agregado {cantidad} de {nombrePlato} a tu pedido.\n")
+            break
+        except ValueError:
+            print(">> Cantidad no válida. Intente nuevamente.")
+
+def eliminarPedido(pedido, recetas, ingredientes, menu):
+    """Cancela un pedido, devolviendo los ingredientes al stock."""
+    for plato in pedido["platos"]:
+        codPlato, cantidad = plato[2], plato[1]
+        devolverStock(codPlato, recetas, ingredientes, cantidad)
+    actualizarStock(menu, recetas, ingredientes)
+
+def terminarPedido(pedido, pedidos, recetas, ingredientes, menu, nombre, mesa):
+    """Finaliza y confirma el pedido, actualizando los datos si es necesario."""
+    print(resumenPedido(nombre, mesa, pedido))
+    confirmacion = confirmInput(">> Confirmar pedido (s=si, n=no):\n<< ")
+
+    if confirmacion == 's':
+        pedidos.append(pedido)
+        guardarDatos(cnf.rutas['pedidos'], pedidos)
+        print(f">> Gracias {nombre}! Tu pedido fue confirmado.")
+    else:
+        eliminarPedido(pedido, recetas, ingredientes, menu)
+        print(">> Pedido cancelado.")
+
+def hacerPedido(nombre, mesa):
+    """Función principal para gestionar un pedido."""
+    menu, recetas, ingredientes, pedidos = cargarDatosBasicos()
+    pedido = inicializarPedido(nombre, mesa)
+
+    actualizarStock(menu, recetas, ingredientes)  # Asegurar que el stock esté actualizado al inicio
+    print(impresionMenuStock())  # Mostrar el menú
+
+    while True:
+        platoSeleccionado = seleccionarPlato(menu)
+        if platoSeleccionado == 0:  # Finalizar pedido
+            break
+
+        procesarPlato(menu, recetas, ingredientes, pedido, platoSeleccionado)
+
+    if len(pedido["platos"]) > 0:
+        terminarPedido(pedido, pedidos, recetas, ingredientes, menu, nombre, mesa)
+    else:
+        print(">> No se agregaron platos al pedido.")
 
         
 def verPedido(nombre, mesa):
     pedidos = cnf.pedidos
     pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
-    impresionPedidos(pedidosCliente)
+    for pedido in impresionPedidos(pedidosCliente):
+        print(pedido)
     if len(pedidosCliente) > 0:
         confirma = confirmInput(">> Desea cancelar algun pedido? s/n\n<< ")
         if confirma == 's' and len(pedidosCliente) >1:
@@ -488,7 +604,8 @@ def avanzarPedidoCocina():
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
         return
-    impresionPedidos(comandas)
+    for pedido in impresionPedidos(comandas):
+        print(pedido)
     avanzar = intInput(f">> Qué pedido desea avanzar? entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
     if avanzar <1 :
         return
@@ -502,13 +619,15 @@ def avanzarPedidoCocina():
             print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             break
+
 def avanzarPedidoSalon():
     pedidos = cnf.pedidos
     comandas = [pedido for pedido in pedidos if pedido["estado"] in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
         return
-    impresionPedidos(comandas)
+    for pedido in impresionPedidos(comandas):
+        print(pedido)
     avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar\n>>")
     if avanzar == 0:
         return
@@ -561,7 +680,7 @@ def consultarReceta():
     print(f"{'=' * 40}\n")
 
 def cerrarMesa():
-    impresionMesas()
+    print(impresionMesas())
     seleccionada = intInput(">>Ingrese numero de mesa a cerrar o 0 para salir\n<<")
     while seleccionada not in range(0, len(cnf.mesas)+1):
         seleccionada = intInput(f">>Debe seleccionar una mesa entre 1 y {len(cnf.mesas)}, o 0 para salir.\n<<")
@@ -578,6 +697,7 @@ def cerrarMesa():
             msg='Error al modificar mesa\n\tFuncion() = cerrarMesa()/mesa=NONE'
             print('>> Error al modificar mesa')
             registrarExcepcion(ValueError,msg)
+
 def ingresoAdmin():
     passwords = list(map(lambda item: list(item.keys())[0], cnf.admins))
     ingreso = charInput("Ingrese su contraseña:\n>>")
@@ -591,7 +711,8 @@ def ingresoAdmin():
 
 def cambiarEstados(pedidos):
     estadosDisponibles = cnf.estadosPedidos
-    impresionPedidos(pedidos)
+    for pedido in impresionPedidos(pedidos):
+        print(pedido)
     seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
     if seleccion == 0:
         return
@@ -612,7 +733,8 @@ def cambiarEstados(pedidos):
     print(f"El estado del pedido de {pedidoSeleccionado['nombre']} ha cambiado a: {nuevoEstado.capitalize()}")
 
 def finalizarPedido(pedidos):
-    impresionPedidos(pedidos)
+    for pedido in impresionPedidos(pedidos):
+        print(pedido)
     seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
     if seleccion == 0:
         return
@@ -627,7 +749,8 @@ def finalizarPedido(pedidos):
     guardarDatos(cnf.rutas["finalizados"], cnf.finalizados)
 
 def cancelarPedido(pedidos):
-        impresionPedidos(pedidos)
+        for pedido in impresionPedidos(pedidos):
+            print(pedido)
         seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
         if seleccion == 0:
             return
@@ -640,7 +763,8 @@ def cancelarPedido(pedidos):
         print(f"El pedido de {pedidoSeleccionado['nombre']} ha sido cancelado.")
 
 def repriorizarPedidos(pedidos):
-    impresionPedidos(pedidos)
+    for pedido in impresionPedidos(pedidos):
+        print(pedido)
     seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
     if seleccion == 0:
         return
