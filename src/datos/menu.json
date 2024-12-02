@@ -1,86 +1,86 @@
 [
     [
-        "BIF",
+        "2000",
         "Bife de Chorizo",
         15000,
         "carne",
-        0
+        17
     ],
     [
-        "AST",
+        "2001",
         "Asado de Tira",
         12800,
         "carne",
-        43
-    ],
-    [
-        "MLT",
-        "Milanesa de Ternera",
-        12000,
-        "carne",
-        19
-    ],
-    [
-        "PLH",
-        "Pollo al Horno",
-        11000,
-        "pollo",
-        18
-    ],
-    [
-        "SNA",
-        "Suprema a la Napolitana",
-        13000,
-        "pollo",
-        23
-    ],
-    [
-        "PLP",
-        "Pollo a la Parrilla",
-        12500,
-        "pollo",
-        18
-    ],
-    [
-        "SMT",
-        "Salm\u00f3n a la Manteca",
-        20000,
-        "pescado",
-        21
-    ],
-    [
-        "MLH",
-        "Merluza al Horno",
-        16000,
-        "pescado",
-        26
-    ],
-    [
-        "PAM",
-        "Paella de Mariscos",
-        22000,
-        "pescado",
-        15
-    ],
-    [
-        "ECA",
-        "Ensalada Caesar",
-        9000,
-        "ensalada",
-        13
-    ],
-    [
-        "EMX",
-        "Ensalada Mixta",
-        7500,
-        "ensalada",
         45
     ],
     [
-        "ECP",
+        "2002",
+        "Milanesa de Ternera",
+        12000,
+        "carne",
+        41
+    ],
+    [
+        "2003",
+        "Pollo al Horno",
+        11000,
+        "pollo",
+        62
+    ],
+    [
+        "2004",
+        "Suprema a la Napolitana",
+        13000,
+        "pollo",
+        47
+    ],
+    [
+        "2005",
+        "Pollo a la Parrilla",
+        12500,
+        "pollo",
+        62
+    ],
+    [
+        "2006",
+        "Salm\u00f3n a la Manteca",
+        20000,
+        "pescado",
+        43
+    ],
+    [
+        "2007",
+        "Merluza al Horno",
+        16000,
+        "pescado",
+        48
+    ],
+    [
+        "2008",
+        "Paella de Mariscos",
+        22000,
+        "pescado",
+        36
+    ],
+    [
+        "2009",
+        "Ensalada Caesar",
+        9000,
+        "ensalada",
+        35
+    ],
+    [
+        "2010",
+        "Ensalada Mixta",
+        7500,
+        "ensalada",
+        78
+    ],
+    [
+        "2011",
         "Ensalada Caprese",
         8000,
         "ensalada",
-        23
+        50
     ]
 ]

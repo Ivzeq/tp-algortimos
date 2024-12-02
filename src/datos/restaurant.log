@@ -82,3 +82,89 @@ Tipo: <class 'ValueError'> - Mensaje: invalid literal for int() with base 10: ''
 Tipo: <class 'ValueError'> - Mensaje: invalid literal for int() with base 10: 'a'
 	Error durante la entrada de un entero
 	Contexto: Ingrese número de plato (0 para terminar):
+
+Fecha: 2024-12-01 18:04:43.330874
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
+Fecha: 2024-12-01 18:04:43.332874
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
+Fecha: 2024-12-01 18:07:02.404702
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
+Fecha: 2024-12-01 18:07:02.405710
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
+Fecha: 2024-12-01 18:07:57.804620
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
+Fecha: 2024-12-01 18:07:57.805620
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
+Fecha: 2024-12-01 18:09:45.682112
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
+Fecha: 2024-12-01 18:09:45.684112
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
+Fecha: 2024-12-01 18:09:50.390723
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Dsa.
+Fecha: 2024-12-01 18:09:50.391723
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-01 18:11:55.344917
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya está ocupada.
+	Intento de reservar mesa ocupada: 3. Cliente actual: Ale.
+Fecha: 2024-12-01 18:11:55.345909
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 3.
+Fecha: 2024-12-01 18:22:39.019381
+Función: ejecutarOpcionCliente
+Tipo: TypeError
+Mensaje: calcularStock() missing 1 required positional argument: 'cant'
+	Error al ejecutar la opción 2 en el menú del cliente.
+Fecha: 2024-12-01 18:22:41.430422
+Función: ejecutarOpcionCliente
+Tipo: TypeError
+Mensaje: calcularStock() missing 1 required positional argument: 'cant'
+	Error al ejecutar la opción 2 en el menú del cliente.
+Fecha: 2024-12-01 18:23:45.047265
+Función: ejecutarOpcionCliente
+Tipo: TypeError
+Mensaje: calcularStock() missing 1 required positional argument: 'cant'
+	Error al ejecutar la opción 2 en el menú del cliente.
+Fecha: 2024-12-01 18:37:45.361276
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya está ocupada.
+	Intento de reservar mesa ocupada: 3. Cliente actual: Ale.
+Fecha: 2024-12-01 18:37:45.362276
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 3.

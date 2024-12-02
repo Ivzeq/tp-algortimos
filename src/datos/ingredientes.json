@@ -1,157 +1,157 @@
 [
     {
-        "id": "BFC",
+        "id": "1000",
         "nombre": "Bife de Chorizo",
-        "cantidad": 0
+        "cantidad": 17
     },
     {
-        "id": "SLT",
+        "id": "1001",
         "nombre": "Sal",
-        "cantidad": 90
+        "cantidad": 170
     },
     {
-        "id": "PMT",
+        "id": "1002",
         "nombre": "Pimienta",
-        "cantidad": 76
+        "cantidad": 232
     },
     {
-        "id": "TNR",
+        "id": "1003",
         "nombre": "Ternera",
-        "cantidad": 19
+        "cantidad": 41
     },
     {
-        "id": "PNR",
+        "id": "1004",
         "nombre": "Pan rallado",
-        "cantidad": 30
+        "cantidad": 74
     },
     {
-        "id": "HVO",
+        "id": "1005",
         "nombre": "Huevo",
-        "cantidad": 36
+        "cantidad": 80
     },
     {
-        "id": "PLL",
+        "id": "1006",
         "nombre": "Pollo",
-        "cantidad": 18
+        "cantidad": 62
     },
     {
-        "id": "ACE",
+        "id": "1007",
         "nombre": "Aceite",
+        "cantidad": 103
+    },
+    {
+        "id": "1008",
+        "nombre": "Especias",
+        "cantidad": 79
+    },
+    {
+        "id": "1009",
+        "nombre": "Pechuga de Pollo",
+        "cantidad": 67
+    },
+    {
+        "id": "1010",
+        "nombre": "Jam\u00f3n",
+        "cantidad": 47
+    },
+    {
+        "id": "1011",
+        "nombre": "Queso",
+        "cantidad": 77
+    },
+    {
+        "id": "1012",
+        "nombre": "Lim\u00f3n",
+        "cantidad": 159
+    },
+    {
+        "id": "1013",
+        "nombre": "Salm\u00f3n",
+        "cantidad": 43
+    },
+    {
+        "id": "1014",
+        "nombre": "Manteca",
+        "cantidad": 88
+    },
+    {
+        "id": "1015",
+        "nombre": "Merluza",
+        "cantidad": 48
+    },
+    {
+        "id": "1016",
+        "nombre": "Arroz",
+        "cantidad": 97
+    },
+    {
+        "id": "1017",
+        "nombre": "Mariscos",
         "cantidad": 59
     },
     {
-        "id": "ESP",
-        "nombre": "Especias",
-        "cantidad": 57
-    },
-    {
-        "id": "PPG",
-        "nombre": "Pechuga de Pollo",
-        "cantidad": 23
-    },
-    {
-        "id": "JMN",
-        "nombre": "Jam\u00f3n",
-        "cantidad": 25
-    },
-    {
-        "id": "QSO",
-        "nombre": "Queso",
-        "cantidad": 55
-    },
-    {
-        "id": "LIM",
-        "nombre": "Lim\u00f3n",
-        "cantidad": 71
-    },
-    {
-        "id": "SLM",
-        "nombre": "Salm\u00f3n",
-        "cantidad": 21
-    },
-    {
-        "id": "MTC",
-        "nombre": "Manteca",
-        "cantidad": 44
-    },
-    {
-        "id": "MLZ",
-        "nombre": "Merluza",
-        "cantidad": 26
-    },
-    {
-        "id": "ARZ",
-        "nombre": "Arroz",
-        "cantidad": 53
-    },
-    {
-        "id": "MRC",
-        "nombre": "Mariscos",
-        "cantidad": 37
-    },
-    {
-        "id": "CLP",
+        "id": "1018",
         "nombre": "Caldo de pescado",
-        "cantidad": 43
+        "cantidad": 109
     },
     {
-        "id": "PMN",
+        "id": "1019",
         "nombre": "Pimiento",
-        "cantidad": 32
+        "cantidad": 54
     },
     {
-        "id": "GTS",
+        "id": "1020",
         "nombre": "Guisantes",
-        "cantidad": 29
+        "cantidad": 51
     },
     {
-        "id": "AZF",
+        "id": "1021",
         "nombre": "Azafr\u00e1n",
-        "cantidad": 27
+        "cantidad": 49
     },
     {
-        "id": "LCH",
+        "id": "1022",
         "nombre": "Lechuga",
-        "cantidad": 52
+        "cantidad": 96
     },
     {
-        "id": "TMT",
+        "id": "1023",
         "nombre": "Tomate",
-        "cantidad": 45
+        "cantidad": 111
     },
     {
-        "id": "CBL",
+        "id": "1024",
         "nombre": "Cebolla",
-        "cantidad": 56
+        "cantidad": 78
     },
     {
-        "id": "MZZ",
+        "id": "1025",
         "nombre": "Mozzarella",
-        "cantidad": 44
+        "cantidad": 66
     },
     {
-        "id": "ALB",
+        "id": "1026",
         "nombre": "Albahaca",
-        "cantidad": 28
+        "cantidad": 50
     },
     {
-        "id": "ADZ",
+        "id": "1027",
         "nombre": "Aderezo Caesar",
-        "cantidad": 26
+        "cantidad": 70
     },
     {
-        "id": "CRT",
+        "id": "1028",
         "nombre": "Crutones",
-        "cantidad": 40
+        "cantidad": 84
     },
     {
-        "id": "OLV",
+        "id": "1029",
         "nombre": "Aceite de oliva",
-        "cantidad": 52
+        "cantidad": 74
     },
     {
-        "id": "ASA",
+        "id": "1030",
         "nombre": "Asado de tira",
-        "cantidad": 43
+        "cantidad": 45
     }
 ]

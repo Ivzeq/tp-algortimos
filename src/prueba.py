@@ -10,4 +10,8 @@ print(fn.impresionPedidos(pedidos))
 for pedido in fn.impresionPedidos(pedidos):
     print(pedido)"""
 
-print(fn.calcularStock("AST", cnf.recetas, cnf.ingredientes, limite=60, profundidad=0))
+
+print(fn.calcularStock("2001", cnf.recetas, cnf.ingredientes))
+fn.restarStock("2001", cnf.recetas, cnf.ingredientes, 2)
+fn.actualizarStock(cnf.menu, cnf.recetas, cnf.ingredientes)
+print(fn.calcularStock("2001", cnf.recetas, cnf.ingredientes))

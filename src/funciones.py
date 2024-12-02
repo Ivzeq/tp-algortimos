@@ -2,6 +2,8 @@ import re
 import json
 import config as cnf
 import math
+import inspect
+from copy import deepcopy
 from functools import reduce
 from datetime import datetime
 
@@ -39,12 +41,19 @@ class MesaOcupada(Exception):
 
 
 
-def registrarExcepcion(e,msg):
+def registrarExcepcion(e,msg, ruta_log="tp-algoritmos\\src\\datos\\restaurant.log"):
     try:
-        archivo = open('tp-algoritmos\\src\\datos\\restaurant.log', 'a')
+        funcion = inspect.stack()[1].function
+
+        archivo = open(ruta_log, 'a')
         try:
-            error = f"\nFecha: {datetime.now()}\nTipo: {type(e)}\nMensaje: {str(e)}\n\t{msg}"
-            print(f"Ocurrio un error: {e}")
+            error = (
+                f"\nFecha: {datetime.now()}\n"
+                f"Función: {funcion}\n"
+                f"Tipo: {type(e).__name__}\n"
+                f"Mensaje: {str(e)}\n"
+                f"\t{msg}"
+            )
             archivo.write(error)
         finally:
             archivo.close()
@@ -77,18 +86,20 @@ def charInput(prompt):
         except Exception as e:
             msg=(f'Error durante la entrada de un caracter\n\tContexto: {prompt}\n')
             registrarExcepcion(e,msg)
+            raise
 
 
-def codeInput(prompt):#A CAMBIAR POR CODIGO NUMERICO
+def codeInput(prompt):
     while True:
         try:
             userInput = input(prompt)
-            # Verifica si el input son 3 caracteres alfabéticos
-            while not re.match(r'^[A-Za-z]{3}$$', userInput):
-                userInput = input("Código inválido. Ingrese un código de 3 caracteres.\n>>")
-            return userInput.upper()
+            # Verifica si el input son exactamente 4 dígitos numéricos
+            while not re.match(r'^\d{4}$', userInput):
+                userInput = input("Código inválido. Ingrese un código de 4 números.\n>>")
+            return userInput
         except Exception as e:
             registrarExcepcion(e)
+            print("Ocurrió un error. Por favor, intente nuevamente.")
 
 
 def confirmInput(prompt):
@@ -112,18 +123,32 @@ def cargarDatos(ruta):
     try:    
         with open(ruta, encoding = 'utf-8') as archivo:
             return json.load(archivo)
+    except FileNotFoundError as e:
+        registrarExcepcion(e, f"Archivo no encontrado: {ruta}.")
+        print(f"Error: El archivo {ruta} no existe.")
+    except json.JSONDecodeError as e:
+        registrarExcepcion(e, f"Error al decodificar JSON en el archivo: {ruta}.")
+        print(f"Error: El archivo {ruta} contiene datos no válidos.")
     except Exception as e:
-        #si ocurre un error deberiamos acceder mediante librerias so para verificar si existe y sino, debemos crear un archivo
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:CargarDatos({ruta})')
-        registrarExcepcion(e,msg)
+        registrarExcepcion(e, f"Error inesperado al cargar datos desde {ruta}.")
+        print(f"Error inesperado al cargar datos desde {ruta}.")
 
 def guardarDatos(ruta, datos):
     try:    
         with open(ruta, 'w', encoding= 'utf-8') as archivo:
             json.dump(datos, archivo, indent=4)
+    except PermissionError as e:
+        registrarExcepcion(e, f"Permiso denegado para guardar en el archivo: {ruta}.")
+        print(f"Error: No se tienen permisos para guardar en {ruta}.")
+        raise
+    except TypeError as e:
+        registrarExcepcion(e, f"Error al serializar datos para guardar en {ruta}.")
+        print(f"Error: Los datos proporcionados no son serializables.")
+        raise
     except Exception as e:
-        msg=(f'Error al abrir archivo con ruta precargada\n\tContexto:guardarDatos({ruta},{datos})')
-        registrarExcepcion(e,msg)
+        registrarExcepcion(e, f"Error inesperado al guardar datos en {ruta}.")
+        print(f"Error inesperado al guardar datos en {ruta}.")
+        raise
 
 def impresionMesas():
     mesas = cnf.mesas
@@ -246,6 +271,7 @@ def impresionRecetas():
 
 def impresionIngredientes(ingredientes, columnas=3):
     ordenados = sorted(ingredientes, key=lambda r: r['nombre'])
+    maxCant = max(len(str(ingrediente['cantidad'])) for ingrediente in ingredientes)
     filas = math.ceil(len(ordenados) / columnas)
     columnasIngredientes = [ordenados[i*filas:(i+1)*filas] for i in range(columnas)]
     print("Listado de Ingredientes:")
@@ -255,7 +281,7 @@ def impresionIngredientes(ingredientes, columnas=3):
         for col in range(columnas):
             if i < len(columnasIngredientes[col]):  # Si hay suficientes ingredientes para esta fila
                 ingrediente = columnasIngredientes[col][i]
-                fila += f"|{ingrediente['id']}: {ingrediente['nombre']:<20} ({ingrediente['cantidad']})|  "
+                fila += f"|{ingrediente['id']}: {ingrediente['nombre']:<20} ({ingrediente['cantidad']:<{maxCant}})|  "
         print(fila)
 
 def verificarStock(codReceta, recetas,ingredientes):
@@ -306,25 +332,21 @@ def sumarAuxIngredientes(codReceta, recetas, ingredientes):
             ingredienteStock = next(i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower())
             ingredienteStock['cantidad'] += cantIngrediente
 
-def restarStock(codReceta, recetas, ingredientes, cant, guardar=True):
+def restarStock(codReceta, recetas, ingredientes, cant):
     for i in range(cant):
         restarAuxIngredientes(codReceta, recetas, ingredientes)
-    if guardar:
-        guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
 
-def devolverStock(codReceta, recetas, ingredientes, cant, guardar=True):
+def devolverStock(codReceta, recetas, ingredientes, cant):
     for i in range(cant):
         sumarAuxIngredientes(codReceta, recetas, ingredientes)
-    if guardar:
-        guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
     
 def conjuntoCodigo(lista):
     return set(diccionario['id'] for diccionario in lista)
 
 
-def calcularStock(codReceta, recetas, ingredientes, limite=None, profundidad=0):
-    
-    restaurar = False
+"""def calcularStock(codReceta, recetas, ingredientes, limite=None, profundidad=0):
     
     try:
         if limite is not None and profundidad >= limite:
@@ -342,7 +364,10 @@ def calcularStock(codReceta, recetas, ingredientes, limite=None, profundidad=0):
                     return 0
 
         # Reducir cantidades
-        restarStock(codReceta, recetas, ingredientes, 1, guardar=False)
+        for ingReceta in receta['ingredientes']:
+            for nombreIngrediente, cantidadNecesaria in ingReceta.items():
+                ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
+                ingredienteStock['cantidad'] -= cantidadNecesaria
 
         # Llamada recursiva
         return 1 + calcularStock(codReceta, recetas, ingredientes, limite, profundidad + 1)
@@ -350,52 +375,83 @@ def calcularStock(codReceta, recetas, ingredientes, limite=None, profundidad=0):
     except StopIteration as e:
         registrarExcepcion(e, f"Error en calcularStock: Ingrediente no encontrado en la receta {codReceta}.")
         print(f"Error: No se encontró un ingrediente necesario en la receta {codReceta}.")
-        restaurar = True
         return 0
     except KeyError as e:
         registrarExcepcion(e, f"Error en calcularStock: Clave faltante {e} en la estructura de datos.")
         print(f"Error: Falta la clave {e} en las estructuras de datos.")
-        restaurar = True
         return 0
     except TypeError as e:
         registrarExcepcion(e, f"Error en calcularStock: Tipo de dato incorrecto en recetas o ingredientes.")
         print("Error: Tipo de dato incorrecto en recetas o ingredientes.")
-        restaurar = True
         return 0
     except ValueError as e:
         registrarExcepcion(e, f"Error en calcularStock: Valor no válido encontrado al procesar recetas o ingredientes.")
         print("Error: Valor no válido encontrado al procesar recetas o ingredientes.")
-        restaurar = True
         return 0
     except IngredienteInsuficiente as e:
         registrarExcepcion(e, f"Error en calcularStock: Ingredientes insuficientes para la receta {codReceta}.")
         print(f"Error: Ingredientes insuficientes para la receta {codReceta}.")
-        restaurar = True
         return 0
     except Exception as e:
         registrarExcepcion(e, "Error inesperado en calcularStock.")
         print("Error inesperado en calcularStock.")
-        restaurar = True
         return 0
     finally:
         # Restaurar cantidades para evitar inconsistencias
         try:
-            if restaurar:
-                print("Restaurando ingredientes desde el backup.")
-                ingredientes.clear()
-                ingredientes.extend(cnf.ingredientes_backup)  # Restaura desde el backup
-            else:
-                cnf.ingredientes_backup.clear()
-                cnf.ingredientes_backup.extend(ingredientes)
-                guardarDatos(cnf.rutas["ingredientes_backup"], ingredientes)
-            
+                        
             if 'receta' in locals() and receta:
-                devolverStock(codReceta, recetas, ingredientes, 1, guardar=False)
-            
-            
+                for ingReceta in receta['ingredientes']:
+                    for nombreIngrediente, cantidadNecesaria in ingReceta.items():
+                        ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
+                        if ingredienteStock:
+                            ingredienteStock['cantidad'] += cantidadNecesaria
+                     
         except Exception as e:
-            registrarExcepcion(e, "Error crítico durante la restauración o actualización del backup.")
-            print("Error crítico: No se pudo restaurar el stock ni actualizar el backup.")
+            registrarExcepcion(e, "Error crítico durante la actualización del inventario.")
+            print("Error crítico: No se pudo restaurar el stock ni actualizar el inventario.")"""
+
+def calcularStock(codReceta, recetas, ingredientes):
+    try:
+        receta = next((r for r in recetas if r['id'] == codReceta), None)
+        if not receta:
+            return 0
+        # Verificar si los ingredientes necesarios están disponibles en el stock
+        for ingReceta in receta['ingredientes']:
+                for nombreIngrediente, cantidadNecesaria in ingReceta.items():
+                    ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
+                    if not ingredienteStock or ingredienteStock['cantidad'] < cantidadNecesaria:
+                        return 0
+    except StopIteration as e:
+        registrarExcepcion(e, f"Error en calcularStock: Ingrediente no encontrado en la receta {codReceta}.")
+        print(f"Error: No se encontró un ingrediente necesario en la receta {codReceta}.")
+        return 0
+    except KeyError as e:
+        registrarExcepcion(e, f"Error en calcularStock: Clave faltante {e} en la estructura de datos.")
+        print(f"Error: Falta la clave {e} en las estructuras de datos.")
+        return 0
+    except TypeError as e:
+        registrarExcepcion(e, f"Error en calcularStock: Tipo de dato incorrecto en recetas o ingredientes.")
+        print("Error: Tipo de dato incorrecto en recetas o ingredientes.")
+        return 0
+    except ValueError as e:
+        registrarExcepcion(e, f"Error en calcularStock: Valor no válido encontrado al procesar recetas o ingredientes.")
+        print("Error: Valor no válido encontrado al procesar recetas o ingredientes.")
+        return 0
+    except IngredienteInsuficiente as e:
+        registrarExcepcion(e, f"Error en calcularStock: Ingredientes insuficientes para la receta {codReceta}.")
+        print(f"Error: Ingredientes insuficientes para la receta {codReceta}.")
+        return 0
+    except Exception as e:
+        registrarExcepcion(e, "Error inesperado en calcularStock.")
+        print("Error inesperado en calcularStock.")
+        return 0
+    
+    ingredientesLocal = deepcopy(ingredientes)
+    
+    restarAuxIngredientes(codReceta, recetas, ingredientesLocal)
+    
+    return 1 + calcularStock(codReceta, recetas, ingredientesLocal)
 
 
 
@@ -687,7 +743,7 @@ def verPedido(nombre, mesa):
             input(">> Enter para continuar\n<< ")   
     else:
         print(">> No se encontraron pedidos activos")
-        input(">> Enter para continuar\n<< ")   
+        #input(">> Enter para continuar\n<< ")   
 
 def avanzarPedidoCocina():
     pedidos = cnf.pedidos
@@ -939,22 +995,18 @@ def reservarMesa(idMesa, cliente):
 
     except StopIteration as e:
         registrarExcepcion(e, f"No se encontró la mesa con ID {idMesa} en la lista.")
-        print(f"Error: No se encontró la mesa con ID {idMesa}.")
         raise  # Relanza la excepción para manejarla en niveles superiores.
 
     except KeyError as e:
         registrarExcepcion(e, f"La mesa con ID {idMesa} no tiene una clave requerida.")
-        print(f"Error: La mesa con ID {idMesa} no existe o falta información.")
         raise
 
     except MesaOcupada as e:
         registrarExcepcion(e, f"Intento de reservar mesa ocupada: {idMesa}. Cliente actual: {e.clienteActual}.")
-        print(e)
         raise
 
     except Exception as e:
         registrarExcepcion(e, f"Error inesperado al intentar reservar la mesa {idMesa}.")
-        print("Error inesperado al intentar reservar la mesa. Por favor, intente nuevamente.")
         raise
 
 def gestionarReserva():
@@ -962,11 +1014,11 @@ def gestionarReserva():
     Maneja la lógica de reserva de mesas para un cliente.
     Reintenta el flujo en caso de errores específicos.
     """
+    # Solicitar el nombre del cliente
+    nombre = charInput(">> Bienvenido al restaurante, Por favor ingrese su nombre:\n<< ")
+    
     while True:
         try:
-            # Solicitar el nombre del cliente
-            nombre = charInput(">> Bienvenido al restaurante, Por favor ingrese su nombre:\n<< ")
-
             # Solicitar el número de mesa y validar el rango
             numMesa = intInput(">> Ingrese el número de mesa:\n<< ")
             while numMesa not in range(1, len(cnf.mesas) + 1):
