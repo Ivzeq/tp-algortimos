@@ -1183,8 +1183,11 @@ def ejecutarOpcionSalon(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 2:
-            for pedido in impresionPedidos(cnf.pedidos):
-                print(pedido)
+            if len(cnf.pedidos)>0: 
+                for pedido in impresionPedidos(cnf.pedidos):
+                    print(pedido)
+            else:
+                print(">> No hay pedidos.")
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
