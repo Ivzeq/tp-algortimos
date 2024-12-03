@@ -41,8 +41,7 @@ class MesaOcupada(Exception):
 
 
 
-def registrarExcepcion(e,msg ):
-    ruta_log = cnf.rutas["log"]
+def registrarExcepcion(e,msg, ruta_log="tp-algoritmos\\src\\datos\\restaurant.log"):
     try:
         funcion = inspect.stack()[1].function
 
@@ -351,72 +350,6 @@ def devolverStock(codReceta, recetas, ingredientes, cant):
 def conjuntoCodigo(lista):
     return set(diccionario['id'] for diccionario in lista)
 
-
-"""def calcularStock(codReceta, recetas, ingredientes, limite=None, profundidad=0):
-    
-    try:
-        if limite is not None and profundidad >= limite:
-            return 0
-
-        receta = next((r for r in recetas if r['id'] == codReceta), None)
-        if not receta:
-            return 0
-
-        # Verificar disponibilidad de ingredientes
-        for ingReceta in receta['ingredientes']:
-            for nombreIngrediente, cantidadNecesaria in ingReceta.items():
-                ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
-                if not ingredienteStock or ingredienteStock['cantidad'] < cantidadNecesaria:
-                    return 0
-
-        # Reducir cantidades
-        for ingReceta in receta['ingredientes']:
-            for nombreIngrediente, cantidadNecesaria in ingReceta.items():
-                ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
-                ingredienteStock['cantidad'] -= cantidadNecesaria
-
-        # Llamada recursiva
-        return 1 + calcularStock(codReceta, recetas, ingredientes, limite, profundidad + 1)
-
-    except StopIteration as e:
-        registrarExcepcion(e, f"Error en calcularStock: Ingrediente no encontrado en la receta {codReceta}.")
-        print(f"Error: No se encontró un ingrediente necesario en la receta {codReceta}.")
-        return 0
-    except KeyError as e:
-        registrarExcepcion(e, f"Error en calcularStock: Clave faltante {e} en la estructura de datos.")
-        print(f"Error: Falta la clave {e} en las estructuras de datos.")
-        return 0
-    except TypeError as e:
-        registrarExcepcion(e, f"Error en calcularStock: Tipo de dato incorrecto en recetas o ingredientes.")
-        print("Error: Tipo de dato incorrecto en recetas o ingredientes.")
-        return 0
-    except ValueError as e:
-        registrarExcepcion(e, f"Error en calcularStock: Valor no válido encontrado al procesar recetas o ingredientes.")
-        print("Error: Valor no válido encontrado al procesar recetas o ingredientes.")
-        return 0
-    except IngredienteInsuficiente as e:
-        registrarExcepcion(e, f"Error en calcularStock: Ingredientes insuficientes para la receta {codReceta}.")
-        print(f"Error: Ingredientes insuficientes para la receta {codReceta}.")
-        return 0
-    except Exception as e:
-        registrarExcepcion(e, "Error inesperado en calcularStock.")
-        print("Error inesperado en calcularStock.")
-        return 0
-    finally:
-        # Restaurar cantidades para evitar inconsistencias
-        try:
-                        
-            if 'receta' in locals() and receta:
-                for ingReceta in receta['ingredientes']:
-                    for nombreIngrediente, cantidadNecesaria in ingReceta.items():
-                        ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
-                        if ingredienteStock:
-                            ingredienteStock['cantidad'] += cantidadNecesaria
-                     
-        except Exception as e:
-            registrarExcepcion(e, "Error crítico durante la actualización del inventario.")
-            print("Error crítico: No se pudo restaurar el stock ni actualizar el inventario.")"""
-
 def calcularStock(codReceta, recetas, ingredientes):
     try:
         receta = next((r for r in recetas if r['id'] == codReceta), None)
@@ -547,94 +480,6 @@ def totalCuenta(pedido):
     total = reduce(lambda subtotal, platoPedido: subtotal + precios[platoPedido[0].lower()] * platoPedido[1], pedido["platos"], 0)
     return total
 
-"""def hacerPedido(nombre, mesa):#chk
-    menu = cnf.menu
-    recetas = cnf.recetas
-    ingredientes = cnf.ingredientes
-    pedidos = cnf.pedidos
-    pedido={"nombre":nombre,
-            "mesa":mesa,
-            "estado": "recibido",
-            "platos":[]}
-    impresionMenu()
-    while True:
-        try:
-            plato = intInput(">> Ingrese numero de plato o 0 para terminar:\n<< ")
-            if plato not in range(1, len(menu) + 1) and plato != 0:
-                raise ValueError
-        except ValueError as e:
-            msg=(f'Error durante la entrada de un entero\n\tfuncion()= hacerPedido/Ingrese numero de plato (0 para terminar):')
-            registrarExcepcion(e,msg)
-            print('>>Opcion ingresada no válida\n>> Ingrese una opción válida\n>>')
-        else:
-            break
-    while plato != 0:
-        nombrePlato=menu[plato-1][1].lower()
-        codPlato = menu[plato-1][0]
-        while True:
-            try:
-                if menu[plato-1][4]!=0:
-                    cant = int(input(f">> Ingrese una cantidad (disponible {menu[plato-1][4]})\n<< "))
-                    if cant > menu[plato-1][4] or cant<1:
-                        raise ValueError
-                    else:
-                        if cant <= menu[plato-1][4]:  # Si hay suficiente stock
-                            # Si ya hay platos en el pedido
-                            platoExistente = False
-                            for elemento in pedido["platos"]:
-                                if elemento[0].lower() == nombrePlato.lower():
-                                    # Si el plato ya está en el pedido, solo actualiza la cantidad
-                                    elemento[1] += cant
-                                    platoExistente = True
-                                    break
-                            if not platoExistente:
-                                # Si el plato no está en el pedido, se agrega
-                                pedido['platos'].append([nombrePlato, cant, codPlato])
-                            #Resta la cantidad pedida al stock
-                            restarStock(codPlato, recetas, ingredientes, cant)
-                            #actualiza el stock total
-                            actualizarStock(menu, recetas, ingredientes)
-                            print(f">> Has agregado {cant} de {nombrePlato} a tu pedido.")
-                else:
-                    print('>> No hay stock disponible del plato.')
-                    break
-            except ValueError as e:
-                msg=(f'Error durante la entrada de un entero\n\tContexto: Seleccione una cantidad (disponible {menu[plato-1][4]}):\n')
-                registrarExcepcion(e,msg)
-                print(f'>> Opcion ingresada no válida\n>> Ingrese opción válida')
-            except Exception as ms:
-                msg=(f'Error durante la entrada de un entero\n\tContexto: Seleccione una cantidad (disponible {menu[plato-1][4]}):\n')
-                registrarExcepcion(ms,msg)
-                break
-            else:
-                break
-        while True:
-            try:
-                plato = int(input(">> Ingrese numero de plato o 0 para terminar:\n<< "))
-                if plato not in range(1, len(cnf.menu) + 1) and plato != 0:
-                    raise ValueError
-            except ValueError as e:
-                msg=(f'Error durante la entrada de un entero\n\tContexto: Ingrese número de plato (0 para terminar):\n')
-                registrarExcepcion(e,msg)
-                print('>>Opción ingresada no válida\n>> Ingrese una opción válida')
-            else:
-                break
-    if len(pedido["platos"])>0:
-        resumenPedido(nombre, mesa, pedido)
-        confirma = confirmInput(">> Confirmar pedido s=si n=no\n<< ")
-        if confirma == 's':
-            pedidos.append(pedido)
-            guardarDatos(cnf.rutas['pedidos'], pedidos)
-            print(f">> Gracias {nombre}! Tu pedido fue confirmado.")
-        else:
-            if len(pedido["platos"]) > 0:
-                for plato in pedido["platos"]:
-                    codPlato = plato[2]
-                    cant = plato[1]
-                    devolverStock(codPlato, recetas, ingredientes, cant)
-                    actualizarStock(menu, recetas, ingredientes)
-            print(">> Pedido cancelado.")"""
-
 def cargarDatosBasicos():
     return cnf.menu, cnf.recetas, cnf.ingredientes, cnf.pedidos
 
@@ -752,7 +597,7 @@ def verPedido(nombre, mesa, pedidos):
 def avanzarPedidoCocina(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosCocina]
     if len(comandas) == 0:
-        input(">> No hay comandas activas en este momento.\n>> Presione Enter para continuar")
+        print(">> No hay comandas activas en este momento.")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
@@ -769,12 +614,11 @@ def avanzarPedidoCocina(pedidos, ruta_pedidos):
             print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             guardarDatos(ruta_pedidos, pedidos)
             break
-    input("\nPresione Enter para continuar>>")
 
 def avanzarPedidoSalon(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
-        input(">> No hay comandas activas en este momento.\n>> Presione Enter para continuar")
+        print(">> No hay comandas activas en este momento.")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
@@ -799,7 +643,6 @@ def avanzarPedidoSalon(pedidos, ruta_pedidos):
                 pedidos.remove(seleccionado)
             guardarDatos(ruta_pedidos, pedidos)
             break
-    input("\nPresione Enter para continuar>>")
 
 def consultarReceta(recetas):
     impresionRecetas(recetas)
@@ -1132,7 +975,7 @@ def ejecutarOpcionCocina(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 2:
-            avanzarPedidoCocina()
+            avanzarPedidoCocina(cnf.pedidos, cnf.rutas["pedidos"])
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
@@ -1188,7 +1031,7 @@ def ejecutarOpcionSalon(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
-            avanzarPedidoSalon()
+            avanzarPedidoSalon(cnf.pedidos, cnf.rutas["pedidos"])
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 4:

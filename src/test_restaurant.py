@@ -64,10 +64,10 @@ class TestRegistrarExcepcion(TestCase):
         try:
             raise ValueError("Valor inválido")
         except ValueError as e:
-            fn.registrarExcepcion(e, "Prueba de registro")
+            fn.registrarExcepcion(e, "Prueba de registro", ruta_log="restaurant.log")
 
         # Verifica que el archivo fue abierto en modo append
-        mock_file.assert_called_with(cnf.rutas["log"], "a", encoding='utf-8')
+        mock_file.assert_called_with('restaurant.log', "a", encoding='utf-8')
 
         # Verifica el contenido completo que se escribió en el archivo
         handle = mock_file()
