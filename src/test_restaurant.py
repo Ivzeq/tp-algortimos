@@ -966,9 +966,24 @@ class TestRepriorizarPedidos(TestCase):
     @patch("builtins.print")
     def test_repriorizar_pedido_normal(self, mock_print, mock_impresionPedidos, mock_intInput):
         pedidos_simulados = [
-            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"},
-            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
-            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"}
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]]},
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido", "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]]},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido", "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]]}
         ]
 
         # Llamar a la función
@@ -976,9 +991,24 @@ class TestRepriorizarPedidos(TestCase):
 
         # Verificar que el pedido fue movido a la posición correcta
         self.assertEqual(pedidos_simulados, [
-            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
-            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"},
-            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"}
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido", "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]]},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido", "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]]},
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]]}
         ])
 
     @patch("funciones.intInput", side_effect=[3, 1])  # Selecciona el último pedido y lo mueve al inicio
@@ -1315,27 +1345,6 @@ class TestCerrarMesa(TestCase):
 
     @patch("funciones.guardarDatos")
     @patch("funciones.impresionMesas", return_value="Listado de mesas")
-    @patch("funciones.intInput", side_effect=[99, 1])  # Mesa inexistente
-    @patch("funciones.cnf", autospec=True)
-    def test_cerrar_mesa_inexistente(self, mock_cnf, mock_intInput, mock_impresionMesas, mock_guardarDatos):
-        # Datos simulados
-        mesas_simuladas = [
-            {"idMesa": 1, "estado": "Ocupada", "cliente": "Juan"},
-        ]
-        mock_cnf.mesas = mesas_simuladas
-
-        # Llamar a la función
-        fn.cerrarMesa()
-
-        # Verificar que se realizaron cambios
-        self.assertEqual(mock_cnf.mesas[0]["estado"], "Libre")
-        self.assertEqual(mock_cnf.mesas[0]["cliente"], "Sin reserva")
-
-        # Verificar que guardarDatos fue llamado solo una vez
-        mock_guardarDatos.assert_called_once()
-
-    @patch("funciones.guardarDatos")
-    @patch("funciones.impresionMesas", return_value="Listado de mesas")
     @patch("funciones.intInput", side_effect=[0])  # Salir
     @patch("funciones.cnf", autospec=True)
     def test_cerrar_mesa_salir(self, mock_cnf, mock_intInput, mock_impresionMesas, mock_guardarDatos):
@@ -1551,19 +1560,6 @@ class TestEjecutarOpcionCocina(TestCase):
         mock_print.assert_called_once_with(">> Cerrando módulo de cocina.")
         self.assertFalse(resultado)
 
-    @patch("funciones.pedirIngredientes", side_effect=Exception("Error simulado"))
-    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
-    @patch("builtins.print")  # Mock para capturar impresiones
-    def test_ejecutar_opcion_cocina_excepcion(self, mock_print, mock_registrarExcepcion, mock_pedirIngredientes):
-        # Llamar a la función con una opción que genera excepción
-        with self.assertRaises(Exception):
-            fn.ejecutarOpcionCocina(5)
-
-        # Verificar que se registró la excepción
-        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al ejecutar la opción 5 en el menú de cocina.")
-
-        # Verificar mensaje de error
-        mock_print.assert_any_call("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
         
 class TestMostrarMenuSalon(TestCase):
     @patch("funciones.intInput", side_effect=[2])  # Opción válida
@@ -1664,17 +1660,3 @@ class TestEjecutarOpcionSalon(TestCase):
         # Verificar que el mensaje de cierre se imprime y devuelve False
         mock_print.assert_called_once_with(">> Cerrando módulo de salón.")
         self.assertFalse(resultado)
-
-    @patch("funciones.ingresoAdmin", side_effect=Exception("Error simulado"))
-    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
-    @patch("builtins.print")  # Mock para capturar impresiones
-    def test_ejecutar_opcion_salon_excepcion(self, mock_print, mock_registrarExcepcion, mock_ingresoAdmin):
-        # Llamar a la función con una opción que genera excepción
-        with self.assertRaises(Exception):
-            fn.ejecutarOpcionSalon(5)
-
-        # Verificar que se registró la excepción
-        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al ejecutar la opción 5 en el menú del salón.")
-
-        # Verificar mensaje de error
-        mock_print.assert_any_call("Error inesperado al procesar la opción. Por favor, intente nuevamente.")

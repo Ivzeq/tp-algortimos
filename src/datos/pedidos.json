@@ -1,1 +1,38 @@
-[]
+[
+    {
+        "nombre": "Cliente 2",
+        "mesa": 2,
+        "estado": "recibido",
+        "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]
+        ]
+    },
+    {
+        "nombre": "Cliente 3",
+        "mesa": 3,
+        "estado": "recibido",
+        "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]
+        ]
+    },
+    {
+        "nombre": "Cliente 1",
+        "mesa": 1,
+        "estado": "recibido",
+        "platos": [
+            [
+                "ensalada caesar",
+                3,
+                "2009"
+            ]
+        ]
+    }
+]

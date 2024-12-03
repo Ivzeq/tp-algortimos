@@ -337,15 +337,15 @@ def sumarAuxIngredientes(codReceta, recetas, ingredientes):
             ingredienteStock = next(i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower())
             ingredienteStock['cantidad'] += cantIngrediente
 
-def restarStock(codReceta, recetas, ingredientes, cant, ruta = "tp-algoritmos\\src\\datos\\ingredientes.json"):
+def restarStock(codReceta, recetas, ingredientes, cant):
     for i in range(cant):
         restarAuxIngredientes(codReceta, recetas, ingredientes)
-    guardarDatos(ruta, ingredientes)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
 
-def devolverStock(codReceta, recetas, ingredientes, cant, ruta = "tp-algoritmos\\src\\datos\\ingredientes.json"):
+def devolverStock(codReceta, recetas, ingredientes, cant):
     for i in range(cant):
         sumarAuxIngredientes(codReceta, recetas, ingredientes)
-    guardarDatos(ruta, ingredientes)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
     
 def conjuntoCodigo(lista):
     return set(diccionario['id'] for diccionario in lista)
@@ -394,7 +394,7 @@ def calcularStock(codReceta, recetas, ingredientes):
 
 
 
-def pedirIngredientes(ingredientes, compras, ruta = "tp-algoritmos\\src\\datos\\compras.json"):
+def pedirIngredientes(ingredientes, compras):
     while True:
         #Primero mostrar el stock actual
         impresionIngredientes(ingredientes)
@@ -424,7 +424,7 @@ def pedirIngredientes(ingredientes, compras, ruta = "tp-algoritmos\\src\\datos\\
         if seguir != "s":
             break
     #Actualizar archivo de pedido de ingredientes
-    guardarDatos(ruta, compras)
+    guardarDatos(cnf.rutas["compras"], compras)
 
 def impresionCompras(compras):
     print("\nEl pedido actual es el siguiente:\n")
@@ -433,7 +433,7 @@ def impresionCompras(compras):
     for pedido in compras:
         print(f"{pedido['id']:<10}{pedido['nombre']:<20}{pedido['cantidad']:<10}")
 
-def modificarCompras(compras, ruta = "tp-algoritmos\\src\\datos\\compras.json"):
+def modificarCompras(compras):
     if len(compras) > 0:
         while True:
             impresionCompras(compras)
@@ -449,19 +449,19 @@ def modificarCompras(compras, ruta = "tp-algoritmos\\src\\datos\\compras.json"):
             seguir = input("¿Desea modificar más ingredientes del pedido? (s/n):\n>>").strip().lower()
             if seguir != "s":
                 break
-        guardarDatos(ruta, compras)
+        guardarDatos(cnf.rutas["compras"], compras)
     else:
         print("No hay pedidos de ingredientes pendientes.")
         return
 
-def actualizarStock(menu, recetas, ingredientes, ruta = "tp-algoritmos\\src\\datos\\menu.json"):
+def actualizarStock(menu, recetas, ingredientes):
     for plato in menu:
         codReceta = plato[0]
         stock = calcularStock(codReceta, recetas, ingredientes)
         plato[4] = stock
-    guardarDatos(ruta, menu)
+    guardarDatos(cnf.rutas["menu"], menu)
 
-def actualizarIngredientes(ingredientes, compras, rutaIng = "tp-algoritmos\\src\\datos\\ingredientes.json", rutaCompras = "tp-algoritmos\\src\\datos\\compras.json"):
+def actualizarIngredientes(ingredientes, compras):
     agregadas = []
     for compra in compras:
         for ingrediente in ingredientes:
@@ -472,8 +472,8 @@ def actualizarIngredientes(ingredientes, compras, rutaIng = "tp-algoritmos\\src\
     
     compras[:] = [compra for compra in compras if compra["id"] not in {c["id"] for c in agregadas}]
 
-    guardarDatos(rutaIng, ingredientes)
-    guardarDatos(rutaCompras, compras)
+    guardarDatos(cnf.rutas["ingredientes"], ingredientes)
+    guardarDatos(cnf.rutas["compras"], compras)
 
 def totalCuenta(pedido):
     precios = {plato[1].lower(): plato[2] for plato in cnf.menu}
@@ -539,14 +539,14 @@ def eliminarPedido(pedido, recetas, ingredientes, menu):
         devolverStock(codPlato, recetas, ingredientes, cantidad)
     actualizarStock(menu, recetas, ingredientes)
 
-def terminarPedido(pedido, pedidos, recetas, ingredientes, menu, nombre, mesa, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"):
+def terminarPedido(pedido, pedidos, recetas, ingredientes, menu, nombre, mesa):
     #Finaliza y confirma el pedido, actualizando los datos si es necesario.
     print(resumenPedido(nombre, mesa, pedido))
     confirmacion = confirmInput(">> Confirmar pedido (s=si, n=no):\n<< ")
 
     if confirmacion == 's':
         pedidos.append(pedido)
-        guardarDatos(ruta, pedidos)
+        guardarDatos(cnf.rutas['pedidos'], pedidos)
         print(f">> Gracias {nombre}! Tu pedido fue confirmado.")
     else:
         eliminarPedido(pedido, recetas, ingredientes, menu)
@@ -573,7 +573,7 @@ def hacerPedido(nombre, mesa):
         print(">> No se agregaron platos al pedido.")
 
         
-def verPedido(nombre, mesa, pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"):
+def verPedido(nombre, mesa, pedidos):
     pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
     menu, recetas, ingredientes, pedidos = cargarDatosBasicos()
     actualizarStock(menu, recetas, ingredientes)
@@ -586,13 +586,14 @@ def verPedido(nombre, mesa, pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.
             while cancelado not in range(1, len(pedidosCliente)+1):
                 cancelado = intInput(f">> Debe seleccionar un número entre 1 y {len(pedidosCliente)}\n<< ")
             pedidos.remove(pedidosCliente[cancelado-1])
-            guardarDatos(ruta, pedidos)
+            guardarDatos(cnf.rutas["pedidos"], pedidos)
             print(">> Pedido eliminado exitosamente.")
             for elemento in pedidosCliente:
                 eliminarPedido(elemento,recetas,ingredientes,menu)
         elif confirma == 's':
             pedidos.remove(pedidosCliente[0])
-            guardarDatos(ruta, pedidos)
+            eliminarPedido(pedidosCliente[0],recetas,ingredientes,menu)
+            guardarDatos(cnf.rutas['pedidos'], pedidos)
             print(">> Pedido eliminado exitosamente.")
             #input(">> Enter para continuar\n<< ")   
     else:
@@ -619,7 +620,7 @@ def avanzarPedidoCocina(pedidos, ruta_pedidos):
             guardarDatos(ruta_pedidos, pedidos)
             break
 
-def avanzarPedidoSalon(pedidos, ruta_pedidos, ruta_mesas = "tp-algoritmos\\src\\datos\\mesas.json",rutaFin = "tp-algoritmos\\src\\datos\\finalizados.json"):
+def avanzarPedidoSalon(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
         print(">> No hay comandas activas en este momento.")
@@ -640,10 +641,10 @@ def avanzarPedidoSalon(pedidos, ruta_pedidos, ruta_mesas = "tp-algoritmos\\src\\
             if seleccionado['estado'].lower() == "finalizado":
                 cnf.mesas[int(seleccionado["mesa"])-1]['estado']= "Libre"
                 cnf.mesas[int(seleccionado["mesa"])-1]['cliente']= "Sin reserva"
-                guardarDatos(ruta_mesas, cnf.mesas)
+                guardarDatos(cnf.rutas["mesas"], cnf.mesas)
                 finalizados = cnf.finalizados
                 finalizados.append(seleccionado)
-                guardarDatos(rutaFin, finalizados)
+                guardarDatos(cnf.rutas["finalizados"], finalizados)
                 pedidos.remove(seleccionado)
             guardarDatos(ruta_pedidos, pedidos)
             break
@@ -676,7 +677,7 @@ def consultarReceta(recetas):
     print(instrucciones)
     print(f"{'=' * 40}\n")
 
-def cerrarMesa(ruta = "tp-algoritmos\\src\\datos\\mesas.json"):
+def cerrarMesa():
     print(impresionMesas(cnf.mesas))
     seleccionada = intInput(">>Ingrese numero de mesa a cerrar o 0 para salir\n<<")
     while seleccionada not in range(0, len(cnf.mesas)+1):
@@ -689,7 +690,7 @@ def cerrarMesa(ruta = "tp-algoritmos\\src\\datos\\mesas.json"):
             mesa["estado"] = "Libre"
             mesa["cliente"] = "Sin reserva"
             print(f"La mesa {mesa['idMesa']} ha sido cerrada exitosamente.")
-            guardarDatos(ruta, cnf.mesas)
+            guardarDatos(cnf.rutas["mesas"], cnf.mesas)
         else:
             msg='Error al modificar mesa\n\tFuncion() = cerrarMesa()/mesa=NONE'
             print('>> Error al modificar mesa')
@@ -728,7 +729,7 @@ def cambiarEstados(pedidos):
     pedidoSeleccionado["estado"] = nuevoEstado
     print(f"El estado del pedido de {pedidoSeleccionado['nombre']} ha cambiado a: {nuevoEstado.capitalize()}")
 
-def finalizarPedido(pedidos, ruta = "tp-algoritmos\\src\\datos\\finalizados.json"):
+def finalizarPedido(pedidos):
     for pedido in impresionPedidos(pedidos):
         print(pedido)
     seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
@@ -742,7 +743,7 @@ def finalizarPedido(pedidos, ruta = "tp-algoritmos\\src\\datos\\finalizados.json
     cnf.finalizados.append(pedidoSeleccionado)
     pedidos.remove(pedidoSeleccionado)
     print(f"El pedido de {pedidoSeleccionado['nombre']} ha sido finalizado.")
-    guardarDatos(ruta, cnf.finalizados)
+    guardarDatos(cnf.rutas["finalizados"], cnf.finalizados)
 
 def cancelarPedido(pedidos):
         for pedido in impresionPedidos(pedidos):
@@ -758,7 +759,7 @@ def cancelarPedido(pedidos):
         pedidos.remove(pedidoSeleccionado)
         print(f"El pedido de {pedidoSeleccionado['nombre']} ha sido cancelado.")
 
-def repriorizarPedidos(pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"):
+def repriorizarPedidos(pedidos):
     for pedido in impresionPedidos(pedidos):
         print(pedido)
     seleccion = intInput(f"Seleccione un pedido entre 1 y {len(pedidos)}. 0 para salir.\n>>")
@@ -783,7 +784,7 @@ def repriorizarPedidos(pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"
         # Inserto el pedido en la nueva posicion usando rebanado
         pedidos[nuevaPos:nuevaPos] = [pedidoSeleccionado]
     print(f"El pedido de '{pedidoSeleccionado['nombre']}' ha sido movido a la posición {nuevaPos + 1}.")
-    guardarDatos(ruta, pedidos)
+    guardarDatos(cnf.rutas["pedidos"], pedidos)
 
 def ingresarCompras(compras, ingredientes):
     impresionCompras(compras)
@@ -794,11 +795,9 @@ def ingresarCompras(compras, ingredientes):
     else:
         return
 
-def administrarPedidos(pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"):
-    if len(pedidos) == 0:
-        print("No hay pedidos activos en este momento.")
-        return
-    
+def administrarPedidos(pedidos):
+
+
     while True:
 
         accion = intInput(f"{cnf.adminUI}")
@@ -834,9 +833,9 @@ def administrarPedidos(pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"
             return
         
         # Guardar cambios
-        guardarDatos(ruta, pedidos)
+        guardarDatos(cnf.rutas["pedidos"], pedidos)
 
-def reservarMesa(idMesa, cliente, ruta_mesas = "tp-algoritmos\\src\\datos\\mesas.json"):
+def reservarMesa(idMesa, cliente, ruta = "tp-algoritmos\\src\\datos\\mesas.json"):
     try:
         # Buscar la mesa en la lista
         mesa = next(m for m in cnf.mesas if m['idMesa'] == idMesa)
@@ -848,7 +847,7 @@ def reservarMesa(idMesa, cliente, ruta_mesas = "tp-algoritmos\\src\\datos\\mesas
         # Reservar la mesa
         mesa['estado'] = 'Ocupada'
         mesa['cliente'] = cliente
-        cnf.guardarDatos(ruta_mesas, cnf.mesas)
+        cnf.guardarDatos(ruta, cnf.mesas)
 
     except StopIteration as e:
         registrarExcepcion(e, f"No se encontró la mesa con ID {idMesa} en la lista.")
@@ -905,6 +904,29 @@ def gestionarReserva():
             registrarExcepcion(e, "Error inesperado al gestionar la reserva de cliente.")
             print("Error inesperado. Por favor, intente nuevamente.")
 
+
+"""def mostrarMenuCliente(nombre, numMesa):
+    while True:
+        opcion = intInput(cnf.clienteUI)
+        while opcion not in [1, 2, 3, 4]:
+            print("Opción inválida. Ingrese 1, 2, 3 o 4.\n")
+            opcion = intInput(cnf.clienteUI)
+
+        if opcion == 1:
+            print(impresionMenu(cnf.menu))
+            input('>> Enter para continuar\n<< ')
+
+        elif opcion == 2:
+            hacerPedido(nombre, numMesa)
+            input(">> Enter para continuar\n<< ")
+
+        elif opcion == 3:
+            verPedido(nombre, numMesa)
+
+        else:
+            print(f">> Gracias, {nombre}!")
+            input(">> Enter para continuar\n<< ")
+            return"""
 
 def mostrarMenuCliente():
     #Muestra el menú interactivo para el cliente y devuelve una opción válida seleccionada.
@@ -991,7 +1013,6 @@ def ejecutarOpcionCocina(opcion):
     except Exception as e:
         registrarExcepcion(e, f"Error al ejecutar la opción {opcion} en el menú de cocina.")
         print("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
-        raise
     return True  # Continuar en el menú principal
 
 def mostrarMenuSalon():
@@ -1041,5 +1062,4 @@ def ejecutarOpcionSalon(opcion):
     except Exception as e:
         registrarExcepcion(e, f"Error al ejecutar la opción {opcion} en el menú del salón.")
         print("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
-        raise
     return True  # Continuar en el menú principal
