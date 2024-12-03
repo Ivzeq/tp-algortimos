@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import patch, mock_open
+from unittest.mock import patch, mock_open, call
 from datetime import datetime
 import config as cnf
 import funciones as fn
@@ -626,9 +626,6 @@ class TestInicializarPedido(TestCase):
         resultado = fn.inicializarPedido(nombre, mesa)
         self.assertEqual(resultado, esperado)
 
-from unittest.mock import patch
-from unittest import TestCase
-
 class TestSeleccionarPlato(TestCase):
     @patch("funciones.intInput", side_effect=[1, 0])  # Simula selección válida y finalización
     def test_seleccionarPlato_valido(self, mock_input):
@@ -785,5 +782,245 @@ class TestTerminarPedido(TestCase):
         mock_eliminarPedido.assert_called_once_with(pedido_simulado, recetas_simuladas, ingredientes_simulados, menu_simulado)
         self.assertNotIn(pedido_simulado, pedidos_simulados)
         mock_guardarDatos.assert_not_called()
+
+
+class TestVerPedido(TestCase):
+
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1: Plato 1 x2"])
+    @patch("funciones.confirmInput", side_effect=["n"])  # El usuario no cancela el pedido
+    @patch("builtins.print")
+    def test_verPedido_existente(self, mock_print, mock_confirmInput, mock_impresionPedidos):
+        # Datos simulados
+        pedidos_simulados = [
+            {"nombre": "Cliente", "mesa": 1, "estado": "recibido", "platos": [["Plato 1", 2, "R001"]]},
+        ]
+
+        # Llamar a la función
+        fn.verPedido("Cliente", 1, pedidos_simulados)
+
+        # Verificar que impresionPedidos fue llamado con el pedido correcto
+        mock_impresionPedidos.assert_called_once_with(pedidos_simulados)
+
+        # Verificar que se imprimió el pedido
+        mock_print.assert_any_call("Pedido 1: Plato 1 x2")
+
+        # Verificar que no se intentó cancelar
+        mock_confirmInput.assert_called_once()
+
+    @patch("funciones.impresionPedidos", return_value=[])
+    @patch("builtins.print")
+    def test_verPedido_inexistente(self, mock_print, mock_impresionPedidos):
+        # Datos simulados
+        pedidos_simulados = []
+
+        # Llamar a la función
+        fn.verPedido("Otro Cliente", 2, pedidos_simulados)
+
+        # Verificar que impresionPedidos no imprime nada
+        mock_impresionPedidos.assert_called_once_with([])
+
+        # Verificar que se imprime el mensaje de error
+        mock_print.assert_called_once_with(">> No se encontraron pedidos activos")
+
+
+class TestAvanzarPedidoCocina(TestCase):
+
+    @patch("funciones.guardarDatos")  # Decorador más interno
+    @patch("funciones.intInput", side_effect=[1])  # Decorador intermedio
+    @patch("builtins.print")  # Decorador más externo
+    def test_avanzarPedidoCocina(self, mock_print, mock_intInput, mock_guardarDatos):
+        # Datos simulados
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": [["Plato 1", 2, "R001"]]},
+        ]
+        ruta_pedidos_simulada = "ruta_a_pedidos.json"
+
+        # Llamar a la función
+        fn.avanzarPedidoCocina(pedidos_simulados, ruta_pedidos_simulada)
+
+        # Verificar que el estado del pedido fue actualizado
+        self.assertEqual(pedidos_simulados[0]["estado"], "en preparacion")
+
+        # Verificar que los datos actualizados se guardaron
+        mock_guardarDatos.assert_called_once_with(ruta_pedidos_simulada, pedidos_simulados)
+
+        # Verificar que se imprimió el mensaje de éxito
+        mock_print.assert_any_call(">> El pedido de Cliente 1 en la mesa 1 ahora está En preparacion.")
+
+
+class TestAvanzarPedidoSalon(TestCase): 
+
+    def test_avanzar_pedido(self):
+        pedidos_simulados = [
+            {"nombre": "Cliente", "mesa": 1, "estado": "entregado", "platos": []}
+        ]
+        ruta_pedidos_simulada = "ruta_a_pedidos.json"
+
+        with patch("funciones.guardarDatos") as mock_guardarDatos, \
+             patch("funciones.intInput", side_effect=[1]) as mock_intInput, \
+             patch("funciones.impresionPedidos", return_value=["Pedido 1"]) as mock_impresionPedidos, \
+             patch("funciones.cnf.permisosEstadosSalon", ["entregado", "pagado"]), \
+             patch("builtins.print") as mock_print:
+
+            # Llamar a la función con los datos simulados
+            fn.avanzarPedidoSalon(pedidos_simulados, ruta_pedidos_simulada)
+
+            # Verificar que el pedido avanzó
+            self.assertEqual(pedidos_simulados[0]["estado"], "pagado")
+
+            # Verificar mensajes impresos
+            mock_print.assert_any_call("El pedido de Cliente en la mesa 1 ahora está Pagado.")
+
+            # Verificar que los datos del pedido se guardaron
+            mock_guardarDatos.assert_any_call(ruta_pedidos_simulada, pedidos_simulados)
+
+    def test_pedido_finalizado(self):
+        pedidos_simulados = [
+            {"nombre": "Cliente", "mesa": 1, "estado": "pagado", "platos": []}
+        ]
+        ruta_pedidos_simulada = "ruta_a_pedidos.json"
+
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Ocupada", "cliente": "Cliente"}
+        ]
+        finalizados_simulados = []
+
+        with patch("funciones.guardarDatos") as mock_guardarDatos, \
+             patch("funciones.intInput", side_effect=[1]) as mock_intInput, \
+             patch("funciones.impresionPedidos", return_value=["Pedido 1"]) as mock_impresionPedidos, \
+             patch("funciones.cnf.permisosEstadosSalon", ["pagado", "finalizado"]), \
+             patch("funciones.cnf.mesas", mesas_simuladas), \
+             patch("funciones.cnf.finalizados", finalizados_simulados), \
+             patch("builtins.print") as mock_print:
+
+            # Llamar a la función con los datos simulados
+            fn.avanzarPedidoSalon(pedidos_simulados, ruta_pedidos_simulada)
+
+            # Verificar que el pedido fue eliminado de pedidos_simulados
+            self.assertEqual(len(pedidos_simulados), 0)
+
+            # Verificar que el pedido fue movido a finalizados_simulados
+            self.assertEqual(len(finalizados_simulados), 1)
+            self.assertEqual(finalizados_simulados[0]["estado"], "finalizado")
+
+            # Verificar que la mesa quedó libre
+            self.assertEqual(mesas_simuladas[0]["estado"], "Libre")
+            self.assertEqual(mesas_simuladas[0]["cliente"], "Sin reserva")
+
+            # Verificar mensajes impresos
+            mock_print.assert_any_call("El pedido de Cliente en la mesa 1 ahora está Finalizado.")
+
+            # Verificar que los datos actualizados se guardaron
+            mock_guardarDatos.assert_any_call(cnf.rutas["mesas"], mesas_simuladas)
+            mock_guardarDatos.assert_any_call(cnf.rutas["finalizados"], finalizados_simulados)
+            mock_guardarDatos.assert_any_call(ruta_pedidos_simulada, pedidos_simulados)
+
+
+class TestCancelarPedido(TestCase):
+
+    @patch("funciones.intInput", side_effect=[1])  # Selecciona el primer pedido
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1"])
+    @patch("builtins.print")
+    def test_cancelar_pedido_normal(self, mock_print, mock_impresionPedidos, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": []}
+        ]
+
+        # Llamar a la función
+        fn.cancelarPedido(pedidos_simulados)
+
+        # Verificar que el pedido fue eliminado
+        self.assertEqual(len(pedidos_simulados), 0)
+
+        # Verificar el mensaje de cancelación
+        mock_print.assert_any_call("El pedido de Cliente 1 ha sido cancelado.")
+
+    @patch("funciones.intInput", side_effect=[0])  # Selecciona salir
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1"])
+    @patch("builtins.print")
+    def test_cancelar_pedido_salir(self, mock_print, mock_impresionPedidos, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": []}
+        ]
+
+        # Llamar a la función
+        fn.cancelarPedido(pedidos_simulados)
+
+        # Verificar que ningún pedido fue eliminado
+        self.assertEqual(len(pedidos_simulados), 1)
+
+        # Mostrar llamadas reales para depurar
+        print(mock_print.call_args_list)
+
+        # Verificar que el mensaje correcto fue impreso
+        mock_print.assert_any_call("Pedido 1")
+        self.assertNotIn(
+            call("El pedido de Cliente 1 ha sido cancelado."),
+            mock_print.mock_calls
+        )
+
+class TestRepriorizarPedidos(TestCase):
+
+    @patch("funciones.intInput", side_effect=[1, 3])  # Selecciona el primer pedido y lo mueve a la posición 3
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1", "Pedido 2", "Pedido 3"])
+    @patch("builtins.print")
+    def test_repriorizar_pedido_normal(self, mock_print, mock_impresionPedidos, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"},
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"}
+        ]
+
+        # Llamar a la función
+        fn.repriorizarPedidos(pedidos_simulados)
+
+        # Verificar que el pedido fue movido a la posición correcta
+        self.assertEqual(pedidos_simulados, [
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"},
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"}
+        ])
+
+    @patch("funciones.intInput", side_effect=[3, 1])  # Selecciona el último pedido y lo mueve al inicio
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1", "Pedido 2", "Pedido 3"])
+    @patch("builtins.print")
+    def test_repriorizar_pedido_límite(self, mock_print, mock_impresionPedidos, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"},
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"}
+        ]
+
+        # Llamar a la función
+        fn.repriorizarPedidos(pedidos_simulados)
+
+        # Verificar que el pedido fue movido al inicio
+        self.assertEqual(pedidos_simulados, [
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"},
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"},
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"}
+        ])
+
+    @patch("funciones.intInput", side_effect=[5, 1, 6])  # Selección inválida, luego válida, luego elije la ultima posicion
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1", "Pedido 2", "Pedido 3"])
+    @patch("builtins.print")
+    def test_repriorizar_pedido_invalido(self, mock_print, mock_impresionPedidos, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"},
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"}
+        ]
+
+        # Llamar a la función
+        fn.repriorizarPedidos(pedidos_simulados)
+        
+        # Verificar que el pedido fue movido correctamente después de la selección válida
+        self.assertEqual(pedidos_simulados, [
+            {"nombre": "Cliente 2", "mesa": 2, "estado": "recibido"},
+            {"nombre": "Cliente 3", "mesa": 3, "estado": "recibido"},
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido"}
+        ])
+                
+        mock_print.assert_any_call("El pedido de 'Cliente 1' ha sido movido a la posición 6.")
 
 

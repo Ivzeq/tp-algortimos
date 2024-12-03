@@ -727,8 +727,7 @@ def hacerPedido(nombre, mesa):
         print(">> No se agregaron platos al pedido.")
 
         
-def verPedido(nombre, mesa):
-    pedidos = cnf.pedidos
+def verPedido(nombre, mesa, pedidos):
     pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
     for pedido in impresionPedidos(pedidosCliente):
         print(pedido)
@@ -748,10 +747,8 @@ def verPedido(nombre, mesa):
             input(">> Enter para continuar\n<< ")   
     else:
         print(">> No se encontraron pedidos activos")
-        #input(">> Enter para continuar\n<< ")   
 
-def avanzarPedidoCocina():
-    pedidos = cnf.pedidos
+def avanzarPedidoCocina(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosCocina]
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
@@ -769,11 +766,10 @@ def avanzarPedidoCocina():
         if actual in avance:
             seleccionado["estado"] = avance[actual]
             print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
-            guardarDatos(cnf.rutas["pedidos"], pedidos)
+            guardarDatos(ruta_pedidos, pedidos)
             break
 
-def avanzarPedidoSalon():
-    pedidos = cnf.pedidos
+def avanzarPedidoSalon(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
         print("No hay comandas activas en este momento.")
@@ -799,7 +795,7 @@ def avanzarPedidoSalon():
                 finalizados.append(seleccionado)
                 guardarDatos(cnf.rutas["finalizados"], finalizados)
                 pedidos.remove(seleccionado)
-            guardarDatos(cnf.rutas["pedidos"], pedidos)
+            guardarDatos(ruta_pedidos, pedidos)
             break
 
 def consultarReceta(recetas):
@@ -1100,7 +1096,7 @@ def ejecutarOpcionCliente(opcion, nombre, numMesa):
             input(">> Enter para continuar\n<< ")
 
         elif opcion == 3:
-            verPedido(nombre, numMesa)
+            verPedido(nombre, numMesa, cnf.pedidos)
             input(">> Enter para continuar\n<< ")
 
         elif opcion == 4:
@@ -1133,7 +1129,7 @@ def ejecutarOpcionCocina(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 2:
-            avanzarPedidoCocina()
+            avanzarPedidoCocina(cnf.pedidos, cnf.rutas["pedidos"])
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
@@ -1186,7 +1182,7 @@ def ejecutarOpcionSalon(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
-            avanzarPedidoSalon()
+            avanzarPedidoSalon(cnf.pedidos, cnf.rutas["pedidos"])
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 4:
