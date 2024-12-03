@@ -755,15 +755,15 @@ def avanzarPedidoCocina():
     pedidos = cnf.pedidos
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosCocina]
     if len(comandas) == 0:
-        print("No hay comandas activas en este momento.")
+        print(">> No hay comandas activas en este momento.")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
     avanzar = intInput(f">> Qué pedido desea avanzar? entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
+    while avanzar not in range(0, len(comandas)+1):
+        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
     if avanzar <1 :
         return
-    while avanzar not in range(1, len(comandas)+1):
-        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)}\n<< ")
     seleccionado = comandas[avanzar-1]
     actual = seleccionado["estado"]
     for avance in cnf.avanceEstados:
@@ -772,6 +772,7 @@ def avanzarPedidoCocina():
             print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             break
+    input("\nPresione Enter para continuar>>")
 
 def avanzarPedidoSalon():
     pedidos = cnf.pedidos
@@ -1135,7 +1136,6 @@ def ejecutarOpcionCocina(opcion):
 
         elif opcion == 2:
             avanzarPedidoCocina()
-            input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
             consultarReceta(cnf.recetas)

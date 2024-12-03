@@ -2,7 +2,7 @@
     {
         "nombre": "Ale",
         "mesa": 2,
-        "estado": "recibido",
+        "estado": "listo",
         "platos": [
             [
                 "asado de tira",

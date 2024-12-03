@@ -1,22 +1,21 @@
-[
-    {
-        "id": "LCH",
-        "nombre": "Lechuga",
-        "cantidad": 2
+[{
+        "id": "1007",
+        "nombre": "Aceite",
+        "cantidad": 1
     },
     {
-        "id": "AZF",
-        "nombre": "Azafr\u00e1n",
-        "cantidad": 2
+        "id": "1023",
+        "nombre": "Tomate",
+        "cantidad": 10
     },
     {
-        "id": "CRT",
-        "nombre": "Crutones",
-        "cantidad": 2
+        "id": "1018",
+        "nombre": "Caldo de pescado",
+        "cantidad": 10
     },
     {
-        "id": "ARZ",
-        "nombre": "Arroz",
-        "cantidad": 2
+        "id": "1004",
+        "nombre": "Pan rallado",
+        "cantidad": 24
     }
 ]

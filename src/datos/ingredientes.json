@@ -2,17 +2,17 @@
     {
         "id": "1000",
         "nombre": "Bife de Chorizo",
-        "cantidad": 17
+        "cantidad": 16
     },
     {
         "id": "1001",
         "nombre": "Sal",
-        "cantidad": 170
+        "cantidad": 79
     },
     {
         "id": "1002",
         "nombre": "Pimienta",
-        "cantidad": 232
+        "cantidad": 186
     },
     {
         "id": "1003",
@@ -152,6 +152,6 @@
     {
         "id": "1030",
         "nombre": "Asado de tira",
-        "cantidad": 45
+        "cantidad": 0
     }
 ]
