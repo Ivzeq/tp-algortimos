@@ -575,6 +575,8 @@ def hacerPedido(nombre, mesa):
         
 def verPedido(nombre, mesa, pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"):
     pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
+    menu, recetas, ingredientes, pedidos = cargarDatosBasicos()
+    actualizarStock(menu, recetas, ingredientes)
     for pedido in impresionPedidos(pedidosCliente):
         print(pedido)
     if len(pedidosCliente) > 0:
@@ -586,11 +588,13 @@ def verPedido(nombre, mesa, pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.
             pedidos.remove(pedidosCliente[cancelado-1])
             guardarDatos(ruta, pedidos)
             print(">> Pedido eliminado exitosamente.")
+            for elemento in pedidosCliente:
+                eliminarPedido(elemento,recetas,ingredientes,menu)
         elif confirma == 's':
             pedidos.remove(pedidosCliente[0])
             guardarDatos(ruta, pedidos)
             print(">> Pedido eliminado exitosamente.")
-            input(">> Enter para continuar\n<< ")   
+            #input(">> Enter para continuar\n<< ")   
     else:
         print(">> No se encontraron pedidos activos")
 
@@ -697,7 +701,6 @@ def ingresoAdmin():
     if ingreso in passwords:
         adminDict = next(item for item in cnf.admins if list(item.keys())[0] == ingreso)
         user = list(adminDict.values())[0]
-        print(f"Bienvenido, {user.capitalize()}.")
         administrarPedidos(cnf.pedidos)
     else:
         print("Contraseña incorrecta. Intente nuevamente.")
@@ -797,28 +800,36 @@ def administrarPedidos(pedidos, ruta = "tp-algoritmos\\src\\datos\\pedidos.json"
         return
     
     while True:
+
         accion = intInput(f"{cnf.adminUI}")
         while accion not in [1, 2, 3, 4, 5, 6, 7]:
             accion = intInput("Debe seleccionar una acción válida (1 a 7):\n>>")
         
         if accion == 1:  # Cambiar estado
-            cambiarEstados(pedidos)
-        
+            if len(pedidos) != 0:
+                cambiarEstados(pedidos)
+            else:
+                input(">> No hay pedidos activos en el momento!\n>> Enter para continuar")
         elif accion == 2:  # Finalizar pedido
-            finalizarPedido(pedidos)
-        
+            if len(pedidos) != 0:
+                finalizarPedido(pedidos)
+            else:
+                input(">> No hay pedidos activos en el momento!\n>> Enter para continuar")
         elif accion == 3:  # Cancelar pedido
-            cancelarPedido(pedidos)
-        
+            if len(pedidos) != 0:
+                cancelarPedido(pedidos)
+            else:
+                input(">> No hay pedidos activos en el momento!\n>> Enter para continuar")
         elif accion == 4: #Repriorizar pedidos
-            repriorizarPedidos(pedidos)
-        
+            if len(pedidos) != 0:
+                repriorizarPedidos(pedidos)
+            else:
+                input(">> No hay pedidos activos en el momento!\n>> Enter para continuar")
         elif accion == 5: #Cambiar pedidos de ingredientes
             modificarCompras(cnf.compras)
         
         elif accion == 6: #Ingresar compras
             ingresarCompras(cnf.compras, cnf.ingredientes)
-        
         else: #Salir
             return
         

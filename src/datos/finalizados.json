@@ -39,5 +39,17 @@
                 "SMT"
             ]
         ]
+    },
+    {
+        "nombre": "Koko",
+        "mesa": 3,
+        "estado": "recibido",
+        "platos": [
+            [
+                "bife de chorizo",
+                1,
+                "2000"
+            ]
+        ]
     }
 ]

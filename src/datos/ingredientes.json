@@ -2,7 +2,7 @@
     {
         "id": "1000",
         "nombre": "Bife de Chorizo",
-        "cantidad": 16
+        "cantidad": 12
     },
     {
         "id": "1001",
@@ -12,22 +12,22 @@
     {
         "id": "1002",
         "nombre": "Pimienta",
-        "cantidad": 186
+        "cantidad": 176
     },
     {
         "id": "1003",
         "nombre": "Ternera",
-        "cantidad": 41
+        "cantidad": 36
     },
     {
         "id": "1004",
         "nombre": "Pan rallado",
-        "cantidad": 74
+        "cantidad": 68
     },
     {
         "id": "1005",
         "nombre": "Huevo",
-        "cantidad": 80
+        "cantidad": 74
     },
     {
         "id": "1006",
@@ -52,12 +52,12 @@
     {
         "id": "1010",
         "nombre": "Jam\u00f3n",
-        "cantidad": 47
+        "cantidad": 46
     },
     {
         "id": "1011",
         "nombre": "Queso",
-        "cantidad": 77
+        "cantidad": 76
     },
     {
         "id": "1012",

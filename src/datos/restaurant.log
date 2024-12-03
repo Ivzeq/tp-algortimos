@@ -28,7 +28,7 @@ Tipo: <class 'ValueError'> - Mensaje:
 
 Tipo: <class 'ValueError'> - Mensaje: 
 	Error durante la entrada de un entero
-	Contexto: Ingrese número de plato (0 para terminar):
+	Contexto: Ingrese nï¿½mero de plato (0 para terminar):
 
 Tipo: <class 'json.decoder.JSONDecodeError'> - Mensaje: Expecting value: line 1 column 1 (char 0)
 	Error al abrir archivo con ruta precargada
@@ -77,128 +77,225 @@ Tipo: <class 'ValueError'> - Mensaje:
 	funcion()= hacerPedido/Ingrese numero de plato (0 para terminar):
 Tipo: <class 'ValueError'> - Mensaje: invalid literal for int() with base 10: ''
 	Error durante la entrada de un entero
-	Contexto: Ingrese número de plato (0 para terminar):
+	Contexto: Ingrese nï¿½mero de plato (0 para terminar):
 
 Tipo: <class 'ValueError'> - Mensaje: invalid literal for int() with base 10: 'a'
 	Error durante la entrada de un entero
-	Contexto: Ingrese número de plato (0 para terminar):
+	Contexto: Ingrese nï¿½mero de plato (0 para terminar):
 
 Fecha: 2024-12-01 18:04:43.330874
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
 Fecha: 2024-12-01 18:04:43.332874
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 2.
 Fecha: 2024-12-01 18:07:02.404702
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
 Fecha: 2024-12-01 18:07:02.405710
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 2.
 Fecha: 2024-12-01 18:07:57.804620
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
 Fecha: 2024-12-01 18:07:57.805620
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 2.
 Fecha: 2024-12-01 18:09:45.682112
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
 Fecha: 2024-12-01 18:09:45.684112
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 2 ya está ocupada.
+Mensaje: La mesa 2 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 2.
 Fecha: 2024-12-01 18:09:50.390723
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 1 ya está ocupada.
+Mensaje: La mesa 1 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 1. Cliente actual: Dsa.
 Fecha: 2024-12-01 18:09:50.391723
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 1 ya está ocupada.
+Mensaje: La mesa 1 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 1.
 Fecha: 2024-12-01 18:11:55.344917
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 3 ya está ocupada.
+Mensaje: La mesa 3 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 3. Cliente actual: Ale.
 Fecha: 2024-12-01 18:11:55.345909
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 3 ya está ocupada.
+Mensaje: La mesa 3 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 3.
 Fecha: 2024-12-01 18:22:39.019381
-Función: ejecutarOpcionCliente
+Funciï¿½n: ejecutarOpcionCliente
 Tipo: TypeError
 Mensaje: calcularStock() missing 1 required positional argument: 'cant'
-	Error al ejecutar la opción 2 en el menú del cliente.
+	Error al ejecutar la opciï¿½n 2 en el menï¿½ del cliente.
 Fecha: 2024-12-01 18:22:41.430422
-Función: ejecutarOpcionCliente
+Funciï¿½n: ejecutarOpcionCliente
 Tipo: TypeError
 Mensaje: calcularStock() missing 1 required positional argument: 'cant'
-	Error al ejecutar la opción 2 en el menú del cliente.
+	Error al ejecutar la opciï¿½n 2 en el menï¿½ del cliente.
 Fecha: 2024-12-01 18:23:45.047265
-Función: ejecutarOpcionCliente
+Funciï¿½n: ejecutarOpcionCliente
 Tipo: TypeError
 Mensaje: calcularStock() missing 1 required positional argument: 'cant'
-	Error al ejecutar la opción 2 en el menú del cliente.
+	Error al ejecutar la opciï¿½n 2 en el menï¿½ del cliente.
 Fecha: 2024-12-01 18:37:45.361276
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 3 ya está ocupada.
+Mensaje: La mesa 3 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 3. Cliente actual: Ale.
 Fecha: 2024-12-01 18:37:45.362276
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 3 ya está ocupada.
+Mensaje: La mesa 3 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 3.
 Fecha: 2024-12-03 02:49:31.944878
-Función: reservarMesa
+Funciï¿½n: reservarMesa
 Tipo: MesaOcupada
-Mensaje: La mesa 3 ya está ocupada.
+Mensaje: La mesa 3 ya estï¿½ ocupada.
 	Intento de reservar mesa ocupada: 3. Cliente actual: Ale.
 Fecha: 2024-12-03 02:49:31.945878
-Función: gestionarReserva
+Funciï¿½n: gestionarReserva
 Tipo: MesaOcupada
-Mensaje: La mesa 3 ya está ocupada.
+Mensaje: La mesa 3 ya estï¿½ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 3.
-Fecha: 2024-12-03 12:51:25.242646
-FunciÃ³n: ejecutarOpcionSalon
-Tipo: KeyError
-Mensaje: 'platos'
-	Error al ejecutar la opciÃ³n 5 en el menÃº del salÃ³n.
-Fecha: 2024-12-03 15:35:17.741397
+Fecha: 2024-12-03 12:04:51.950195
 FunciÃ³n: reservarMesa
 Tipo: MesaOcupada
 Mensaje: La mesa 1 ya estÃ¡ ocupada.
-	Intento de reservar mesa ocupada: 1. Cliente actual: Juan.
-Fecha: 2024-12-03 15:35:17.742398
+	Intento de reservar mesa ocupada: 1. Cliente actual: Koko.
+Fecha: 2024-12-03 12:04:51.950678
 FunciÃ³n: gestionarReserva
 Tipo: MesaOcupada
 Mensaje: La mesa 1 ya estÃ¡ ocupada.
 	Intento de reservar una mesa ocupada: Mesa 1.
-Fecha: 2024-12-03 15:35:19.966049
+Fecha: 2024-12-03 12:09:04.555024
 FunciÃ³n: reservarMesa
 Tipo: MesaOcupada
 Mensaje: La mesa 2 ya estÃ¡ ocupada.
-	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
-Fecha: 2024-12-03 15:35:19.967419
+	Intento de reservar mesa ocupada: 2. Cliente actual: Koko.
+Fecha: 2024-12-03 12:09:04.555425
+FunciÃ³n: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya estÃ¡ ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
+Fecha: 2024-12-03 12:09:06.441330
+FunciÃ³n: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya estÃ¡ ocupada.
+	Intento de reservar mesa ocupada: 3. Cliente actual: Juan.
+Fecha: 2024-12-03 12:09:06.441717
+FunciÃ³n: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya estÃ¡ ocupada.
+	Intento de reservar una mesa ocupada: Mesa 3.
+Fecha: 2024-12-03 12:55:53.034427
+FunciÃ³n: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya estÃ¡ ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Juan.
+Fecha: 2024-12-03 12:55:53.034810
+FunciÃ³n: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya estÃ¡ ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-03 13:50:41.950028
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 5 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:50:56.802491
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 5 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:50:58.359461
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:50:59.769936
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:16.187365
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:16.885432
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:17.521575
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:17.886526
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:18.163370
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:18.370476
+FunciÃ³n: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opciÃ³n 2 en el menÃº del salÃ³n.
+Fecha: 2024-12-03 13:51:22.781331
+FunciÃ³n: cargarDatos
+Tipo: JSONDecodeError
+Mensaje: Expecting value: line 1 column 1 (char 0)
+	Error al abrir archivo con ruta precargada
+	Contexto:CargarDatos(c:\Users\MOB\Desktop\Programacion\Github\tp-algoritmos\src\datos\pedidos.json)
+Fecha: 2024-12-03 13:59:33.693143
+FunciÃ³n: cargarDatos
+Tipo: JSONDecodeError
+Mensaje: Expecting value: line 1 column 1 (char 0)
+	Error al abrir archivo con ruta precargada
+	Contexto:CargarDatos(c:\Users\MOB\Desktop\Programacion\Github\tp-algoritmos\src\datos\pedidos.json)
+Fecha: 2024-12-03 13:59:50.984641
+FunciÃ³n: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya estÃ¡ ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Juan.
+Fecha: 2024-12-03 13:59:50.984990
+FunciÃ³n: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya estÃ¡ ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-03 13:59:53.271976
+FunciÃ³n: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya estÃ¡ ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Judas.
+Fecha: 2024-12-03 13:59:53.272485
 FunciÃ³n: gestionarReserva
 Tipo: MesaOcupada
 Mensaje: La mesa 2 ya estÃ¡ ocupada.
