@@ -41,11 +41,12 @@ class MesaOcupada(Exception):
 
 
 
-def registrarExcepcion(e,msg, ruta_log="tp-algoritmos\\src\\datos\\restaurant.log"):
+def registrarExcepcion(e,msg ):
+    ruta_log = cnf.rutas["log"]
     try:
         funcion = inspect.stack()[1].function
 
-        archivo = open(ruta_log, 'a')
+        archivo = open(ruta_log, 'a', encoding='utf-8')
         try:
             error = (
                 f"\nFecha: {datetime.now()}\n"
