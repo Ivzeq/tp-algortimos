@@ -150,8 +150,7 @@ def guardarDatos(ruta, datos):
         print(f"Error inesperado al guardar datos en {ruta}.")
         raise
 
-def impresionMesas():
-    mesas = cnf.mesas
+def impresionMesas(mesas):
     if len(mesas)%2==0:
         output = f"""
 ╔═════════════════════════════════════════════╗
@@ -184,8 +183,7 @@ def impresionMesas():
         output += f"\n╚══════════════════════╝"
         return output
 
-def impresionMenu():
-    menu = cnf.menu
+def impresionMenu(menu):
     output = f"""
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
@@ -200,8 +198,7 @@ def impresionMenu():
     output += """\n╚═══════════════════════════════════════════════════════╝"""
     return output
 
-def impresionMenuStock():
-    menu = cnf.menu
+def impresionStockMenu(menu):
     output = f"""
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
@@ -256,9 +253,8 @@ def resumenPedido(nombre, mesa, pedido):
 ╚═══════════════════════════════════════════════════════╝"""
     return output
 
-def impresionRecetas():
-    recetas = cnf.recetas
-    ordenadas = sorted(recetas, key=lambda r: r['nombre'])
+def impresionRecetas(recetas):
+    ordenadas = sorted(recetas, key=lambda r: r['id'])
     print("Listado de recetas:")
     for receta in ordenadas:
         print(f"{receta['id']}: {receta['nombre']}")
@@ -291,7 +287,7 @@ def verificarStock(codReceta, recetas,ingredientes):
             # Buscar el ingrediente en el stock
             ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
             # Verificar si hay suficiente cantidad en el stock
-            if ingredienteStock['cantidad'] < cantIngrediente:
+            if not ingredienteStock or ingredienteStock['cantidad'] < cantIngrediente:
                 return False
     
     return True
@@ -303,15 +299,24 @@ def restarIngredientes(codReceta, recetas, ingredientes):
 
     try:
         # Verificar si los ingredientes están disponibles en la cantidad suficiente
-        if verificarStock(ingredientes, receta):
+        if verificarStock(codReceta, recetas,ingredientes):
             # Si los ingredientes son suficientes, restar las cantidades
             restarAuxIngredientes(codReceta, recetas, ingredientes)
-            guardarDatos(cnf.rutas("ingredientes"), ingredientes)
+            guardarDatos(cnf.rutas["ingredientes"], ingredientes)
         else:
-            raise IngredienteInsuficiente("Cantidad de ingredientes insuficiente.\n")
+            for ingReceta in receta['ingredientes']:
+                for nombreIngrediente, cantIngrediente in ingReceta.items():
+                    ingredienteStock = next((i for i in ingredientes if i['nombre'].lower() == nombreIngrediente.lower()), None)
+                    if not ingredienteStock or ingredienteStock['cantidad'] < cantIngrediente:
+                        raise IngredienteInsuficiente(
+                            nombreIngrediente,
+                            cantIngrediente,
+                            ingredienteStock['cantidad'] if ingredienteStock else 0
+                        )
     except IngredienteInsuficiente as e:
         msg=(f'Error ingredientes insuficientes\n')
         registrarExcepcion(e,msg)
+        raise
 #Resta ingredientes pero no modifica el json
 def restarAuxIngredientes(codReceta, recetas, ingredientes):
     # Buscar la receta por código usando filter
@@ -520,7 +525,7 @@ def actualizarStock(menu, recetas, ingredientes):
         codReceta = plato[0]
         stock = calcularStock(codReceta, recetas, ingredientes)
         plato[4] = stock
-        guardarDatos(cnf.rutas["menu"], menu)
+    guardarDatos(cnf.rutas["menu"], menu)
 
 def actualizarIngredientes(ingredientes, compras):
     agregadas = []
@@ -531,7 +536,7 @@ def actualizarIngredientes(ingredientes, compras):
                 agregadas.append(compra)
                 break
     
-    compras = [compra for compra in compras if compra not in agregadas]
+    compras[:] = [compra for compra in compras if compra["id"] not in {c["id"] for c in agregadas}]
 
     guardarDatos(cnf.rutas["ingredientes"], ingredientes)
     guardarDatos(cnf.rutas["compras"], compras)
@@ -707,7 +712,7 @@ def hacerPedido(nombre, mesa):
     pedido = inicializarPedido(nombre, mesa)
 
     actualizarStock(menu, recetas, ingredientes)  # Asegurar que el stock esté actualizado al inicio
-    print(impresionMenuStock())  # Mostrar el menú
+    print(impresionStockMenu(cnf.menu))  # Mostrar el menú
 
     while True:
         platoSeleccionado = seleccionarPlato(menu)
@@ -797,9 +802,8 @@ def avanzarPedidoSalon():
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             break
 
-def consultarReceta():
-    recetas = cnf.recetas
-    impresionRecetas()
+def consultarReceta(recetas):
+    impresionRecetas(recetas)
     consulta = codeInput("Ingrese el código de la receta a consultar:\n>>")
     #Verificar que el codigo exista
     while not verifCodigo(recetas, consulta):
@@ -827,7 +831,7 @@ def consultarReceta():
     print(f"{'=' * 40}\n")
 
 def cerrarMesa():
-    print(impresionMesas())
+    print(impresionMesas(cnf.mesas))
     seleccionada = intInput(">>Ingrese numero de mesa a cerrar o 0 para salir\n<<")
     while seleccionada not in range(0, len(cnf.mesas)+1):
         seleccionada = intInput(f">>Debe seleccionar una mesa entre 1 y {len(cnf.mesas)}, o 0 para salir.\n<<")
@@ -1057,7 +1061,7 @@ def mostrarMenuCliente(nombre, numMesa):
             opcion = intInput(cnf.clienteUI)
 
         if opcion == 1:
-            print(impresionMenu())
+            print(impresionMenu(cnf.menu))
             input('>> Enter para continuar\n<< ')
 
         elif opcion == 2:
@@ -1088,7 +1092,7 @@ def ejecutarOpcionCliente(opcion, nombre, numMesa):
     #Ejecuta la opción seleccionada en el menú del cliente.
     try:
         if opcion == 1:
-            print(impresionMenu())
+            print(impresionMenu(cnf.menu))
             input('>> Enter para continuar\n<< ')
 
         elif opcion == 2:
@@ -1133,7 +1137,7 @@ def ejecutarOpcionCocina(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
-            consultarReceta()
+            consultarReceta(cnf.recetas)
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 4:
@@ -1173,7 +1177,7 @@ def ejecutarOpcionSalon(opcion):
     #Ejecuta la opción seleccionada en el menú del salón.
     try:
         if opcion == 1:
-            print(impresionMesas())
+            print(impresionMesas(cnf.mesas))
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 2:

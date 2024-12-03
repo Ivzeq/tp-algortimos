@@ -11,13 +11,13 @@
     },
     {
         "idMesa": 3,
-        "estado": "Ocupada",
-        "cliente": "Ale"
+        "estado": "Libre",
+        "cliente": "Sin reserva"
     },
     {
         "idMesa": 4,
-        "estado": "Ocupada",
-        "cliente": "Ale"
+        "estado": "Libre",
+        "cliente": "Sin reserva"
     },
     {
         "idMesa": 5,
