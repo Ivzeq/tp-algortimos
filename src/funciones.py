@@ -755,14 +755,14 @@ def avanzarPedidoCocina():
     pedidos = cnf.pedidos
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosCocina]
     if len(comandas) == 0:
-        print(">> No hay comandas activas en este momento.")
+        input(">> No hay comandas activas en este momento.\n>> Presione Enter para continuar")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
     avanzar = intInput(f">> Qué pedido desea avanzar? entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
     while avanzar not in range(0, len(comandas)+1):
         avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
-    if avanzar <1 :
+    if avanzar == 0:
         return
     seleccionado = comandas[avanzar-1]
     actual = seleccionado["estado"]
@@ -778,15 +778,15 @@ def avanzarPedidoSalon():
     pedidos = cnf.pedidos
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
-        print("No hay comandas activas en este momento.")
+        input(">> No hay comandas activas en este momento.\n>> Presione Enter para continuar")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
     avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar\n>>")
+    while avanzar not in range(0, len(comandas)+1):
+        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
     if avanzar == 0:
         return
-    while avanzar not in range(1, len(comandas)+1):
-        avanzar = intInput(f"Debe seleccionar un número entre 1 y {len(comandas)}\n>>")
     seleccionado = comandas[avanzar-1]
     actual = seleccionado["estado"]
     for avance in cnf.avanceEstados:
@@ -803,6 +803,7 @@ def avanzarPedidoSalon():
                 pedidos.remove(seleccionado)
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             break
+    input("\nPresione Enter para continuar>>")
 
 def consultarReceta(recetas):
     impresionRecetas(recetas)
@@ -1188,7 +1189,7 @@ def ejecutarOpcionSalon(opcion):
 
         elif opcion == 3:
             avanzarPedidoSalon()
-            input("\nPresione Enter para continuar>>")
+
 
         elif opcion == 4:
             cerrarMesa()
