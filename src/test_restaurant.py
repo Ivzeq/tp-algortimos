@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import patch, mock_open, call
+from unittest.mock import patch, mock_open, call, ANY
 from datetime import datetime
 import config as cnf
 import funciones as fn
@@ -1023,4 +1023,658 @@ class TestRepriorizarPedidos(TestCase):
                 
         mock_print.assert_any_call("El pedido de 'Cliente 1' ha sido movido a la posición 6.")
 
+class TestCambiarEstados(TestCase):
 
+    @patch.object(cnf, "estadosPedidos", ["recibido", "en preparacion", "listo"])
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1"])
+    @patch("builtins.print")
+    @patch("funciones.intInput", side_effect=[1, 2])  # Selección de pedido y estado
+    def test_cambiar_estado_exitoso(self, mock_intInput, mock_print, mock_impresionPedidos):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": [["Plato 1", 1, "recibido"]]}
+        ]
+
+        # Llamar a la función
+        fn.cambiarEstados(pedidos_simulados)
+
+        # Verificar que el estado cambió correctamente
+        self.assertEqual(pedidos_simulados[0]["estado"], "en preparacion")
+
+        # Verificar que se mostró el mensaje correcto
+        mock_print.assert_any_call("El estado del pedido de Cliente 1 ha cambiado a: En preparacion")
+
+
+    @patch("funciones.intInput", side_effect=[0])  # Selección de salir
+    @patch("builtins.print")
+    def test_cambiar_estado_salir(self, mock_print, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": [["Plato 1", 1, "recibido"]]}
+        ]
+
+        # Llamar a la función
+        fn.cambiarEstados(pedidos_simulados)
+
+        # Verificar que no hubo cambios en el estado
+        self.assertEqual(pedidos_simulados[0]["estado"], "recibido")
+
+    @patch("funciones.intInput", side_effect=[5, 0])  # Selección fuera de rango y luego salir
+    @patch("builtins.print")
+    def test_cambiar_estado_seleccion_invalida(self, mock_print, mock_intInput):
+        pedidos_simulados = [
+            {"nombre": "Cliente 1", "mesa": 1, "estado": "recibido", "platos": [["Plato 1", 1, "recibido"]]}
+        ]
+
+        # Llamar a la función
+        fn.cambiarEstados(pedidos_simulados)
+
+        # Verificar que no hubo cambios en el estado
+        self.assertEqual(pedidos_simulados[0]["estado"], "recibido")
+
+class TestPedirIngredientes(TestCase):
+    @patch("funciones.codeInput", side_effect=["1001", "1002"])  # Códigos de ingredientes
+    @patch("funciones.intInput", side_effect=[5, 3])  # Cantidades ingresadas
+    @patch("funciones.input", side_effect=["s", "n"])  # Finalizar ingreso
+    @patch("funciones.guardarDatos")  # Mock para evitar guardar en disco durante el test
+    def test_pedir_ingredientes(self, mock_guardarDatos, mock_input, mock_intInput, mock_codeInput):
+        # Datos iniciales
+        ingredientes = [
+            {"id": "1001", "nombre": "Sal", "cantidad": 77},
+            {"id": "1002", "nombre": "Pimienta", "cantidad": 186},
+        ]
+        compras = []
+
+        # Llamar la función
+        fn.pedirIngredientes(ingredientes, compras)
+
+        # Verificar cambios
+        self.assertEqual(len(compras), 2)
+        self.assertEqual(compras[0]["id"], "1001")
+        self.assertEqual(compras[0]["cantidad"], 5)
+        self.assertEqual(compras[1]["id"], "1002")
+        self.assertEqual(compras[1]["cantidad"], 3)
+
+        # Verificar que guardarDatos fue llamado
+        mock_guardarDatos.assert_called_once()
+
+    @patch("funciones.codeInput", side_effect=["1003", "1001"])  # Código no existente
+    @patch("funciones.intInput", side_effect=[5])  # Cantidad ingresada
+    @patch("funciones.input", side_effect=["n"])  # Finalizar ingreso
+    def test_pedir_ingredientes_codigo_invalido(self, mock_input, mock_intInput, mock_codeInput):
+        # Datos iniciales
+        ingredientes = [
+            {"id": "1001", "nombre": "Sal", "cantidad": 77},
+            {"id": "1002", "nombre": "Pimienta", "cantidad": 186},
+        ]
+        compras = []
+
+        # Llamar la función
+        fn.pedirIngredientes(ingredientes, compras)
+
+        # Verificar que se agrego solo uno
+        self.assertEqual(len(compras), 1)
+
+    @patch("funciones.codeInput", side_effect=["1001", "1001"])  # Duplicar código de ingrediente
+    @patch("funciones.intInput", side_effect=[5, 3])  # Cantidades ingresadas
+    @patch("funciones.input", side_effect=["s", "n"])  # Finalizar ingreso
+    @patch("funciones.guardarDatos")
+    def test_pedir_ingredientes_codigo_duplicado(self, mock_guardarDatos, mock_input, mock_intInput, mock_codeInput):
+        # Datos iniciales
+        ingredientes = [
+            {"id": "1001", "nombre": "Sal", "cantidad": 77},
+            {"id": "1002", "nombre": "Pimienta", "cantidad": 186},
+        ]
+        compras = []
+
+        # Llamar la función
+        fn.pedirIngredientes(ingredientes, compras)
+
+        # Verificar que se manejaron códigos duplicados
+        self.assertEqual(len(compras), 1)  # Solo se cuenta una entrada
+        self.assertEqual(compras[0]["id"], "1001")
+        self.assertEqual(compras[0]["cantidad"], 8)  # Se suma la cantidad
+
+
+class TestModificarCompras(TestCase):
+    @patch("funciones.codeInput", side_effect=["1001"])  # Código de ingrediente existente
+    @patch("funciones.intInput", side_effect=[10])  # Nueva cantidad deseada
+    @patch("funciones.input", side_effect=["n"])  # Finalizar modificación
+    @patch("funciones.guardarDatos")  # Mock para evitar guardar en disco
+    def test_modificar_compras_valido(self, mock_guardarDatos, mock_input, mock_intInput, mock_codeInput):
+        # Datos simulados
+        compras = [{"id": "1001", "nombre": "Sal", "cantidad": 5}]
+        
+        # Llamar a la función
+        fn.modificarCompras(compras)
+
+        # Verificar cambios
+        self.assertEqual(compras[0]["cantidad"], 10)
+
+        # Verificar que los datos se guardaron
+        mock_guardarDatos.assert_called_once()
+
+    @patch("funciones.codeInput", side_effect=["9999", "1001"])  # Código de ingrediente inexistente
+    @patch("funciones.intInput", return_value=1)  # Nueva cantidad deseada
+    @patch("funciones.input", side_effect=["n"])  # Finalizar modificación
+    @patch("funciones.guardarDatos")
+    def test_modificar_compras_codigo_invalido(self, mock_guardarDatos, mock_input, mock_intInput, mock_codeInput):
+        # Datos simulados
+        compras = [{"id": "1001", "nombre": "Sal", "cantidad": 5}]
+        
+        # Llamar a la función
+        fn.modificarCompras(compras)
+
+        # Verificar que hubo cambios correctos
+        self.assertEqual(compras[0]["cantidad"], 1)
+
+        # Verificar que no se guardaron datos con codigos incorrectos
+        mock_guardarDatos.assert_called_once()
+
+class TestIngresarCompras(TestCase):
+    @patch("funciones.confirmInput", side_effect=["s"])  # Confirmar ingreso
+    @patch("funciones.actualizarIngredientes")  # Mock de actualización de ingredientes
+    def test_ingresar_compras_confirmado(self, mock_actualizarIngredientes, mock_confirmInput):
+        # Datos simulados
+        compras_simuladas = [{"id": "1001", "nombre": "Sal", "cantidad": 10}]
+        ingredientes_simulados = [{"id": "1001", "nombre": "Sal", "cantidad": 20}]
+
+        # Llamar a la función
+        fn.ingresarCompras(compras_simuladas, ingredientes_simulados)
+
+        # Verificar que actualizarIngredientes fue llamado correctamente
+        mock_actualizarIngredientes.assert_called_once_with(ingredientes_simulados, compras_simuladas)
+
+    @patch("funciones.confirmInput", side_effect=["n"])  # Rechazar ingreso
+    @patch("funciones.actualizarIngredientes")  # Mock de actualización de ingredientes
+    def test_ingresar_compras_rechazado(self, mock_actualizarIngredientes, mock_confirmInput):
+        # Datos simulados
+        compras_simuladas = [{"id": "1001", "nombre": "Sal", "cantidad": 10}]
+        ingredientes_simulados = [{"id": "1001", "nombre": "Sal", "cantidad": 20}]
+
+        # Llamar a la función
+        fn.ingresarCompras(compras_simuladas, ingredientes_simulados)
+
+        # Verificar que actualizarIngredientes no fue llamado
+        mock_actualizarIngredientes.assert_not_called()
+
+class TestReservarMesa(TestCase):
+    @patch("funciones.guardarDatos", autospec=True)  # Mock directo de la función guardarDatos
+    @patch("funciones.cnf", autospec=True)  # Mock completo del módulo cnf
+    def test_reservar_mesa_valido(self, mock_cnf, mock_guardarDatos):
+        # Datos simulados
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Libre", "cliente": "Sin reserva"},
+            {"idMesa": 2, "estado": "Ocupada", "cliente": "Ale"},
+        ]
+        cliente = "Juan"
+        ruta_mock = "ruta/falsa/mesas.json"  # Simulamos una ruta falsa
+
+        # Configurar el mock de cnf
+        mock_cnf.mesas = mesas_simuladas
+
+        # Llamar a la función con la ruta mock
+        fn.reservarMesa(1, cliente, ruta_mock)
+
+        # Verificar cambios
+        self.assertEqual(mock_cnf.mesas[0]["estado"], "Ocupada")
+        self.assertEqual(mock_cnf.mesas[0]["cliente"], cliente)
+
+    @patch("funciones.registrarExcepcion")
+    @patch("funciones.cnf", autospec=True)
+    def test_reservar_mesa_ocupada(self, mock_cnf, mock_registrarExcepcion):
+        # Datos simulados
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Ocupada", "cliente": "Ale"},
+        ]
+        cliente = "Juan"
+
+        # Configurar el mock de cnf
+        mock_cnf.mesas = mesas_simuladas
+
+        # Llamar a la función y verificar la excepción
+        with self.assertRaises(fn.MesaOcupada):
+            fn.reservarMesa(1, cliente)
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once()
+
+    @patch("funciones.registrarExcepcion")
+    @patch("funciones.cnf", autospec=True)
+    def test_reservar_mesa_inexistente(self, mock_cnf, mock_registrarExcepcion):
+        # Datos simulados
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Libre", "cliente": "Sin reserva"},
+        ]
+        cliente = "Juan"
+
+        # Configurar el mock de cnf
+        mock_cnf.mesas = mesas_simuladas
+
+        # Llamar a la función y verificar la excepción
+        with self.assertRaises(StopIteration):
+            fn.reservarMesa(99, cliente)
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once()
+
+class TestGestionarReserva(TestCase):
+    @patch("funciones.intInput", side_effect=[1])  # Seleccionar mesa 1
+    @patch("funciones.charInput", return_value="Juan")  # Nombre del cliente
+    @patch("funciones.reservarMesa")  # Mock de la función reservarMesa
+    def test_gestionar_reserva_valida(self, mock_reservarMesa, mock_charInput, mock_intInput):
+        # Llamar a la función
+        cliente, mesa = fn.gestionarReserva()
+
+        # Verificar resultados
+        self.assertEqual(cliente, "Juan")
+        self.assertEqual(mesa, 1)
+
+        # Verificar que reservarMesa fue llamado con los parámetros correctos
+        mock_reservarMesa.assert_called_once_with(1, "Juan")
+
+    @patch("funciones.intInput", side_effect=[2, 3])  # Intentar mesa ocupada, luego libre
+    @patch("funciones.charInput", return_value="Pedro")  # Nombre del cliente
+    @patch("funciones.reservarMesa", side_effect=[fn.MesaOcupada(2, "Koko"), None])  # Error para mesa 2
+    @patch("builtins.print")  # Mock para verificar mensajes
+    def test_gestionar_reserva_mesa_ocupada(self, mock_print, mock_reservarMesa, mock_charInput, mock_intInput):
+        # Llamar a la función
+        cliente, mesa = fn.gestionarReserva()
+
+        # Verificar que eventualmente se reservó la mesa 3
+        self.assertEqual(cliente, "Pedro")
+        self.assertEqual(mesa, 3)
+
+        # Verificar que reservarMesa fue llamado dos veces
+        self.assertEqual(mock_reservarMesa.call_count, 2)
+
+        # Verificar mensajes impresos
+        mock_print.assert_any_call("Por favor, seleccione otra mesa.")
+
+
+class TestCerrarMesa(TestCase):
+    @patch("funciones.guardarDatos")  # Mock para evitar escritura en disco
+    @patch("funciones.impresionMesas", return_value="Listado de mesas")  # Mock para listado
+    @patch("funciones.intInput", side_effect=[1])  # Seleccionar mesa 1
+    @patch("funciones.cnf", autospec=True)  # Mock completo del módulo cnf
+    def test_cerrar_mesa_valida(self, mock_cnf, mock_intInput, mock_impresionMesas, mock_guardarDatos):
+        # Datos simulados
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Ocupada", "cliente": "Juan"},
+            {"idMesa": 2, "estado": "Libre", "cliente": "Sin reserva"},
+        ]
+        mock_cnf.mesas = mesas_simuladas
+
+        # Llamar a la función
+        fn.cerrarMesa()
+
+        # Verificar cambios
+        self.assertEqual(mock_cnf.mesas[0]["estado"], "Libre")
+        self.assertEqual(mock_cnf.mesas[0]["cliente"], "Sin reserva")
+
+        # Verificar que guardarDatos fue llamado con los argumentos correctos
+        mock_guardarDatos.assert_called_once_with(mock_cnf.rutas["mesas"], mock_cnf.mesas)
+
+    @patch("funciones.guardarDatos")
+    @patch("funciones.impresionMesas", return_value="Listado de mesas")
+    @patch("funciones.intInput", side_effect=[99, 1])  # Mesa inexistente
+    @patch("funciones.cnf", autospec=True)
+    def test_cerrar_mesa_inexistente(self, mock_cnf, mock_intInput, mock_impresionMesas, mock_guardarDatos):
+        # Datos simulados
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Ocupada", "cliente": "Juan"},
+        ]
+        mock_cnf.mesas = mesas_simuladas
+
+        # Llamar a la función
+        fn.cerrarMesa()
+
+        # Verificar que se realizaron cambios
+        self.assertEqual(mock_cnf.mesas[0]["estado"], "Libre")
+        self.assertEqual(mock_cnf.mesas[0]["cliente"], "Sin reserva")
+
+        # Verificar que guardarDatos fue llamado solo una vez
+        mock_guardarDatos.assert_called_once()
+
+    @patch("funciones.guardarDatos")
+    @patch("funciones.impresionMesas", return_value="Listado de mesas")
+    @patch("funciones.intInput", side_effect=[0])  # Salir
+    @patch("funciones.cnf", autospec=True)
+    def test_cerrar_mesa_salir(self, mock_cnf, mock_intInput, mock_impresionMesas, mock_guardarDatos):
+        # Datos simulados
+        mesas_simuladas = [
+            {"idMesa": 1, "estado": "Ocupada", "cliente": "Juan"},
+        ]
+        mock_cnf.mesas = mesas_simuladas
+
+        # Llamar a la función
+        fn.cerrarMesa()
+
+        # Verificar que no se realizaron cambios
+        self.assertEqual(mock_cnf.mesas[0]["estado"], "Ocupada")
+        self.assertEqual(mock_cnf.mesas[0]["cliente"], "Juan")
+
+        # Verificar que guardarDatos no fue llamado
+        mock_guardarDatos.assert_not_called()
+
+
+class TestMostrarMenuCliente(TestCase):
+    @patch("funciones.intInput", side_effect=[1])  # Opción válida
+    def test_mostrar_menu_cliente_opcion_valida(self, mock_intInput):
+        # Llamar a la función
+        opcion = fn.mostrarMenuCliente()
+
+        # Verificar que devuelve la opción seleccionada
+        self.assertEqual(opcion, 1)
+
+    @patch("funciones.intInput", side_effect=[5, 3])  # Entradas inválidas y luego válida
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_mostrar_menu_cliente_entrada_invalida(self, mock_print, mock_intInput):
+        # Llamar a la función
+        opcion = fn.mostrarMenuCliente()
+
+        # Verificar que devuelve la opción válida
+        self.assertEqual(opcion, 3)
+
+
+    @patch("funciones.intInput", side_effect=ValueError("Entrada inválida"))  # Simular excepción
+    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_mostrar_menu_cliente_excepcion(self, mock_print, mock_registrarExcepcion, mock_intInput):
+        # Verificar que la excepción se relanza
+        with self.assertRaises(ValueError):
+            fn.mostrarMenuCliente()
+
+        # Verificar que se registró la excepción con los argumentos esperados
+        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al capturar la opción del menú del cliente.")
+
+        # Verificar mensaje de error
+        mock_print.assert_any_call("Error inesperado. Por favor, intente nuevamente.")
+
+class TestEjecutarOpcionCliente(TestCase):
+    @patch("funciones.impresionMenu", return_value="Menú impreso")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cliente_opcion_1(self, mock_input, mock_impresionMenu):
+        # Llamar a la función con la opción 1
+        resultado = fn.ejecutarOpcionCliente(1, "Juan", 1)
+
+        # Verificar que se imprimió el menú
+        mock_impresionMenu.assert_called_once_with(cnf.menu)
+        self.assertTrue(resultado)
+
+    @patch("funciones.hacerPedido")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cliente_opcion_2(self, mock_input, mock_hacerPedido):
+        # Llamar a la función con la opción 2
+        resultado = fn.ejecutarOpcionCliente(2, "Juan", 1)
+
+        # Verificar que se llamó a hacerPedido
+        mock_hacerPedido.assert_called_once_with("Juan", 1)
+        self.assertTrue(resultado)
+
+    @patch("funciones.verPedido")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cliente_opcion_3(self, mock_input, mock_verPedido):
+        # Llamar a la función con la opción 3
+        resultado = fn.ejecutarOpcionCliente(3, "Juan", 1)
+
+        # Verificar que se llamó a verPedido
+        mock_verPedido.assert_called_once_with("Juan", 1, cnf.pedidos)
+        self.assertTrue(resultado)
+
+    @patch("builtins.print")
+    def test_ejecutar_opcion_cliente_opcion_4(self, mock_print):
+        # Llamar a la función con la opción 4
+        resultado = fn.ejecutarOpcionCliente(4, "Juan", 1)
+
+        # Verificar que el mensaje de despedida se imprime y devuelve False
+        mock_print.assert_called_once_with(">> Gracias, Juan.")
+        self.assertFalse(resultado)
+
+    @patch("funciones.hacerPedido", side_effect=Exception("Error simulado"))
+    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_cliente_excepcion(self, mock_print, mock_registrarExcepcion, mock_hacerPedido):
+        # Llamar a la función con una opción que genera excepción
+        resultado = fn.ejecutarOpcionCliente(2, "Juan", 1)
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al ejecutar la opción 2 en el menú del cliente.")
+
+        # Verificar mensaje de error
+        mock_print.assert_any_call("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
+        self.assertTrue(resultado)
+
+class TestMostrarMenuCocina(TestCase):
+    @patch("funciones.intInput", side_effect=[3])  # Opción válida
+    def test_mostrar_menu_cocina_opcion_valida(self, mock_intInput):
+        # Llamar a la función
+        opcion = fn.mostrarMenuCocina()
+
+        # Verificar que devuelve la opción seleccionada
+        self.assertEqual(opcion, 3)
+
+    @patch("funciones.intInput", side_effect=[8, 5])  # Entradas inválidas y luego válida
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_mostrar_menu_cocina_entrada_invalida(self, mock_print, mock_intInput):
+        # Llamar a la función
+        opcion = fn.mostrarMenuCocina()
+
+        # Verificar que devuelve la opción válida
+        self.assertEqual(opcion, 5)
+
+        # Verificar mensajes de error
+        mock_print.assert_any_call("Opción inválida. Ingrese un número entre 1 y 7.\n")
+
+    @patch("funciones.intInput", side_effect=ValueError("Entrada inválida"))  # Simular excepción
+    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_mostrar_menu_cocina_excepcion(self, mock_print, mock_registrarExcepcion, mock_intInput):
+        # Verificar que la excepción se relanza
+        with self.assertRaises(ValueError):
+            fn.mostrarMenuCocina()
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al capturar la opción del menú de cocina.")
+
+        # Verificar mensaje de error
+        mock_print.assert_any_call("Error inesperado. Por favor, intente nuevamente.")
+
+class TestEjecutarOpcionCocina(TestCase):
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1", "Pedido 2"])
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_cocina_opcion_1(self, mock_print, mock_input, mock_impresionPedidos):
+        # Llamar a la función con la opción 1
+        resultado = fn.ejecutarOpcionCocina(1)
+
+        # Verificar que se imprimieron los pedidos
+        mock_impresionPedidos.assert_called_once_with(cnf.pedidos)
+        mock_print.assert_any_call("Pedido 1")
+        mock_print.assert_any_call("Pedido 2")
+        self.assertTrue(resultado)
+
+    @patch("funciones.avanzarPedidoCocina")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cocina_opcion_2(self, mock_input, mock_avanzarPedidoCocina):
+        # Llamar a la función con la opción 2
+        resultado = fn.ejecutarOpcionCocina(2)
+
+        # Verificar que se llamó avanzarPedidoCocina
+        mock_avanzarPedidoCocina.assert_called_once_with(cnf.pedidos, cnf.rutas["pedidos"])
+        self.assertTrue(resultado)
+
+    @patch("funciones.consultarReceta")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cocina_opcion_3(self, mock_input, mock_consultarReceta):
+        # Llamar a la función con la opción 3
+        resultado = fn.ejecutarOpcionCocina(3)
+
+        # Verificar que se llamó consultarReceta
+        mock_consultarReceta.assert_called_once_with(cnf.recetas)
+        self.assertTrue(resultado)
+
+    @patch("funciones.impresionIngredientes")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cocina_opcion_4(self, mock_input, mock_impresionIngredientes):
+        # Llamar a la función con la opción 4
+        resultado = fn.ejecutarOpcionCocina(4)
+
+        # Verificar que se llamó impresionIngredientes
+        mock_impresionIngredientes.assert_called_once_with(cnf.ingredientes)
+        self.assertTrue(resultado)
+
+    @patch("funciones.pedirIngredientes")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cocina_opcion_5(self, mock_input, mock_pedirIngredientes):
+        # Llamar a la función con la opción 5
+        resultado = fn.ejecutarOpcionCocina(5)
+
+        # Verificar que se llamó pedirIngredientes
+        mock_pedirIngredientes.assert_called_once_with(cnf.ingredientes, cnf.compras)
+        self.assertTrue(resultado)
+
+    @patch("funciones.impresionCompras")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_cocina_opcion_6(self, mock_input, mock_impresionCompras):
+        # Llamar a la función con la opción 6
+        resultado = fn.ejecutarOpcionCocina(6)
+
+        # Verificar que se llamó impresionCompras
+        mock_impresionCompras.assert_called_once_with(cnf.compras)
+        self.assertTrue(resultado)
+
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_cocina_opcion_7(self, mock_print):
+        # Llamar a la función con la opción 7
+        resultado = fn.ejecutarOpcionCocina(7)
+
+        # Verificar que se imprimió el mensaje de cierre y devuelve False
+        mock_print.assert_called_once_with(">> Cerrando módulo de cocina.")
+        self.assertFalse(resultado)
+
+    @patch("funciones.pedirIngredientes", side_effect=Exception("Error simulado"))
+    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_cocina_excepcion(self, mock_print, mock_registrarExcepcion, mock_pedirIngredientes):
+        # Llamar a la función con una opción que genera excepción
+        with self.assertRaises(Exception):
+            fn.ejecutarOpcionCocina(5)
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al ejecutar la opción 5 en el menú de cocina.")
+
+        # Verificar mensaje de error
+        mock_print.assert_any_call("Error inesperado al procesar la opción. Por favor, intente nuevamente.")
+        
+class TestMostrarMenuSalon(TestCase):
+    @patch("funciones.intInput", side_effect=[2])  # Opción válida
+    def test_mostrar_menu_salon_opcion_valida(self, mock_intInput):
+        # Llamar a la función
+        opcion = fn.mostrarMenuSalon()
+
+        # Verificar que devuelve la opción seleccionada
+        self.assertEqual(opcion, 2)
+
+    @patch("funciones.intInput", side_effect=["a", 7, 3])  # Entradas inválidas y luego válida
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_mostrar_menu_salon_entrada_invalida(self, mock_print, mock_intInput):
+        # Llamar a la función
+        opcion = fn.mostrarMenuSalon()
+
+        # Verificar que devuelve la opción válida
+        self.assertEqual(opcion, 3)
+
+        # Verificar mensajes de error
+        mock_print.assert_any_call(">> Opción inválida. Ingrese un número entre 1 y 6.\n")
+
+    @patch("funciones.intInput", side_effect=ValueError("Entrada inválida"))  # Simular excepción
+    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_mostrar_menu_salon_excepcion(self, mock_print, mock_registrarExcepcion, mock_intInput):
+        # Verificar que la excepción se relanza
+        with self.assertRaises(ValueError):
+            fn.mostrarMenuSalon()
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al capturar la opción del menú del salón.")
+
+        # Verificar mensaje de error
+        mock_print.assert_any_call("Error inesperado. Por favor, intente nuevamente.")
+
+class TestEjecutarOpcionSalon(TestCase):
+    @patch("funciones.impresionMesas", return_value="Listado de mesas")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_salon_opcion_1(self, mock_print, mock_input, mock_impresionMesas):
+        # Llamar a la función con la opción 1
+        resultado = fn.ejecutarOpcionSalon(1)
+
+        # Verificar que se imprimieron las mesas
+        mock_impresionMesas.assert_called_once_with(cnf.mesas)
+        mock_print.assert_any_call("Listado de mesas")
+        self.assertTrue(resultado)
+
+    @patch("funciones.impresionPedidos", return_value=["Pedido 1", "Pedido 2"])
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_salon_opcion_2(self, mock_print, mock_input, mock_impresionPedidos):
+        # Llamar a la función con la opción 2
+        resultado = fn.ejecutarOpcionSalon(2)
+
+        # Verificar que se imprimieron los pedidos
+        mock_impresionPedidos.assert_called_once_with(cnf.pedidos)
+        mock_print.assert_any_call("Pedido 1")
+        mock_print.assert_any_call("Pedido 2")
+        self.assertTrue(resultado)
+
+    @patch("funciones.avanzarPedidoSalon")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_salon_opcion_3(self, mock_input, mock_avanzarPedidoSalon):
+        # Llamar a la función con la opción 3
+        resultado = fn.ejecutarOpcionSalon(3)
+
+        # Verificar que se llamó avanzarPedidoSalon
+        mock_avanzarPedidoSalon.assert_called_once_with(cnf.pedidos, cnf.rutas["pedidos"])
+        self.assertTrue(resultado)
+
+    @patch("funciones.cerrarMesa")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_salon_opcion_4(self, mock_input, mock_cerrarMesa):
+        # Llamar a la función con la opción 4
+        resultado = fn.ejecutarOpcionSalon(4)
+
+        # Verificar que se llamó cerrarMesa
+        mock_cerrarMesa.assert_called_once()
+        self.assertTrue(resultado)
+
+    @patch("funciones.ingresoAdmin")
+    @patch("builtins.input", return_value="")  # Simular pausa con Enter
+    def test_ejecutar_opcion_salon_opcion_5(self, mock_input, mock_ingresoAdmin):
+        # Llamar a la función con la opción 5
+        resultado = fn.ejecutarOpcionSalon(5)
+
+        # Verificar que se llamó ingresoAdmin
+        mock_ingresoAdmin.assert_called_once()
+        self.assertTrue(resultado)
+
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_salon_opcion_6(self, mock_print):
+        # Llamar a la función con la opción 6
+        resultado = fn.ejecutarOpcionSalon(6)
+
+        # Verificar que el mensaje de cierre se imprime y devuelve False
+        mock_print.assert_called_once_with(">> Cerrando módulo de salón.")
+        self.assertFalse(resultado)
+
+    @patch("funciones.ingresoAdmin", side_effect=Exception("Error simulado"))
+    @patch("funciones.registrarExcepcion")  # Mock para registrar excepciones
+    @patch("builtins.print")  # Mock para capturar impresiones
+    def test_ejecutar_opcion_salon_excepcion(self, mock_print, mock_registrarExcepcion, mock_ingresoAdmin):
+        # Llamar a la función con una opción que genera excepción
+        with self.assertRaises(Exception):
+            fn.ejecutarOpcionSalon(5)
+
+        # Verificar que se registró la excepción
+        mock_registrarExcepcion.assert_called_once_with(ANY, "Error al ejecutar la opción 5 en el menú del salón.")
+
+        # Verificar mensaje de error
+        mock_print.assert_any_call("Error inesperado al procesar la opción. Por favor, intente nuevamente.")

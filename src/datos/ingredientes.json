@@ -7,7 +7,7 @@
     {
         "id": "1001",
         "nombre": "Sal",
-        "cantidad": 79
+        "cantidad": 77
     },
     {
         "id": "1002",
@@ -47,7 +47,7 @@
     {
         "id": "1009",
         "nombre": "Pechuga de Pollo",
-        "cantidad": 67
+        "cantidad": 64
     },
     {
         "id": "1010",
@@ -82,37 +82,37 @@
     {
         "id": "1016",
         "nombre": "Arroz",
-        "cantidad": 97
+        "cantidad": 93
     },
     {
         "id": "1017",
         "nombre": "Mariscos",
-        "cantidad": 59
+        "cantidad": 57
     },
     {
         "id": "1018",
         "nombre": "Caldo de pescado",
-        "cantidad": 109
+        "cantidad": 103
     },
     {
         "id": "1019",
         "nombre": "Pimiento",
-        "cantidad": 54
+        "cantidad": 52
     },
     {
         "id": "1020",
         "nombre": "Guisantes",
-        "cantidad": 51
+        "cantidad": 49
     },
     {
         "id": "1021",
         "nombre": "Azafr\u00e1n",
-        "cantidad": 49
+        "cantidad": 47
     },
     {
         "id": "1022",
         "nombre": "Lechuga",
-        "cantidad": 96
+        "cantidad": 93
     },
     {
         "id": "1023",
@@ -137,12 +137,12 @@
     {
         "id": "1027",
         "nombre": "Aderezo Caesar",
-        "cantidad": 70
+        "cantidad": 64
     },
     {
         "id": "1028",
         "nombre": "Crutones",
-        "cantidad": 84
+        "cantidad": 78
     },
     {
         "id": "1029",

@@ -178,3 +178,28 @@ Funci�n: gestionarReserva
 Tipo: MesaOcupada
 Mensaje: La mesa 3 ya est� ocupada.
 	Intento de reservar una mesa ocupada: Mesa 3.
+Fecha: 2024-12-03 12:51:25.242646
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 5 en el menú del salón.
+Fecha: 2024-12-03 15:35:17.741397
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Juan.
+Fecha: 2024-12-03 15:35:17.742398
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-03 15:35:19.966049
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Ale.
+Fecha: 2024-12-03 15:35:19.967419
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
