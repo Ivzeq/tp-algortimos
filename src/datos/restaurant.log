@@ -218,3 +218,85 @@ Función: gestionarReserva
 Tipo: MesaOcupada
 Mensaje: La mesa 1 ya está ocupada.
 	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-03 13:50:41.950028
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 5 en el menú del salón.
+Fecha: 2024-12-03 13:50:56.802491
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 5 en el menú del salón.
+Fecha: 2024-12-03 13:50:58.359461
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:50:59.769936
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:16.187365
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:16.885432
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:17.521575
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:17.886526
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:18.163370
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:18.370476
+Función: ejecutarOpcionSalon
+Tipo: KeyError
+Mensaje: 'platos'
+	Error al ejecutar la opción 2 en el menú del salón.
+Fecha: 2024-12-03 13:51:22.781331
+Función: cargarDatos
+Tipo: JSONDecodeError
+Mensaje: Expecting value: line 1 column 1 (char 0)
+	Error al abrir archivo con ruta precargada
+	Contexto:CargarDatos(c:\Users\MOB\Desktop\Programacion\Github\tp-algoritmos\src\datos\pedidos.json)
+Fecha: 2024-12-03 13:59:33.693143
+Función: cargarDatos
+Tipo: JSONDecodeError
+Mensaje: Expecting value: line 1 column 1 (char 0)
+	Error al abrir archivo con ruta precargada
+	Contexto:CargarDatos(c:\Users\MOB\Desktop\Programacion\Github\tp-algoritmos\src\datos\pedidos.json)
+Fecha: 2024-12-03 13:59:50.984641
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Juan.
+Fecha: 2024-12-03 13:59:50.984990
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-03 13:59:53.271976
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Judas.
+Fecha: 2024-12-03 13:59:53.272485
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.

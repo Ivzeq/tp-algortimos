@@ -1023,4 +1023,6 @@ class TestRepriorizarPedidos(TestCase):
                 
         mock_print.assert_any_call("El pedido de 'Cliente 1' ha sido movido a la posición 6.")
 
-
+def test_eliminarPedidos():
+    with open(cnf.rutas["pedidos"],"w") as archivo:
+        archivo.write("")

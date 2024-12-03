@@ -1,4 +1,5 @@
-[{
+[
+    {
         "nombre": "mihcael",
         "mesa": 2,
         "estado": "finalizado",
@@ -36,6 +37,18 @@
                 "salm\u00f3n a la manteca",
                 3,
                 "SMT"
+            ]
+        ]
+    },
+    {
+        "nombre": "Koko",
+        "mesa": 3,
+        "estado": "recibido",
+        "platos": [
+            [
+                "bife de chorizo",
+                1,
+                "2000"
             ]
         ]
     }
