@@ -41,11 +41,12 @@ class MesaOcupada(Exception):
 
 
 
-def registrarExcepcion(e,msg, ruta_log="tp-algoritmos\\src\\datos\\restaurant.log"):
+def registrarExcepcion(e,msg ):
+    ruta_log = cnf.rutas["log"]
     try:
         funcion = inspect.stack()[1].function
 
-        archivo = open(ruta_log, 'a')
+        archivo = open(ruta_log, 'a', encoding='utf-8')
         try:
             error = (
                 f"\nFecha: {datetime.now()}\n"
@@ -751,15 +752,15 @@ def verPedido(nombre, mesa, pedidos):
 def avanzarPedidoCocina(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosCocina]
     if len(comandas) == 0:
-        print("No hay comandas activas en este momento.")
+        input(">> No hay comandas activas en este momento.\n>> Presione Enter para continuar")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
     avanzar = intInput(f">> Qué pedido desea avanzar? entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
-    if avanzar <1 :
+    while avanzar not in range(0, len(comandas)+1):
+        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
+    if avanzar == 0:
         return
-    while avanzar not in range(1, len(comandas)+1):
-        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)}\n<< ")
     seleccionado = comandas[avanzar-1]
     actual = seleccionado["estado"]
     for avance in cnf.avanceEstados:
@@ -768,19 +769,20 @@ def avanzarPedidoCocina(pedidos, ruta_pedidos):
             print(f">> El pedido de {seleccionado['nombre']} en la mesa {seleccionado['mesa']} ahora está {seleccionado['estado'].capitalize()}.")
             guardarDatos(ruta_pedidos, pedidos)
             break
+    input("\nPresione Enter para continuar>>")
 
 def avanzarPedidoSalon(pedidos, ruta_pedidos):
     comandas = [pedido for pedido in pedidos if (pedido["estado"].lower()) in cnf.permisosEstadosSalon]
     if len(comandas) == 0:
-        print("No hay comandas activas en este momento.")
+        input(">> No hay comandas activas en este momento.\n>> Presione Enter para continuar")
         return
     for pedido in impresionPedidos(comandas):
         print(pedido)
     avanzar = intInput(f"Qué pedido desea avanzar? entre 1 y {len(comandas)}. 0 para cancelar\n>>")
+    while avanzar not in range(0, len(comandas)+1):
+        avanzar = intInput(f">> Debe seleccionar un número entre 1 y {len(comandas)} o 0 para cancelar.\n<< ")
     if avanzar == 0:
         return
-    while avanzar not in range(1, len(comandas)+1):
-        avanzar = intInput(f"Debe seleccionar un número entre 1 y {len(comandas)}\n>>")
     seleccionado = comandas[avanzar-1]
     actual = seleccionado["estado"]
     for avance in cnf.avanceEstados:
@@ -797,6 +799,7 @@ def avanzarPedidoSalon(pedidos, ruta_pedidos):
                 pedidos.remove(seleccionado)
             guardarDatos(ruta_pedidos, pedidos)
             break
+    input("\nPresione Enter para continuar>>")
 
 def consultarReceta(recetas):
     impresionRecetas(recetas)
@@ -1129,7 +1132,7 @@ def ejecutarOpcionCocina(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 2:
-            avanzarPedidoCocina(cnf.pedidos, cnf.rutas["pedidos"])
+            avanzarPedidoCocina()
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
@@ -1177,12 +1180,15 @@ def ejecutarOpcionSalon(opcion):
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 2:
-            for pedido in impresionPedidos(cnf.pedidos):
-                print(pedido)
+            if len(cnf.pedidos)>0: 
+                for pedido in impresionPedidos(cnf.pedidos):
+                    print(pedido)
+            else:
+                print(">> No hay pedidos.")
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 3:
-            avanzarPedidoSalon(cnf.pedidos, cnf.rutas["pedidos"])
+            avanzarPedidoSalon()
             input("\nPresione Enter para continuar>>")
 
         elif opcion == 4:

@@ -1,17 +1,19 @@
 [
     {
-        "nombre": "Cliente 2",
+        "nombre": "Ale",
         "mesa": 2,
-        "estado": "recibido"
-    },
-    {
-        "nombre": "Cliente 3",
-        "mesa": 3,
-        "estado": "recibido"
-    },
-    {
-        "nombre": "Cliente 1",
-        "mesa": 1,
-        "estado": "recibido"
+        "estado": "recibido",
+        "platos": [
+            [
+                "asado de tira",
+                2,
+                "AST"
+            ],
+            [
+                "salm\u00f3n a la manteca",
+                3,
+                "SMT"
+            ]
+        ]
     }
 ]
