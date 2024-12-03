@@ -731,6 +731,8 @@ def hacerPedido(nombre, mesa):
 def verPedido(nombre, mesa):
     pedidos = cnf.pedidos
     pedidosCliente = [pedido for pedido in pedidos if pedido['nombre'].lower() == nombre.lower() and pedido['mesa'] == mesa]
+    menu, recetas, ingredientes, pedidos = cargarDatosBasicos()
+    actualizarStock(menu, recetas, ingredientes)
     for pedido in impresionPedidos(pedidosCliente):
         print(pedido)
     if len(pedidosCliente) > 0:
@@ -742,11 +744,14 @@ def verPedido(nombre, mesa):
             pedidos.remove(pedidosCliente[cancelado-1])
             guardarDatos(cnf.rutas["pedidos"], pedidos)
             print(">> Pedido eliminado exitosamente.")
+            for elemento in pedidosCliente:
+                eliminarPedido(elemento,recetas,ingredientes,menu)
         elif confirma == 's':
             pedidos.remove(pedidosCliente[0])
+            eliminarPedido(pedidosCliente[0],recetas,ingredientes,menu)
             guardarDatos(cnf.rutas['pedidos'], pedidos)
             print(">> Pedido eliminado exitosamente.")
-            input(">> Enter para continuar\n<< ")   
+            #input(">> Enter para continuar\n<< ")   
     else:
         print(">> No se encontraron pedidos activos")
         #input(">> Enter para continuar\n<< ")   

@@ -178,3 +178,43 @@ Funci�n: gestionarReserva
 Tipo: MesaOcupada
 Mensaje: La mesa 3 ya est� ocupada.
 	Intento de reservar una mesa ocupada: Mesa 3.
+Fecha: 2024-12-03 12:04:51.950195
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Koko.
+Fecha: 2024-12-03 12:04:51.950678
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
+Fecha: 2024-12-03 12:09:04.555024
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar mesa ocupada: 2. Cliente actual: Koko.
+Fecha: 2024-12-03 12:09:04.555425
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 2 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 2.
+Fecha: 2024-12-03 12:09:06.441330
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya está ocupada.
+	Intento de reservar mesa ocupada: 3. Cliente actual: Juan.
+Fecha: 2024-12-03 12:09:06.441717
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 3 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 3.
+Fecha: 2024-12-03 12:55:53.034427
+Función: reservarMesa
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar mesa ocupada: 1. Cliente actual: Juan.
+Fecha: 2024-12-03 12:55:53.034810
+Función: gestionarReserva
+Tipo: MesaOcupada
+Mensaje: La mesa 1 ya está ocupada.
+	Intento de reservar una mesa ocupada: Mesa 1.
