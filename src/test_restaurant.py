@@ -1025,4 +1025,4 @@ class TestRepriorizarPedidos(TestCase):
 
 def test_eliminarPedidos():
     with open(cnf.rutas["pedidos"],"w") as archivo:
-        archivo.write("")
+        archivo.write("[]")
